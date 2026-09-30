@@ -34,7 +34,11 @@ export const metadata: Metadata = {
       { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
     ],
+    shortcut: "/favicon.svg",
     apple: "/favicon.svg",
+    other: [
+      { rel: "mask-icon", url: "/favicon.svg", color: "#123C2A" },
+    ],
   },
 };
 

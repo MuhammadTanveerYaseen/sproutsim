@@ -1,23 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <!-- Background circle -->
-  <circle cx="32" cy="32" r="32" fill="#123C2A"/>
-  
-  <!-- Globe circle outline -->
-  <circle cx="32" cy="40" r="16" fill="none" stroke="#A7E8C1" stroke-width="1.5" opacity="0.9"/>
-  
-  <!-- Globe latitude lines -->
-  <path d="M16 40 Q24 36 32 40 Q40 44 48 40" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
-  <path d="M17 34 Q24.5 30 32 34 Q39.5 38 47 34" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
-  <path d="M18 46 Q25 42.5 32 46 Q39 49.5 46 46" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
-  
-  <!-- Globe vertical center line -->
-  <path d="M32 24 Q28 32 32 40 Q36 48 32 56" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.6"/>
-  
-  <!-- Left leaf -->
-  <path d="M24 27 C16 22 13 10 20 6 C21 14 24 22 24 27 Z" fill="#2FBF71"/>
-  <path d="M24 27 C22 20 19 14 20 6" stroke="#123C2A" stroke-width="1" stroke-linecap="round" fill="none"/>
-  
-  <!-- Right leaf -->
-  <path d="M32 26 C32 18 38 8 46 7 C42 14 36 21 32 26 Z" fill="#2FBF71"/>
-  <path d="M32 26 C35 20 40 13 46 7" stroke="#123C2A" stroke-width="1" stroke-linecap="round" fill="none"/>
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Globe base -->
+  <circle cx="24" cy="24" r="18" fill="#123C2A"/>
+
+  <!-- Globe grid lines in mint -->
+  <path d="M24 6C14.0589 6 6 14.0589 6 24C6 33.9411 14.0589 42 24 42" stroke="#2FBF71" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/>
+  <path d="M12 16C16 19 21 18 24 16C27 14 31 16 34 18" stroke="#A7E8C1" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M9 25C14 27 18 25 22 23C26 21 31 23 37 25" stroke="#A7E8C1" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M14 34C18 32 23 34 26 33C29 32 32 33 35 32" stroke="#A7E8C1" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Sprouting leaf 1 (Left) -->
+  <path d="M14 36C12 28 14 18 22 12C20 18 21 27 14 36Z" fill="#2FBF71"/>
+  <path d="M14 36C17 26 23 18 22 12" stroke="#123C2A" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Sprouting leaf 2 (Right) -->
+  <path d="M24 37C23 27 28 17 38 12C36 19 35 28 24 37Z" fill="#2FBF71"/>
+  <path d="M24 37C29 27 34 18 38 12" stroke="#123C2A" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Orbit ring -->
+  <ellipse cx="24" cy="24" rx="22" ry="8" transform="rotate(-24 24 24)" stroke="#2FBF71" stroke-width="1.8" stroke-dasharray="4 2"/>
 </svg>
