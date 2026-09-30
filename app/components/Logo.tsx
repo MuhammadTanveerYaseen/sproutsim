@@ -98,22 +98,42 @@ export function SproutSimIcon({ className = "w-8 h-8" }: { className?: string })
   );
 }
 
-// Image-based logo using the actual brand file
+// Full horizontal logo using the actual brand file
 export function SproutSimLogoImage({
-  width = 36,
-  height = 36,
+  height = 42,
   className = "",
 }: {
   width?: number;
   height?: number;
   className?: string;
 }) {
+  const width = Math.round(height * 3);
   return (
     <Image
       src="/sproutsim-logo.jpg"
-      alt="SproutSIM Logo"
+      alt="SproutSIM - Stay Connected Anywhere"
       width={width}
       height={height}
+      className={`h-auto object-contain rounded-lg ${className}`}
+      priority
+    />
+  );
+}
+
+// Icon-only logo using the square app icon file
+export function SproutSimIconImage({
+  size = 40,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <Image
+      src="/sproutsim-icon.jpg"
+      alt="SproutSIM Icon"
+      width={size}
+      height={size}
       className={`rounded-xl object-cover ${className}`}
       priority
     />
@@ -125,40 +145,32 @@ export default function Logo({
   variant = "dark",
   size = "md",
 }: LogoProps) {
-  const isDark = variant === "white";
-
   const sizeMap = {
-    sm: { px: 28, text: "text-lg", sub: "text-[9px]" },
-    md: { px: 36, text: "text-xl", sub: "text-[10px]" },
-    lg: { px: 48, text: "text-2xl", sub: "text-xs" },
+    sm: { height: 38, width: 114, iconSize: 36 },
+    md: { height: 48, width: 144, iconSize: 44 },
+    lg: { height: 56, width: 168, iconSize: 52 },
   }[size];
 
   if (variant === "iconOnly") {
     return (
-      <SproutSimLogoImage width={sizeMap.px} height={sizeMap.px} />
+      <SproutSimIconImage
+        size={sizeMap.iconSize}
+        className={className}
+      />
     );
   }
 
   return (
-    <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
-      {/* Use real brand image as icon */}
-      <SproutSimLogoImage width={sizeMap.px} height={sizeMap.px} />
-      <div className="flex flex-col leading-none">
-        <span
-          className={`font-extrabold tracking-tight ${sizeMap.text} ${
-            isDark ? "text-white" : "text-[#123C2A]"
-          }`}
-        >
-          SPROUT<span className="text-[#2FBF71]">SIM</span>
-        </span>
-        <span
-          className={`tracking-[0.16em] uppercase font-semibold mt-0.5 ${sizeMap.sub} ${
-            isDark ? "text-[#A7E8C1]" : "text-[#5E6E66]"
-          }`}
-        >
-          Stay Connected Anywhere.
-        </span>
-      </div>
+    <div className={`inline-flex items-center select-none ${className}`}>
+      <Image
+        src="/sproutsim-logo.jpg"
+        alt="SproutSIM - Stay Connected Anywhere"
+        width={sizeMap.width}
+        height={sizeMap.height}
+        style={{ height: `${sizeMap.height}px`, width: "auto" }}
+        className="rounded-xl object-contain shadow-sm border border-emerald-950/20 bg-black brightness-110 contrast-115 transition-transform hover:scale-[1.02]"
+        priority
+      />
     </div>
   );
 }
