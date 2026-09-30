@@ -22,20 +22,22 @@ export const metadata: Metadata = {
     siteName: "SproutSIM",
     locale: "en_PK",
     type: "website",
+    images: [{ url: "/og-image.jpg", width: 1080, height: 1080, alt: "SproutSIM Logo" }],
   },
   twitter: {
     card: "summary",
     title: "SproutSIM – Pakistan Non-PTA eSIM Data",
     description:
       "High-speed 4G data for Non-PTA devices in Pakistan. Zero PTA tax. Instant QR delivery.",
+    images: ["/og-image.jpg"],
   },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
     ],
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    shortcut: "/sproutsim-logo.jpg",
+    apple: "/apple-icon.jpg",
     other: [
       { rel: "mask-icon", url: "/favicon.svg", color: "#123C2A" },
     ],
