@@ -1,8 +1,8 @@
 import React from "react";
 import Logo from "./Logo";
-import { ShieldCheck, Radio, Signal, ArrowUp, Mail, Phone } from "lucide-react";
+import { ShieldCheck, Mail, Lock } from "lucide-react";
 
-export function SocialIcon({ platform }: { platform: "instagram" | "facebook" | "x" | "linkedin" | "tiktok" | "whatsapp" }) {
+function SocialIcon({ platform }: { platform: "instagram" | "facebook" | "x" | "linkedin" | "tiktok" | "whatsapp" }) {
   switch (platform) {
     case "instagram":
       return (
@@ -56,7 +56,7 @@ export default function Footer() {
     { name: "X (Twitter)", platform: "x" as const, url: "https://x.com/sproutsim" },
     { name: "LinkedIn", platform: "linkedin" as const, url: "https://linkedin.com/company/sproutsim" },
     { name: "TikTok", platform: "tiktok" as const, url: "https://tiktok.com/@sproutsim" },
-    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/?text=Hi%20SproutSIM" },
+    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/?text=Hi%20SproutSIM%20Non-PTA%20Support" },
   ];
 
   return (
@@ -70,17 +70,17 @@ export default function Footer() {
           <div className="lg:col-span-5 space-y-4">
             <Logo variant="white" size="md" />
             <p className="text-xs text-[#A7E8C1] leading-relaxed max-w-sm">
-              SproutSIM delivers fast, reliable, and affordable 4G LTE prepaid eSIM data packages across Pakistan — eliminating the hassle of physical plastic SIM cards, airport queues, and steep roaming fees.
+              SproutSIM is Pakistan&apos;s leading international roaming data service engineered specifically for Non-PTA iPhones &amp; Androids. Stay connected 365 days a year without paying heavy PTA device registration taxes.
             </p>
 
             <div className="pt-1 text-[11px] text-[#A7E8C1] space-y-1 font-medium">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2FBF71]"></span>
-                <span>Supported on Jazz, Zong, Telenor &amp; Ufone</span>
+                <span>Zero PTA Device Tax • Never Blocked</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2FBF71]"></span>
-                <span>Instant Digital QR Code Email Delivery</span>
+                <span>Instant Hostinger Business Email Dispatch</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#2FBF71]" />
@@ -90,7 +90,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Social Media Links Row */}
+            {/* Social Media Links */}
             <div className="pt-2">
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#2FBF71] mb-2.5">
                 Connect With Us
@@ -118,66 +118,71 @@ export default function Footer() {
             {/* Quick Links */}
             <div className="space-y-2.5">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#2FBF71]">
-                Pakistan eSIM
+                Non-PTA Packages
               </h4>
               <ul className="space-y-1.5 text-xs font-semibold text-[#F5F7F2]">
                 <li>
                   <a href="#plans" className="hover:text-[#2FBF71] transition-colors">
-                    1 GB Starter Pack
+                    1 GB Starter Trial
                   </a>
                 </li>
                 <li>
                   <a href="#plans" className="hover:text-[#2FBF71] transition-colors">
-                    3 GB Traveler Plus
+                    3 GB Weekly Pass
                   </a>
                 </li>
                 <li>
                   <a href="#plans" className="hover:text-[#2FBF71] transition-colors">
-                    10 GB Explorer (Hot)
+                    10 GB Monthly (Hot)
                   </a>
                 </li>
                 <li>
                   <a href="#plans" className="hover:text-[#2FBF71] transition-colors">
-                    50 GB Nomad Ultra
+                    20 GB Pro Streamer
                   </a>
                 </li>
                 <li>
                   <a href="#plans" className="hover:text-[#2FBF71] transition-colors">
-                    Unlimited Pakistan
+                    50 GB Power User
+                  </a>
+                </li>
+                <li>
+                  <a href="#plans" className="hover:text-[#2FBF71] transition-colors">
+                    Unlimited VIP (30D)
                   </a>
                 </li>
               </ul>
             </div>
 
-            {/* Coverage Cities */}
+            {/* Non-PTA Devices */}
             <div className="space-y-2.5">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#2FBF71]">
-                Coverage
+                Supported Devices
               </h4>
               <ul className="space-y-1.5 text-xs font-semibold text-[#F5F7F2]">
                 <li>
-                  <a href="#coverage" className="hover:text-[#2FBF71] transition-colors">
-                    Karachi 4G LTE
+                  <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
+                    Non-PTA iPhone 16 / 15
                   </a>
                 </li>
                 <li>
-                  <a href="#coverage" className="hover:text-[#2FBF71] transition-colors">
-                    Lahore Super 4G
+                  <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
+                    Non-PTA iPhone 14 / 13
                   </a>
                 </li>
                 <li>
-                  <a href="#coverage" className="hover:text-[#2FBF71] transition-colors">
-                    Islamabad &amp; Pindi
+                  <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
+                    Non-PTA iPhone 12 / 11
                   </a>
                 </li>
                 <li>
-                  <a href="#coverage" className="hover:text-[#2FBF71] transition-colors">
-                    Hunza &amp; Skardu
+                  <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
+                    Samsung Galaxy S24 / S23
                   </a>
                 </li>
                 <li>
-                  <a href="#coverage" className="hover:text-[#2FBF71] transition-colors">
-                    Peshawar &amp; Quetta
+                  <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
+                    Google Pixel 9 / 8 / 7
                   </a>
                 </li>
               </ul>
@@ -190,23 +195,23 @@ export default function Footer() {
               </h4>
               <ul className="space-y-1.5 text-xs font-semibold text-[#F5F7F2]">
                 <li>
+                  <a href="#why-non-pta" className="hover:text-[#2FBF71] transition-colors">
+                    Zero PTA Tax Guarantee
+                  </a>
+                </li>
+                <li>
                   <a href="#how-it-works" className="hover:text-[#2FBF71] transition-colors">
-                    How It Works
+                    Setup Guide
                   </a>
                 </li>
                 <li>
-                  <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
-                    Device Checker
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-[#2FBF71] transition-colors">
-                    Privacy Policy
+                  <a href="#faq" className="hover:text-[#2FBF71] transition-colors">
+                    Non-PTA FAQ
                   </a>
                 </li>
                 <li>
                   <a href="#" className="hover:text-[#2FBF71] transition-colors">
-                    Terms &amp; Refunds
+                    Privacy &amp; Terms
                   </a>
                 </li>
               </ul>
@@ -219,7 +224,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A7E8C1]">
           <div>
-            &copy; {new Date().getFullYear()} SPROUTSIM PAKISTAN. All Rights Reserved. Stay Connected Anywhere.
+            &copy; {new Date().getFullYear()} SPROUTSIM NON-PTA DATA PAKISTAN. All Rights Reserved.
           </div>
 
           <div className="flex items-center gap-4">

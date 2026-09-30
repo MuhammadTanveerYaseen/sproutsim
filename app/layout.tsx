@@ -2,24 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SPROUTSIM - Stay Connected Anywhere | 190+ Countries eSIM",
+  title: "SproutSIM - Pakistan Non-PTA eSIM Data | Zero PTA Tax",
   description:
-    "Simple global eSIM connectivity for your next journey. Fast, reliable, and affordable travel eSIMs. Get online in minutes across 190+ countries with zero roaming fees.",
+    "Keep your Non-PTA iPhone & Android connected in Pakistan without paying PTA tax. High-speed 4G data that never gets blocked. Instant QR code delivery.",
   keywords: [
-    "eSIM",
+    "Non-PTA eSIM",
+    "Pakistan Non-PTA data",
+    "Non-PTA iPhone data",
+    "eSIM Pakistan without PTA tax",
+    "Non PTA sim Pakistan",
     "SproutSIM",
-    "travel eSIM",
-    "global data",
-    "international roaming",
-    "prepaid eSIM",
-    "unlimited travel data",
   ],
   authors: [{ name: "SPROUTSIM" }],
-  openGraph: {
-    title: "SPROUTSIM - Global Data. Bigger Horizons.",
-    description: "Simple global eSIM connectivity for your next journey. 190+ countries.",
-    type: "website",
-  },
 };
 
 export default function RootLayout({

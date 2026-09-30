@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
 import { CURRENCY_RATES, CurrencyCode } from "../data/destinations";
-import { Globe, ChevronDown, Menu, X, ArrowRight, ShieldCheck, Radio, Signal } from "lucide-react";
+import { Globe, ChevronDown, Menu, X, ArrowRight, ShieldCheck, Smartphone } from "lucide-react";
 
 interface NavbarProps {
   currentCurrency: CurrencyCode;
@@ -23,11 +23,11 @@ export default function Navbar({
 
   return (
     <header className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#E0E7E2]">
-      {/* Top Banner (Solid Forest Green - No emojis) */}
+      {/* Top Banner (Solid Forest Green) */}
       <div className="bg-[#123C2A] text-[#F5F7F2] text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2">
         <span className="inline-block w-2 h-2 rounded-full bg-[#2FBF71]"></span>
         <span>
-          <strong>PAKISTAN eSIM CONNECTIVITY.</strong> Instant activation on Jazz &amp; Zong 4G LTE networks nationwide. Zero roaming charges.
+          <strong>PAKISTAN NON-PTA eSIM DATA.</strong> Keep your Non-PTA iPhone or Android connected with 4G data. Zero PTA tax required.
         </span>
       </div>
 
@@ -45,13 +45,13 @@ export default function Navbar({
               href="#plans"
               className="text-[#1C2420] hover:text-[#2FBF71] text-sm font-semibold transition-colors"
             >
-              Pakistan Plans
+              Non-PTA Plans
             </a>
             <a
-              href="#coverage"
+              href="#why-non-pta"
               className="text-[#1C2420] hover:text-[#2FBF71] text-sm font-semibold transition-colors"
             >
-              Coverage &amp; Networks
+              Zero PTA Tax
             </a>
             <a
               href="#how-it-works"
@@ -60,16 +60,10 @@ export default function Navbar({
               How It Works
             </a>
             <a
-              href="#why-sproutsim"
-              className="text-[#1C2420] hover:text-[#2FBF71] text-sm font-semibold transition-colors"
-            >
-              Why SproutSIM
-            </a>
-            <a
               href="#compatibility"
               className="text-[#1C2420] hover:text-[#2FBF71] text-sm font-semibold transition-colors"
             >
-              Compatibility
+              Non-PTA Devices
             </a>
             <a
               href="#faq"
@@ -114,18 +108,18 @@ export default function Navbar({
               )}
             </div>
 
-            {/* Region / Carrier Badge */}
-            <div className="px-2.5 py-1.5 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-xs font-bold text-[#123C2A] flex items-center gap-1">
-              <Radio className="w-3 h-3 text-[#2FBF71]" />
-              <span>PK 4G</span>
+            {/* Non-PTA Verified Badge */}
+            <div className="px-2.5 py-1.5 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-xs font-bold text-[#123C2A] flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#2FBF71]" />
+              <span>Non-PTA Ready</span>
             </div>
 
-            {/* Primary Action Button (Brand Kit Sprout Green CTA) */}
+            {/* Primary Action Button */}
             <button
               onClick={onOpenPlan}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold tracking-wide uppercase transition-transform active:scale-95"
             >
-              <span>Buy Pakistan eSIM</span>
+              <span>Get Non-PTA eSIM</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -152,14 +146,14 @@ export default function Navbar({
               onClick={() => setMobileMenuOpen(false)}
               className="text-base font-semibold text-[#1C2420] py-1 border-b border-[#F5F7F2]"
             >
-              Pakistan Plans
+              Non-PTA Plans
             </a>
             <a
-              href="#coverage"
+              href="#why-non-pta"
               onClick={() => setMobileMenuOpen(false)}
               className="text-base font-semibold text-[#1C2420] py-1 border-b border-[#F5F7F2]"
             >
-              Coverage &amp; Networks
+              Zero PTA Tax Guarantee
             </a>
             <a
               href="#how-it-works"
@@ -169,18 +163,11 @@ export default function Navbar({
               How It Works
             </a>
             <a
-              href="#why-sproutsim"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-semibold text-[#1C2420] py-1 border-b border-[#F5F7F2]"
-            >
-              Why SproutSIM
-            </a>
-            <a
               href="#compatibility"
               onClick={() => setMobileMenuOpen(false)}
               className="text-base font-semibold text-[#1C2420] py-1 border-b border-[#F5F7F2]"
             >
-              Check Compatibility
+              Supported Non-PTA Devices
             </a>
             <a
               href="#faq"
@@ -219,7 +206,7 @@ export default function Navbar({
               }}
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-sm font-bold tracking-wide uppercase transition-colors"
             >
-              <span>Buy Pakistan eSIM</span>
+              <span>Get Non-PTA eSIM</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

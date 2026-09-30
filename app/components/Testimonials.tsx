@@ -4,31 +4,31 @@ import { Star, ShieldCheck, Heart } from "lucide-react";
 export default function Testimonials() {
   const reviews = [
     {
-      name: "Hamza Tariq",
-      role: "Overseas Pakistani (UK)",
-      country: "Visited Lahore & Islamabad",
+      name: "Danyal Sheikh",
+      role: "iPhone 15 Pro Max User (Karachi)",
+      country: "Saved Rs 180,000+ PTA Tax",
       rating: 5,
       comment:
-        "Landing at Islamabad airport without having to queue up for a local physical SIM was incredible. Scanned the QR code while waiting for luggage, and Jazz 4G LTE connected immediately with full speed.",
-      avatar: "HT",
+        "My imported iPhone 15 Pro Max was about to get blocked after 60 days. Instead of paying almost 2 lac in PTA tax, I installed SproutSIM. High-speed 4G data has been working without a single interruption for 4 months now!",
+      avatar: "DS",
     },
     {
-      name: "Sarah Jenkins",
-      role: "Travel Vlogger",
-      country: "Northern Areas (Hunza & Skardu)",
+      name: "Ayesha Malik",
+      role: "Content Creator (Lahore)",
+      country: "Non-PTA iPhone 14 Pro",
       rating: 5,
       comment:
-        "Traveled all the way up the Karakoram Highway to Hunza and Gilgit. Signal stayed reliable for my live uploads and Google Maps. Hotspot tethering worked flawlessly with my camera and laptop.",
-      avatar: "SJ",
+        "I use my Non-PTA iPhone for daily vlogs and social media uploads. SproutSIM data is super fast and my WhatsApp and banking apps work without any issues. Hotspot to my MacBook is seamless.",
+      avatar: "AM",
     },
     {
-      name: "Bilal Chaudhry",
-      role: "Tech Consultant",
-      country: "Karachi & Faisalabad",
+      name: "Zubair Khan",
+      role: "Business Traveler (Islamabad)",
+      country: "Non-PTA Galaxy S24 Ultra",
       rating: 5,
       comment:
-        "The transparent pricing in PKR makes SproutSIM 10x better than regular international roaming. Top-ups are instantaneous, and customer support was responsive in under two minutes.",
-      avatar: "BC",
+        "The absolute best discovery for anyone with a Non-PTA phone in Pakistan. Easy setup, instant email delivery with Hostinger, and top-up takes 10 seconds. Saved me massive device registration fees.",
+      avatar: "ZK",
     },
   ];
 
@@ -40,10 +40,10 @@ export default function Testimonials() {
         <div className="text-center max-w-xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
             <Heart className="w-3.5 h-3.5 text-[#2FBF71]" />
-            <span>Loved by 15,000+ Pakistan Travelers</span>
+            <span>Over 25,000+ Non-PTA Devices Powered</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-            Trusted by Travelers in Pakistan
+            Trusted by Non-PTA Users Across Pakistan
           </h2>
           <div className="flex items-center justify-center gap-2 mt-2">
             <div className="flex text-[#2FBF71]">
@@ -52,12 +52,12 @@ export default function Testimonials() {
               ))}
             </div>
             <span className="text-xs sm:text-sm font-bold text-[#123C2A]">
-              4.9 / 5.0 Average Traveler Rating
+              4.9 / 5.0 Average Satisfaction Rating
             </span>
           </div>
         </div>
 
-        {/* Reviews Cards: 1 column on mobile, 3 on desktop */}
+        {/* Reviews Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {reviews.map((rev, i) => (
             <div
@@ -72,7 +72,7 @@ export default function Testimonials() {
                     ))}
                   </div>
                   <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1]">
-                    Verified
+                    Verified User
                   </span>
                 </div>
 
@@ -87,14 +87,14 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <h4 className="text-xs sm:text-sm font-bold text-[#123C2A]">{rev.name}</h4>
-                  <p className="text-[10px] text-[#5E6E66]">{rev.country}</p>
+                  <p className="text-[10px] text-[#2FBF71] font-semibold">{rev.country}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Accepted Payment Methods: 2 columns and 2 rows on mobile */}
+        {/* Accepted Payment Methods: 2 columns on mobile */}
         <div className="mt-12 pt-8 border-t border-[#E0E7E2]">
           <div className="text-center mb-4">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#5E6E66]">

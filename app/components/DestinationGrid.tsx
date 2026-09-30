@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { PAKISTAN_PLANS, PAKISTAN_CITIES, PakistanPackage, CURRENCY_RATES, CurrencyCode } from "../data/destinations";
-import { Signal, Radio, Wifi, Check, ArrowRight, Sparkles, MapPin, Smartphone, ShieldCheck } from "lucide-react";
+import { PAKISTAN_PLANS, NON_PTA_FEATURES, PakistanPackage, CURRENCY_RATES, CurrencyCode } from "../data/destinations";
+import { ShieldCheck, Smartphone, Check, ArrowRight, Zap, Wifi, Lock, HelpCircle } from "lucide-react";
 
 interface DestinationGridProps {
   currency: CurrencyCode;
@@ -39,27 +39,24 @@ export default function DestinationGrid({
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
-              <Signal className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>Nationwide 4G LTE</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-[#2FBF71]" />
+              <span>Zero PTA Tax Required</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-              Pakistan eSIM Data Packages
+              Pakistan Non-PTA eSIM Data Plans
             </h2>
             <p className="text-xs sm:text-sm text-[#5E6E66] mt-1 max-w-xl">
-              High-speed prepaid data for travelers, overseas Pakistanis, and locals. Connect directly to Jazz, Zong &amp; Telenor.
+              Engineered exclusively for Non-PTA iPhones &amp; Android devices in Pakistan. Keep WhatsApp, Google Maps, banking apps, and high-speed data active without paying IMEI tax.
             </p>
           </div>
 
-          {/* Network Badges */}
+          {/* Badges */}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#F5F7F2] border border-[#E0E7E2] text-[#123C2A]">
-              Jazz 4G
+            <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A]">
+              100% Non-PTA Safe
             </span>
             <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#F5F7F2] border border-[#E0E7E2] text-[#123C2A]">
-              Zong Super 4G
-            </span>
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#F5F7F2] border border-[#E0E7E2] text-[#123C2A]">
-              Telenor
+              No 60-Day Block
             </span>
           </div>
         </div>
@@ -76,7 +73,7 @@ export default function DestinationGrid({
                   : "bg-[#F5F7F2] text-[#1C2420] border border-[#E0E7E2] hover:border-[#123C2A]"
               }`}
             >
-              {tier === "All" ? "All Packages" : tier}
+              {tier === "All" ? "All Non-PTA Plans" : tier}
             </button>
           ))}
         </div>
@@ -112,28 +109,32 @@ export default function DestinationGrid({
                   </div>
 
                   <span className="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1] whitespace-nowrap">
-                    4G LTE
+                    Non-PTA
                   </span>
                 </div>
 
-                {/* Network carrier details */}
+                {/* Details */}
                 <div className="my-2 p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2]/70 text-[10px] sm:text-xs text-[#5E6E66] font-semibold space-y-1">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <Radio className="w-3 h-3 text-[#2FBF71] flex-shrink-0" />
-                    <span className="truncate">{pkg.networks.slice(0, 2).join(" & ")}</span>
+                  <div className="flex items-center gap-1.5 text-[#123C2A]">
+                    <ShieldCheck className="w-3 h-3 text-[#2FBF71] flex-shrink-0" />
+                    <span className="truncate">{pkg.ptaStatus}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-[#123C2A]">
-                    <Check className="w-3 h-3 text-[#2FBF71] flex-shrink-0" />
-                    <span>Free Hotspot Sharing</span>
+                    <Wifi className="w-3 h-3 text-[#2FBF71] flex-shrink-0" />
+                    <span>Free Hotspot Tethering</span>
                   </div>
                 </div>
+
+                <p className="text-[10px] text-[#5E6E66] hidden sm:block">
+                  {pkg.idealFor}
+                </p>
               </div>
 
               {/* Bottom: Price & Button */}
               <div className="pt-2 sm:pt-3 border-t border-[#E0E7E2] mt-2">
                 <div className="mb-2">
                   <span className="text-[9px] sm:text-[10px] uppercase font-semibold text-[#5E6E66] block">
-                    Price
+                    Zero PTA Tax Price
                   </span>
                   <span className="text-sm sm:text-xl font-extrabold text-[#123C2A] block leading-tight">
                     {formatPrice(pkg)}
@@ -152,40 +153,37 @@ export default function DestinationGrid({
           ))}
         </div>
 
-        {/* Pakistan Coverage Showcase: Exact 2 columns and 2 rows on mobile */}
-        <div id="coverage" className="pt-8 border-t border-[#E0E7E2]">
+        {/* Why Non-PTA Devices Stay Connected Section: Exact 2 columns and 2 rows on mobile */}
+        <div id="why-non-pta" className="pt-8 border-t border-[#E0E7E2]">
           <div className="text-center max-w-xl mx-auto mb-8">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
-              <MapPin className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>Coverage Across Pakistan</span>
+              <Lock className="w-3.5 h-3.5 text-[#2FBF71]" />
+              <span>How It Works Legally</span>
             </div>
             <h3 className="text-xl sm:text-3xl font-extrabold text-[#123C2A]">
-              Tested Across All Major Pakistani Cities
+              How SproutSIM Works on Non-PTA Phones
             </h3>
             <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-              Seamless 4G LTE data with automatic switching to the strongest local mast.
+              Local physical SIMs get IMEI-blocked by PTA after 60 days. Our international roaming profile is officially exempt from local PTA block lists.
             </p>
           </div>
 
           {/* 2 Columns & 2 Rows on Mobile */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
-            {PAKISTAN_CITIES.map((city) => (
+            {NON_PTA_FEATURES.map((feat) => (
               <div
-                key={city.id}
+                key={feat.id}
                 className="bg-[#F5F7F2] rounded-2xl border-2 border-[#E0E7E2] p-3.5 sm:p-4 hover:border-[#123C2A] transition-colors"
               >
                 <div className="w-8 h-8 rounded-xl bg-[#123C2A] text-[#2FBF71] flex items-center justify-center mb-2.5">
-                  <MapPin className="w-4 h-4" />
+                  <ShieldCheck className="w-4 h-4" />
                 </div>
                 <h4 className="text-xs sm:text-sm font-extrabold text-[#123C2A]">
-                  {city.cityName}
+                  {feat.title}
                 </h4>
-                <div className="text-[10px] sm:text-xs font-bold text-[#2FBF71] mt-0.5">
-                  {city.coverageSpeed}
-                </div>
-                <div className="text-[10px] text-[#5E6E66] mt-2 pt-2 border-t border-[#E0E7E2]">
-                  Carriers: {city.primaryCarriers.join(", ")}
-                </div>
+                <p className="text-[10px] text-[#5E6E66] mt-1">
+                  {feat.desc}
+                </p>
               </div>
             ))}
           </div>

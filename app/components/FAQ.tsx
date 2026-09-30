@@ -1,35 +1,35 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { ChevronDown, HelpCircle, ShieldCheck } from "lucide-react";
 
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   const faqs = [
     {
-      q: "How does the Pakistan eSIM work on Jazz & Zong?",
-      a: "Our Pakistan travel eSIM connects directly to local cellular infrastructure across Pakistan, including Jazz (Pakistan's largest 4G provider) and Zong Super 4G. You scan a QR code to download the profile to your device, giving you instant data access upon landing.",
+      q: "Does this truly work on Non-PTA iPhones & Android phones?",
+      a: "Yes, 100%! SproutSIM is an international roaming data profile. In Pakistan, PTA blocks local Pakistani physical SIM cards (like Jazz, Zong, Telenor, Ufone) from latching onto towers if the device's IMEI hasn't paid PTA tax. However, international roaming data profiles are exempt from local device block lists and operate normally.",
     },
     {
-      q: "Will my WhatsApp and personal home number still work?",
-      a: "Yes! Your existing physical SIM or main eSIM remains fully active for receiving incoming calls and SMS verification codes. Your WhatsApp account stays unchanged and continues working seamlessly on SproutSIM's high-speed Pakistan data.",
+      q: "Will my Non-PTA device get blocked after 60 days?",
+      a: "No! The 60-day limit only applies to local Pakistani SIMs inserted into Non-PTA hardware. Because SproutSIM operates over global roaming protocols, it does not trigger the 60-day PTA timer. You can use it year-round by simply renewing or topping up your data allowance.",
     },
     {
-      q: "Do I need a Pakistani CNIC or local ID to activate?",
-      a: "No! SproutSIM data packages are 100% digital prepaid travel packages. You do not need a Pakistani CNIC, passport upload, or franchise visit. Activation happens instantly upon QR code scanning.",
+      q: "Can I make voice calls and use WhatsApp on my Non-PTA phone?",
+      a: "Yes! All your internet-based calling apps — including WhatsApp audio/video calls, FaceTime, Zoom, Telegram, and Messenger — work in crystal-clear HD. You also keep your original WhatsApp number even if the phone has no local physical SIM.",
     },
     {
-      q: "Can I share data via Personal Hotspot with my laptop or family?",
-      a: "Yes! All Pakistan plans feature unrestricted Personal Hotspot tethering. You can connect your laptop, iPad, or travel companions' devices freely.",
+      q: "Can I share my Non-PTA data with other devices using Hotspot?",
+      a: "Absolutely! Personal Hotspot and tethering are completely unlocked. You can turn on your Non-PTA iPhone hotspot and provide internet to your laptop, tablet, or another phone anywhere in Pakistan.",
     },
     {
-      q: "Does it work in Northern Areas (Hunza, Skardu, Gilgit)?",
-      a: "Yes! Our profiles switch automatically to local partner networks across Gilgit-Baltistan and Kashmir, giving you reliable coverage for navigation and maps in mountainous regions.",
+      q: "Do I need to provide a Pakistani CNIC or visit a franchise?",
+      a: "No paperwork or franchise visits are required. SproutSIM is 100% digital. You purchase your package online, receive your QR code via Hostinger business email, scan it into your phone's cellular settings, and get online instantly.",
     },
     {
-      q: "Can I top up if I run out of gigabytes during my stay in Pakistan?",
-      a: "Yes! You can top up anytime from our website or app with 1 click. You do not need to install a new eSIM or rescan any QR code.",
+      q: "What happens if I run out of data before the month ends?",
+      a: "You can top up additional gigabytes right from the SproutSIM website with 1 click. You never need to reinstall the eSIM or scan a new QR code.",
     },
   ];
 
@@ -41,13 +41,13 @@ export default function FAQ() {
         <div className="text-center max-w-xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
             <HelpCircle className="w-3.5 h-3.5 text-[#2FBF71]" />
-            <span>Got Questions?</span>
+            <span>Non-PTA Questions Answered</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-            Pakistan eSIM FAQ
+            Frequently Asked Questions
           </h2>
           <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-            Common questions about traveling connected in Pakistan.
+            Everything you need to know about keeping your Non-PTA phone connected in Pakistan.
           </p>
         </div>
 

@@ -80,23 +80,24 @@ export async function sendEsimOrderEmail(payload: EsimEmailPayload) {
           </div>
 
           <div class="order-box">
-            <div class="order-row"><span>Destination</span><strong>Pakistan (Jazz &amp; Zong 4G)</strong></div>
+            <div class="order-row"><span>Destination</span><strong>Pakistan (Non-PTA Compatible)</strong></div>
+            <div class="order-row"><span>Device Status</span><strong>Zero PTA Tax Required</strong></div>
             <div class="order-row"><span>Data Package</span><strong>${payload.dataAllowance}</strong></div>
             <div class="order-row"><span>Validity</span><strong>${payload.validity}</strong></div>
             <div class="order-row"><span>Amount Paid</span><strong>${payload.priceFormatted}</strong></div>
           </div>
 
           <div class="qr-placeholder">
-            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #A7E8C1; letter-spacing: 0.5px;">Manual Activation Details</div>
+            <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #A7E8C1; letter-spacing: 0.5px;">Non-PTA Activation Code</div>
             <div class="code-box">${lpaCode}</div>
             <div style="font-size: 11px; color: #A7E8C1;">SM-DP+ Address: ${smdp}</div>
           </div>
 
           <div class="steps">
-            <div style="font-weight: 800; font-size: 14px; color: #123C2A; margin-bottom: 10px;">Quick Setup Guide:</div>
-            <div class="step-item">1. Go to <strong>Settings &rarr; Cellular / Mobile Service &rarr; Add eSIM</strong> on your device.</div>
+            <div style="font-weight: 800; font-size: 14px; color: #123C2A; margin-bottom: 10px;">Quick Non-PTA Device Setup:</div>
+            <div class="step-item">1. Open <strong>Settings &rarr; Cellular / Mobile Service &rarr; Add eSIM</strong> on your Non-PTA phone.</div>
             <div class="step-item">2. Scan your QR code or paste the activation code above.</div>
-            <div class="step-item">3. Turn on <strong>Data Roaming</strong> when landing in Pakistan.</div>
+            <div class="step-item">3. Turn on <strong>Data Roaming</strong>. Your Non-PTA phone connects to high-speed data immediately.</div>
           </div>
 
           <p style="font-size: 12px; color: #5E6E66; text-align: center;">

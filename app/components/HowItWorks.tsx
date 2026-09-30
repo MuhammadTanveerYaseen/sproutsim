@@ -1,34 +1,34 @@
 import React from "react";
-import { Compass, CreditCard, QrCode, Wifi, ArrowRight } from "lucide-react";
+import { Compass, CreditCard, QrCode, Wifi } from "lucide-react";
 
 export default function HowItWorks() {
   const steps = [
     {
       num: "01",
       icon: Compass,
-      title: "Choose Data Package",
-      desc: "Select the GB allowance for your stay in Pakistan (from 1 GB up to Unlimited).",
+      title: "Choose Data Allowance",
+      desc: "Select the GB package tailored for your Non-PTA device (1 GB trial up to Unlimited).",
       badge: "Step One",
     },
     {
       num: "02",
       icon: CreditCard,
       title: "Instant Digital Checkout",
-      desc: "Pay securely with Card, Google Pay, or Apple Pay. Zero passport verification needed.",
+      desc: "Pay securely in PKR or USD. No Pakistani CNIC, passport, or franchise biometric needed.",
       badge: "Step Two",
     },
     {
       num: "03",
       icon: QrCode,
-      title: "Scan & Install eSIM",
-      desc: "Scan the QR code emailed directly to you. Takes under 60 seconds on any compatible phone.",
+      title: "Scan on Non-PTA Phone",
+      desc: "Go to Settings &rarr; Cellular &rarr; Add eSIM and scan your QR code. Takes under 60 seconds.",
       badge: "Step Three",
     },
     {
       num: "04",
       icon: Wifi,
-      title: "Connect to 4G LTE",
-      desc: "Turn on data roaming upon landing in Pakistan. Enjoy superfast Jazz & Zong connectivity.",
+      title: "Turn on Roaming & Enjoy",
+      desc: "Enable Data Roaming. Your Non-PTA phone connects to high-speed 4G data that never gets blocked.",
       badge: "Step Four",
     },
   ];
@@ -40,13 +40,13 @@ export default function HowItWorks() {
         {/* Header */}
         <div className="text-center max-w-xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
-            <span>Simple 4-Step Flow</span>
+            <span>Simple 4-Step Process</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-            How Pakistan eSIM Works
+            How to Setup Your Non-PTA eSIM
           </h2>
           <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-            Get connected before or after landing in Pakistan without visiting a franchise or airport counter.
+            Activate data on any Non-PTA smartphone in under 2 minutes without paying any PTA tax.
           </p>
         </div>
 
@@ -83,7 +83,7 @@ export default function HowItWorks() {
                 </div>
 
                 <div className="mt-3 pt-2 border-t border-[#F5F7F2] text-[10px] font-bold text-[#2FBF71]">
-                  Instant Setup
+                  Zero PTA Tax
                 </div>
               </div>
             );

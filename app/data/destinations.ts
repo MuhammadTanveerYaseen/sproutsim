@@ -1,14 +1,3 @@
-export interface EsimPlan {
-  id: string;
-  data: string;
-  validity: string;
-  priceUSD: number;
-  pricePKR: number;
-  popular?: boolean;
-  unlimited?: boolean;
-  features?: string[];
-}
-
 export interface PakistanPackage {
   id: string;
   name: string;
@@ -18,18 +7,9 @@ export interface PakistanPackage {
   priceUSD: number;
   pricePKR: number;
   popular?: boolean;
-  networks: string[];
-  speeds: string[];
+  ptaStatus: string;
   tethering: boolean;
-  callsSms: string;
-}
-
-export interface PakistanCityCoverage {
-  id: string;
-  cityName: string;
-  province: string;
-  coverageSpeed: string;
-  primaryCarriers: string[];
+  idealFor: string;
 }
 
 export const CURRENCY_RATES = {
@@ -44,118 +24,104 @@ export type CurrencyCode = keyof typeof CURRENCY_RATES;
 
 export const PAKISTAN_PLANS: PakistanPackage[] = [
   {
-    id: "pk-1gb",
-    name: "Starter Lite",
+    id: "non-pta-1gb",
+    name: "Starter Trial",
     tier: "Standard",
     data: "1 GB",
     validity: "7 Days",
-    priceUSD: 1.49,
-    pricePKR: 415,
+    priceUSD: 1.89,
+    pricePKR: 525,
     popular: false,
-    networks: ["Jazz 4G", "Zong 4G"],
-    speeds: ["4G LTE"],
+    ptaStatus: "100% Non-PTA Compatible",
     tethering: true,
-    callsSms: "Data Only / WhatsApp Calls",
+    idealFor: "Testing Non-PTA connection & emergency data",
   },
   {
-    id: "pk-3gb",
-    name: "Traveler Plus",
+    id: "non-pta-3gb",
+    name: "Weekly Pack",
     tier: "Standard",
     data: "3 GB",
     validity: "15 Days",
-    priceUSD: 3.49,
-    pricePKR: 970,
+    priceUSD: 3.99,
+    pricePKR: 1110,
     popular: false,
-    networks: ["Jazz 4G", "Zong 4G", "Telenor"],
-    speeds: ["4G LTE High-Speed"],
+    ptaStatus: "100% Non-PTA Compatible",
     tethering: true,
-    callsSms: "Data Only / WhatsApp Calls",
+    idealFor: "Short visits & WhatsApp navigation",
   },
   {
-    id: "pk-10gb",
-    name: "Explorer Choice",
+    id: "non-pta-10gb",
+    name: "Monthly Freedom",
     tier: "Popular",
     data: "10 GB",
     validity: "30 Days",
-    priceUSD: 7.99,
-    pricePKR: 2225,
+    priceUSD: 8.99,
+    pricePKR: 2500,
     popular: true,
-    networks: ["Jazz 4G", "Zong 4G", "Telenor", "Ufone"],
-    speeds: ["Super 4G LTE"],
+    ptaStatus: "100% Non-PTA Compatible",
     tethering: true,
-    callsSms: "Data Only / WhatsApp Calls",
+    idealFor: "Most popular for daily Non-PTA iPhone users",
   },
   {
-    id: "pk-20gb",
-    name: "Power User",
+    id: "non-pta-20gb",
+    name: "Pro Streamer",
     tier: "Heavy",
     data: "20 GB",
     validity: "30 Days",
-    priceUSD: 13.99,
-    pricePKR: 3890,
+    priceUSD: 15.99,
+    pricePKR: 4450,
     popular: false,
-    networks: ["Jazz 4G", "Zong 4G", "Telenor", "Ufone"],
-    speeds: ["Super 4G LTE"],
+    ptaStatus: "100% Non-PTA Compatible",
     tethering: true,
-    callsSms: "Data Only / WhatsApp Calls",
+    idealFor: "Social media, YouTube, Hotspot & calls",
   },
   {
-    id: "pk-50gb",
-    name: "Nomad Ultra",
-    tier: "Max",
+    id: "non-pta-50gb",
+    name: "Power User",
+    tier: "Heavy",
     data: "50 GB",
     validity: "30 Days",
-    priceUSD: 24.99,
-    pricePKR: 6960,
+    priceUSD: 29.99,
+    pricePKR: 8350,
     popular: false,
-    networks: ["Jazz 4G", "Zong 4G", "Telenor"],
-    speeds: ["Super 4G LTE"],
+    ptaStatus: "100% Non-PTA Compatible",
     tethering: true,
-    callsSms: "Data Only / WhatsApp Calls",
+    idealFor: "Nomads, laptop tethering & remote work",
   },
   {
-    id: "pk-unl",
-    name: "Unlimited Max",
+    id: "non-pta-unl",
+    name: "Unlimited VIP",
     tier: "Max",
     data: "Unlimited",
-    validity: "15 Days",
-    priceUSD: 32.99,
-    pricePKR: 9190,
+    validity: "30 Days",
+    priceUSD: 44.99,
+    pricePKR: 12530,
     popular: false,
-    networks: ["Jazz 4G", "Zong 4G"],
-    speeds: ["Super 4G LTE"],
+    ptaStatus: "100% Non-PTA Compatible",
     tethering: true,
-    callsSms: "Data Only / WhatsApp Calls",
+    idealFor: "Uncapped high-speed 4G data for 30 days",
   },
 ];
 
-export const PAKISTAN_CITIES: PakistanCityCoverage[] = [
+export const NON_PTA_FEATURES = [
   {
-    id: "karachi",
-    cityName: "Karachi",
-    province: "Sindh",
-    coverageSpeed: "Full 4G+ Coverage",
-    primaryCarriers: ["Jazz", "Zong"],
+    id: "no-tax",
+    title: "Zero PTA Tax",
+    desc: "Avoid paying Rs 100,000 to Rs 250,000+ PTA device registration tax.",
   },
   {
-    id: "lahore",
-    cityName: "Lahore",
-    province: "Punjab",
-    coverageSpeed: "High-Speed 4G LTE",
-    primaryCarriers: ["Jazz", "Zong"],
+    id: "no-block",
+    title: "Never Gets Blocked",
+    desc: "Works continuously on Non-PTA phones via international roaming data.",
   },
   {
-    id: "islamabad",
-    cityName: "Islamabad & Rawalpindi",
-    province: "Capital / Punjab",
-    coverageSpeed: "Full 4G+ Coverage",
-    primaryCarriers: ["Jazz", "Zong", "Telenor"],
+    id: "hotspot",
+    title: "Free Hotspot Sharing",
+    desc: "Tether your Non-PTA data seamlessly to your laptop or other phones.",
   },
   {
-    id: "northern-areas",
-    cityName: "Northern Areas (Hunza, Skardu, Gilgit)",
-    province: "Gilgit-Baltistan",
-    coverageSpeed: "Mountain 4G Data",
-    primaryCarriers: ["SCOM", "Zong", "Jazz"],
+    id: "instant",
+    title: "Instant QR Setup",
+    desc: "Scan and connect in under 60 seconds without CNIC biometric queues.",
   },
 ];

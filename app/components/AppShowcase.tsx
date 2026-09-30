@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Smartphone, ArrowRight, Wifi, Battery, Search, Home, Compass, Signal, User } from "lucide-react";
+import { Check, ArrowRight, Wifi, Battery, Search, Home, Compass, Signal, User, ShieldCheck, Lock } from "lucide-react";
 import Logo from "./Logo";
 
 export default function AppShowcase() {
@@ -15,15 +15,15 @@ export default function AppShowcase() {
           {/* Left Text & 2x2 Mobile Feature Grid */}
           <div className="lg:col-span-6 space-y-5">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider">
-              <span>SproutSIM Mobile App</span>
+              <span>Non-PTA Mobile Management</span>
             </div>
 
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight leading-tight">
-              Manage Your Pakistan eSIM on the Go.
+              Manage Your Non-PTA Connection in Real Time.
             </h2>
 
             <p className="text-xs sm:text-base text-[#5E6E66] leading-relaxed">
-              Track live data consumption, top up gigabytes with 1 tap, and keep your connection active wherever you travel across Pakistan. Available on iOS &amp; Android.
+              Track live data consumption, check renewal dates, and top up gigabytes with 1 tap. Your Non-PTA device stays protected and connected 24/7 anywhere in Pakistan.
             </p>
 
             {/* 2 Columns & 2 Rows on Mobile for Features */}
@@ -33,7 +33,7 @@ export default function AppShowcase() {
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
                 <span className="text-[11px] sm:text-xs font-bold text-[#1C2420]">
-                  Track Live Data Usage
+                  Zero PTA Block Risk
                 </span>
               </div>
 
@@ -51,7 +51,7 @@ export default function AppShowcase() {
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
                 <span className="text-[11px] sm:text-xs font-bold text-[#1C2420]">
-                  Zero QR Code Rescan
+                  Continuous Roaming Data
                 </span>
               </div>
 
@@ -60,7 +60,7 @@ export default function AppShowcase() {
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
                 <span className="text-[11px] sm:text-xs font-bold text-[#1C2420]">
-                  Jazz &amp; Zong Support
+                  Tethering to Laptop
                 </span>
               </div>
             </div>
@@ -99,12 +99,12 @@ export default function AppShowcase() {
                       : "text-[#1C2420] hover:bg-[#F5F7F2]"
                   }`}
                 >
-                  Data Usage
+                  Usage
                 </button>
               </div>
             </div>
 
-            {/* App Store Buttons (Clean vector text - No emojis) */}
+            {/* App Store Buttons */}
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 pt-1">
               <button className="flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#123C2A] text-white hover:bg-[#1A523A] transition-colors">
                 <span className="font-extrabold text-sm">iOS</span>
@@ -124,7 +124,7 @@ export default function AppShowcase() {
             </div>
           </div>
 
-          {/* Right Phone Mockup (faithfully reproducing Brand Kit with Pakistan context & clean icons) */}
+          {/* Right Phone Mockup */}
           <div className="lg:col-span-6 flex justify-center">
             <div className="w-[300px] sm:w-[330px] bg-[#123C2A] rounded-[44px] p-3 shadow-2xl border-4 border-[#123C2A] relative">
               
@@ -146,30 +146,30 @@ export default function AppShowcase() {
                   <div className="p-4 space-y-3.5 flex-1">
                     <div className="flex items-center justify-between">
                       <Logo size="sm" />
-                      <div className="w-7 h-7 rounded-full bg-[#123C2A] text-white text-[11px] font-bold flex items-center justify-center">
-                        PK
+                      <div className="w-7 h-7 rounded-full bg-[#123C2A] text-white text-[10px] font-bold flex items-center justify-center">
+                        PTA-FREE
                       </div>
                     </div>
 
                     <div>
-                      <span className="text-[11px] text-[#5E6E66]">Welcome back</span>
+                      <span className="text-[11px] text-[#5E6E66]">Device Protected</span>
                       <h4 className="text-base font-extrabold text-[#123C2A]">
-                        Pakistan 4G Connectivity
+                        Non-PTA iPhone 15 Pro
                       </h4>
                     </div>
 
                     {/* Active eSIM Card */}
                     <div className="bg-[#FFFFFF] p-3 rounded-2xl border-2 border-[#2FBF71] space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold text-[#5E6E66]">Active eSIM</span>
+                        <span className="text-[10px] font-bold text-[#5E6E66]">Active Profile</span>
                         <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#E9F8F0] text-[#2FBF71]">
-                          Connected
+                          Online • No Block
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="font-extrabold text-sm text-[#123C2A]">Pakistan - 10 GB</div>
-                          <div className="text-[10px] text-[#5E6E66]">Jazz 4G LTE</div>
+                          <div className="font-extrabold text-sm text-[#123C2A]">Non-PTA 10 GB Pack</div>
+                          <div className="text-[10px] text-[#5E6E66]">4G High-Speed Data</div>
                         </div>
                         <button
                           onClick={() => setActiveTab("usage")}
@@ -180,25 +180,25 @@ export default function AppShowcase() {
                       </div>
                     </div>
 
-                    {/* 2x2 Cities in App Mockup */}
+                    {/* 2x2 Features in App Mockup */}
                     <div>
-                      <div className="text-[11px] font-bold text-[#123C2A] mb-1.5">Coverage Hotspots</div>
+                      <div className="text-[11px] font-bold text-[#123C2A] mb-1.5">Active Status</div>
                       <div className="grid grid-cols-2 gap-1.5 text-[10px] font-bold">
                         <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
-                          <span className="text-[#2FBF71]">Karachi</span>
+                          <span className="text-[#2FBF71]">PTA Tax</span>
+                          <div className="text-[9px] text-[#5E6E66] font-normal">Exempt ($0)</div>
+                        </div>
+                        <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
+                          <span className="text-[#2FBF71]">Data Speed</span>
                           <div className="text-[9px] text-[#5E6E66] font-normal">Super 4G+</div>
                         </div>
                         <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
-                          <span className="text-[#2FBF71]">Lahore</span>
-                          <div className="text-[9px] text-[#5E6E66] font-normal">Super 4G+</div>
+                          <span className="text-[#2FBF71]">Hotspot</span>
+                          <div className="text-[9px] text-[#5E6E66] font-normal">Unlocked</div>
                         </div>
                         <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
-                          <span className="text-[#2FBF71]">Islamabad</span>
-                          <div className="text-[9px] text-[#5E6E66] font-normal">Super 4G+</div>
-                        </div>
-                        <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
-                          <span className="text-[#2FBF71]">Northern Areas</span>
-                          <div className="text-[9px] text-[#5E6E66] font-normal">Mountain 4G</div>
+                          <span className="text-[#2FBF71]">WhatsApp</span>
+                          <div className="text-[9px] text-[#5E6E66] font-normal">Active</div>
                         </div>
                       </div>
                     </div>
@@ -212,33 +212,33 @@ export default function AppShowcase() {
                       <button onClick={() => setActiveTab("home")} className="text-xs font-bold text-[#5E6E66]">
                         ‹ Back
                       </button>
-                      <span className="text-xs font-bold text-[#123C2A]">Pakistan Plans</span>
+                      <span className="text-xs font-bold text-[#123C2A]">Non-PTA Plans</span>
                     </div>
 
                     <div className="bg-[#123C2A] text-white p-2.5 rounded-xl flex items-center justify-between">
                       <div>
-                        <div className="text-[9px] text-[#A7E8C1]">Destination</div>
-                        <div className="text-xs font-extrabold">Pakistan eSIM</div>
+                        <div className="text-[9px] text-[#A7E8C1]">Device Type</div>
+                        <div className="text-xs font-extrabold">Non-PTA Approved</div>
                       </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#2FBF71]">Jazz &amp; Zong</span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#2FBF71]">Zero Tax</span>
                     </div>
 
                     <div className="space-y-1.5">
                       <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-between text-xs">
                         <span className="font-bold">1 GB • 7 days</span>
-                        <span className="font-extrabold text-[#123C2A]">Rs 415</span>
+                        <span className="font-extrabold text-[#123C2A]">Rs 525</span>
                       </div>
                       <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-between text-xs">
                         <span className="font-bold">3 GB • 15 days</span>
-                        <span className="font-extrabold text-[#123C2A]">Rs 970</span>
+                        <span className="font-extrabold text-[#123C2A]">Rs 1,110</span>
                       </div>
                       <div className="bg-[#E9F8F0] p-2 rounded-xl border-2 border-[#2FBF71] flex items-center justify-between text-xs">
                         <span className="font-bold text-[#123C2A]">10 GB • 30 days</span>
-                        <span className="font-extrabold text-[#2FBF71]">Rs 2,225</span>
+                        <span className="font-extrabold text-[#2FBF71]">Rs 2,500</span>
                       </div>
                       <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-between text-xs">
-                        <span className="font-bold">Unlimited</span>
-                        <span className="font-extrabold text-[#123C2A]">Rs 9,190</span>
+                        <span className="font-bold">Unlimited VIP</span>
+                        <span className="font-extrabold text-[#123C2A]">Rs 12,530</span>
                       </div>
                     </div>
 
@@ -255,9 +255,9 @@ export default function AppShowcase() {
                 {activeTab === "usage" && (
                   <div className="p-4 space-y-3.5 flex-1">
                     <div className="text-center">
-                      <span className="text-[10px] font-bold text-[#5E6E66]">Data Usage</span>
+                      <span className="text-[10px] font-bold text-[#5E6E66]">Non-PTA Data Left</span>
                       <div className="text-2xl font-black text-[#123C2A] mt-0.5">3.6 GB</div>
-                      <div className="text-[10px] text-[#5E6E66]">left of 10 GB</div>
+                      <div className="text-[10px] text-[#5E6E66]">of 10 GB plan</div>
                     </div>
 
                     {/* Progress */}
@@ -267,16 +267,16 @@ export default function AppShowcase() {
 
                     <div className="bg-[#FFFFFF] p-3 rounded-2xl border border-[#E0E7E2] text-[11px] space-y-1.5">
                       <div className="flex justify-between text-[#5E6E66]">
-                        <span>Pakistan - 30 days</span>
-                        <span className="font-bold text-[#123C2A]">Active</span>
+                        <span>Pakistan Roaming</span>
+                        <span className="font-bold text-[#123C2A]">Online</span>
                       </div>
                       <div className="flex justify-between text-[#5E6E66]">
                         <span>Data used</span>
                         <span className="font-bold text-[#123C2A]">6.4 GB</span>
                       </div>
                       <div className="flex justify-between text-[#5E6E66]">
-                        <span>Network</span>
-                        <span className="font-bold text-[#123C2A]">Jazz 4G LTE</span>
+                        <span>PTA Device Status</span>
+                        <span className="font-bold text-[#2FBF71]">Never Blocked</span>
                       </div>
                     </div>
 
@@ -289,7 +289,7 @@ export default function AppShowcase() {
                   </div>
                 )}
 
-                {/* Bottom App Navigation Bar (Clean vector icons - No emojis) */}
+                {/* Bottom App Navigation Bar */}
                 <div className="bg-[#FFFFFF] border-t border-[#E0E7E2] px-4 py-2 flex items-center justify-around text-[9px] font-bold text-[#5E6E66]">
                   <button onClick={() => setActiveTab("home")} className={`flex flex-col items-center gap-0.5 ${activeTab === "home" ? "text-[#2FBF71]" : ""}`}>
                     <Home className="w-3.5 h-3.5" />
