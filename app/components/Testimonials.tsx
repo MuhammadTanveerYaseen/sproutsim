@@ -15,25 +15,25 @@ export default function Testimonials() {
     {
       name: "Ayesha Malik",
       role: "Content Creator (Lahore)",
-      country: "Non-PTA iPhone 14 Pro",
+      country: "iPhone 14 Pro User",
       rating: 5,
       comment:
-        "I use my Non-PTA iPhone for daily vlogs and social media uploads. SproutSIM data is super fast and my WhatsApp and banking apps work without any issues. Hotspot to my MacBook is seamless.",
+        "I use my imported iPhone for daily vlogs and social media uploads. SproutSIM data is super fast and my WhatsApp and banking apps work without any issues. Hotspot to my MacBook is seamless.",
       avatar: "AM",
     },
     {
       name: "Zubair Khan",
       role: "Business Traveler (Islamabad)",
-      country: "Non-PTA Galaxy S24 Ultra",
+      country: "Galaxy S24 Ultra User",
       rating: 5,
       comment:
-        "The absolute best discovery for anyone with a Non-PTA phone in Pakistan. Easy setup, instant email delivery with Hostinger, and top-up takes 10 seconds. Saved me massive device registration fees.",
+        "The absolute best discovery for keeping imported phones connected in Pakistan. Easy setup, instant email delivery with Hostinger, and top-up takes 10 seconds. Saved me massive device registration fees.",
       avatar: "ZK",
     },
   ];
 
   return (
-    <section className="py-12 sm:py-20 bg-[#F5F7F2] border-b border-[#E0E7E2]">
+    <section className="py-12 sm:py-20 bg-[#FFFFFF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -62,7 +62,7 @@ export default function Testimonials() {
           {reviews.map((rev, i) => (
             <div
               key={i}
-              className="bg-[#FFFFFF] rounded-2xl border-2 border-[#E0E7E2] p-5 sm:p-6 flex flex-col justify-between"
+              className="bg-[#F5F7F2] rounded-2xl border-2 border-[#E0E7E2] p-5 sm:p-6 flex flex-col justify-between hover:border-[#2FBF71] transition-all"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
@@ -103,22 +103,22 @@ export default function Testimonials() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs font-bold text-[#123C2A]">
-            <span className="px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E0E7E2] text-center">
+            <span className="px-3 py-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] text-center">
               Apple Pay
             </span>
-            <span className="px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E0E7E2] text-center">
+            <span className="px-3 py-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] text-center">
               Google Pay
             </span>
-            <span className="px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E0E7E2] text-center">
+            <span className="px-3 py-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] text-center">
               Debit / Credit Card
             </span>
-            <span className="px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E0E7E2] text-center">
+            <span className="px-3 py-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] text-center">
               Mastercard
             </span>
-            <span className="px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E0E7E2] text-center">
+            <span className="px-3 py-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] text-center">
               Visa
             </span>
-            <span className="px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E0E7E2] text-center">
+            <span className="px-3 py-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] text-center">
               JazzCash / EasyPaisa
             </span>
           </div>

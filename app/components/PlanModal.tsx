@@ -43,14 +43,14 @@ export default function PlanModal({
     PAKISTAN_PLANS[0];
 
   const handleCopyCode = () => {
-    navigator.clipboard?.writeText("LPA:1$smdp.sproutsim.io$NON-PTA-PK-ROAM99");
+    navigator.clipboard?.writeText("LPA:1$smdp.sproutsim.io$SPROUTSIM-PK");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleConfirmAndSend = async () => {
     if (!email || !email.includes("@")) {
-      alert("Please provide a valid email address to receive your Non-PTA eSIM QR code.");
+      alert("Please provide a valid email address to receive your eSIM QR code.");
       return;
     }
 
@@ -62,7 +62,7 @@ export default function PlanModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          planName: `${selectedPlan.name} (Non-PTA Data)`,
+          planName: `${selectedPlan.name} (4G Data)`,
           dataAllowance: selectedPlan.data,
           validity: selectedPlan.validity,
           priceFormatted: formatPrice(selectedPlan),
@@ -91,17 +91,17 @@ export default function PlanModal({
         <div className="bg-[#123C2A] text-[#FFFFFF] p-5 sm:p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#2FBF71] text-[#FFFFFF] flex items-center justify-center font-extrabold text-xs tracking-wider">
-              NON-PTA
+              SIM
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight">Non-PTA Pakistan eSIM</h2>
+                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight">Pakistan 4G eSIM</h2>
                 <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-[#2FBF71] text-[#FFFFFF] uppercase">
-                  Zero PTA Tax
+                  Instant Setup
                 </span>
               </div>
               <p className="text-xs text-[#A7E8C1] font-medium">
-                High-Speed 4G Data • Never Blocked by PTA
+                High-Speed 4G Data • Continuous Connectivity
               </p>
             </div>
           </div>
@@ -343,7 +343,7 @@ export default function PlanModal({
               <div className="flex items-center justify-center gap-2 max-w-xs mx-auto">
                 <input
                   readOnly
-                  value="LPA:1$smdp.sproutsim.io$NON-PTA-PK"
+                  value="LPA:1$smdp.sproutsim.io$SPROUTSIM-PK"
                   className="bg-[#F5F7F2] border border-[#E0E7E2] px-2.5 py-1.5 rounded-xl text-[11px] font-mono text-[#1C2420] w-full"
                 />
                 <button

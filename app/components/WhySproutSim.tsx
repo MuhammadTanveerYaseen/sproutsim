@@ -11,7 +11,7 @@ export default function WhySproutSim() {
     {
       icon: Lock,
       title: "Immune to 60-Day Blocks",
-      desc: "Local SIMs stop working on Non-PTA devices after 60 days. Our international roaming profile stays online continuously.",
+      desc: "Local SIMs stop working on unregistered devices after 60 days. Our international roaming profile stays online continuously.",
     },
     {
       icon: Smartphone,
@@ -21,12 +21,12 @@ export default function WhySproutSim() {
     {
       icon: Wifi,
       title: "Hotspot to All Devices",
-      desc: "Share your high-speed Non-PTA mobile data with your laptop, tablet, or secondary phones via Personal Hotspot.",
+      desc: "Share your high-speed mobile data with your laptop, tablet, or secondary phones via Personal Hotspot.",
     },
   ];
 
   return (
-    <section id="why-sproutsim" className="py-12 sm:py-20 bg-[#FFFFFF] border-b border-[#E0E7E2]">
+    <section id="why-sproutsim" className="py-12 sm:py-20 bg-[#FFFFFF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Header */}
@@ -73,7 +73,7 @@ export default function WhySproutSim() {
         </div>
 
         {/* Guarantee Promise Callout */}
-        <div className="bg-[#FFFFFF] rounded-2xl border-2 border-[#123C2A] p-5 sm:p-8">
+        <div className="bg-[#F5F7F2] rounded-2xl border-2 border-[#123C2A] p-5 sm:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             
             <div className="lg:col-span-8 space-y-2">
@@ -90,7 +90,7 @@ export default function WhySproutSim() {
 
             {/* 2 Columns & 2 Rows on Mobile for Brand Badges */}
             <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-2.5">
-              <div className="bg-[#F5F7F2] p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
+              <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-[#123C2A] text-[#2FBF71] flex items-center justify-center flex-shrink-0">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
@@ -100,7 +100,7 @@ export default function WhySproutSim() {
                 </div>
               </div>
 
-              <div className="bg-[#F5F7F2] p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
+              <div className="bg-[#FFFFFF] p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-[#123C2A] text-[#2FBF71] flex items-center justify-center flex-shrink-0">
                   <Lock className="w-4 h-4" />
                 </div>

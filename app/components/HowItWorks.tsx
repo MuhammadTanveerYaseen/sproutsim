@@ -34,7 +34,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-12 sm:py-20 bg-[#F5F7F2] border-b border-[#E0E7E2]">
+    <section id="how-it-works" className="py-12 sm:py-20 bg-[#FFFFFF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -57,7 +57,7 @@ export default function HowItWorks() {
             return (
               <div
                 key={step.num}
-                className="bg-[#FFFFFF] rounded-2xl border-2 border-[#E0E7E2] p-3.5 sm:p-6 flex flex-col justify-between hover:border-[#123C2A] transition-colors"
+                className="bg-[#F5F7F2] rounded-2xl border-2 border-[#E0E7E2] p-3.5 sm:p-6 flex flex-col justify-between hover:border-[#2FBF71] transition-all"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -82,8 +82,8 @@ export default function HowItWorks() {
                   </p>
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-[#F5F7F2] text-[10px] font-bold text-[#2FBF71]">
-                  Zero PTA Tax
+                <div className="mt-3 pt-2 border-t border-[#E0E7E2] text-[10px] font-bold text-[#2FBF71]">
+                  Instant Setup
                 </div>
               </div>
             );

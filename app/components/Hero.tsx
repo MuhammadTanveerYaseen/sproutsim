@@ -17,7 +17,7 @@ export default function Hero({
   const quickPicks = ["1 GB Trial", "3 GB Weekly", "10 GB Monthly (Hot)", "20 GB Pro", "50 GB Power", "Unlimited"];
 
   return (
-    <section className="bg-[#F5F7F2] border-b border-[#E0E7E2] py-10 sm:py-16">
+    <section className="bg-[#FFFFFF] py-12 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
@@ -40,7 +40,7 @@ export default function Hero({
             </p>
 
             {/* Action Bar */}
-            <div className="bg-[#FFFFFF] p-2 rounded-2xl border-2 border-[#123C2A] shadow-sm max-w-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+            <div className="bg-[#F5F7F2] p-2 rounded-2xl border-2 border-[#123C2A] shadow-sm max-w-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5 px-2 py-1 sm:py-0">
                 <Smartphone className="w-5 h-5 text-[#2FBF71] flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-bold text-[#1C2420]">
@@ -63,7 +63,7 @@ export default function Hero({
                 <button
                   key={pick}
                   onClick={() => onFilterPlan(pick)}
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FFFFFF] hover:bg-[#123C2A] hover:text-[#FFFFFF] text-[#1C2420] border border-[#E0E7E2] transition-colors whitespace-nowrap flex-shrink-0"
+                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#F5F7F2] hover:bg-[#123C2A] hover:text-[#FFFFFF] text-[#123C2A] border border-[#E0E7E2] transition-colors whitespace-nowrap flex-shrink-0"
                 >
                   {pick}
                 </button>
@@ -75,7 +75,7 @@ export default function Hero({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 
                 {/* Row 1, Col 1 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
                     <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
@@ -86,7 +86,7 @@ export default function Hero({
                 </div>
 
                 {/* Row 1, Col 2 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
                     <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
@@ -97,7 +97,7 @@ export default function Hero({
                 </div>
 
                 {/* Row 2, Col 1 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
                     <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
@@ -108,7 +108,7 @@ export default function Hero({
                 </div>
 
                 {/* Row 2, Col 2 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
                     <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>

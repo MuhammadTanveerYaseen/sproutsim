@@ -32,7 +32,7 @@ export default function DestinationGrid({
   });
 
   return (
-    <section id="plans" className="py-12 sm:py-20 bg-[#FFFFFF] border-b border-[#E0E7E2]">
+    <section id="plans" className="py-12 sm:py-20 bg-[#FFFFFF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}

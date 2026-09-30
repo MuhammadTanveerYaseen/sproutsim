@@ -51,7 +51,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F7F2]">
+    <div className="min-h-screen flex flex-col bg-[#FFFFFF]">
       {/* Navigation */}
       <Navbar
         currentCurrency={currency}

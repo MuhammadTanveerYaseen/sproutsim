@@ -56,7 +56,7 @@ export default function Footer() {
     { name: "X (Twitter)", platform: "x" as const, url: "https://x.com/sproutsim" },
     { name: "LinkedIn", platform: "linkedin" as const, url: "https://linkedin.com/company/sproutsim" },
     { name: "TikTok", platform: "tiktok" as const, url: "https://tiktok.com/@sproutsimofficial" },
-    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/923086379663?text=Hi%20SproutSIM%2C%20I%20need%20Non-PTA%20eSIM%20support" },
+    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/923086379663?text=Hi%20SproutSIM%2C%20I%20need%20eSIM%20support" },
   ];
 
   return (
@@ -195,8 +195,8 @@ export default function Footer() {
               </h4>
               <ul className="space-y-1.5 text-xs font-semibold text-[#F5F7F2]">
                 <li>
-                  <a href="#why-non-pta" className="hover:text-[#2FBF71] transition-colors">
-                    Zero PTA Tax Guarantee
+                  <a href="#why-sproutsim" className="hover:text-[#2FBF71] transition-colors">
+                    Zero Device Tax Guarantee
                   </a>
                 </li>
                 <li>
@@ -206,7 +206,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="#faq" className="hover:text-[#2FBF71] transition-colors">
-                    Non-PTA FAQ
+                    eSIM FAQ
                   </a>
                 </li>
                 <li>
@@ -224,7 +224,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A7E8C1]">
           <div>
-            &copy; {new Date().getFullYear()} SPROUTSIM NON-PTA DATA PAKISTAN. All Rights Reserved.
+            &copy; {new Date().getFullYear()} SPROUTSIM PAKISTAN. All Rights Reserved.
           </div>
 
           <div className="flex items-center gap-4">
