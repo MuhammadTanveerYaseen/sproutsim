@@ -1,69 +1,108 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import DestinationGrid from "./components/DestinationGrid";
+import HowItWorks from "./components/HowItWorks";
+import WhySproutSim from "./components/WhySproutSim";
+import AppShowcase from "./components/AppShowcase";
+import CompatibilityChecker from "./components/CompatibilityChecker";
+import Testimonials from "./components/Testimonials";
+import FAQ from "./components/FAQ";
+import Footer from "./components/Footer";
+import FloatingSupport from "./components/FloatingSupport";
+import PlanModal from "./components/PlanModal";
+import { PAKISTAN_PLANS, PakistanPackage, CurrencyCode } from "./data/destinations";
 
 export default function Home() {
+  const [currency, setCurrency] = useState<CurrencyCode>("PKR");
+  const [selectedPlan, setSelectedPlan] = useState<PakistanPackage | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenPlanFor = (pkg: PakistanPackage) => {
+    setSelectedPlan(pkg);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenDefaultModal = () => {
+    const popular = PAKISTAN_PLANS.find((p) => p.popular) || PAKISTAN_PLANS[0];
+    handleOpenPlanFor(popular);
+  };
+
+  const handleFilterPlanByTag = (tag: string) => {
+    if (tag.includes("1 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "1 GB");
+      if (p) handleOpenPlanFor(p);
+    } else if (tag.includes("3 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "3 GB");
+      if (p) handleOpenPlanFor(p);
+    } else if (tag.includes("10 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "10 GB");
+      if (p) handleOpenPlanFor(p);
+    } else if (tag.includes("50 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "50 GB");
+      if (p) handleOpenPlanFor(p);
+    } else if (tag.includes("Unlimited")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "Unlimited");
+      if (p) handleOpenPlanFor(p);
+    } else {
+      handleOpenDefaultModal();
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="min-h-screen flex flex-col bg-[#F5F7F2]">
+      {/* Navigation */}
+      <Navbar
+        currentCurrency={currency}
+        onCurrencyChange={setCurrency}
+        onOpenPlan={handleOpenDefaultModal}
+      />
+
+      {/* Hero Section with 2x2 Mobile Grid & Live Pakistan Active eSIM Card */}
+      <Hero
+        onOpenPakistanModal={handleOpenDefaultModal}
+        onFilterPlan={handleFilterPlanByTag}
+      />
+
+      {/* Pakistan eSIM Packages Grid (Exact 2-column, 2-row layout on mobile) */}
+      <DestinationGrid
+        currency={currency}
+        onSelectPlan={handleOpenPlanFor}
+      />
+
+      {/* How It Works (2-column, 2-row mobile grid) */}
+      <HowItWorks />
+
+      {/* Why SproutSIM & Brand Promise (2-column, 2-row mobile grid) */}
+      <WhySproutSim />
+
+      {/* Interactive Mobile App Showcase (Clean vector icons, zero emojis) */}
+      <AppShowcase />
+
+      {/* Device Compatibility Checker (2-column mobile grid) */}
+      <CompatibilityChecker />
+
+      {/* Traveler Testimonials & 2x2 Payment Badges */}
+      <Testimonials />
+
+      {/* Frequently Asked Questions */}
+      <FAQ />
+
+      {/* Solid Brand Footer */}
+      <Footer />
+
+      {/* Floating 24/7 WhatsApp & Live Support */}
+      <FloatingSupport />
+
+      {/* Pakistan Plan Selection & Instant Checkout Modal */}
+      <PlanModal
+        initialPlan={selectedPlan}
+        currency={currency}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
