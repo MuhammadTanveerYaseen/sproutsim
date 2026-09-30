@@ -2,18 +2,40 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SproutSIM - Pakistan Non-PTA eSIM Data | Zero PTA Tax",
+  title: "SproutSIM – Pakistan Non-PTA eSIM Data | Zero PTA Tax",
   description:
-    "Keep your Non-PTA iPhone & Android connected in Pakistan without paying PTA tax. High-speed 4G data that never gets blocked. Instant QR code delivery.",
+    "Keep your Non-PTA iPhone & Android connected in Pakistan without paying PTA tax. High-speed 4G data that never gets blocked. Instant QR code delivery via SproutSIM.",
   keywords: [
     "Non-PTA eSIM",
     "Pakistan Non-PTA data",
-    "Non-PTA iPhone data",
+    "Non-PTA iPhone data Pakistan",
     "eSIM Pakistan without PTA tax",
     "Non PTA sim Pakistan",
     "SproutSIM",
+    "sproutsimofficial",
   ],
   authors: [{ name: "SPROUTSIM" }],
+  openGraph: {
+    title: "SproutSIM – Pakistan Non-PTA eSIM Data",
+    description:
+      "High-speed 4G data for Non-PTA iPhones & Androids in Pakistan. No PTA tax, never blocked. Get your eSIM QR instantly.",
+    siteName: "SproutSIM",
+    locale: "en_PK",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "SproutSIM – Pakistan Non-PTA eSIM Data",
+    description:
+      "High-speed 4G data for Non-PTA devices in Pakistan. Zero PTA tax. Instant QR delivery.",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

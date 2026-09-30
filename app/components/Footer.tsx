@@ -51,12 +51,12 @@ function SocialIcon({ platform }: { platform: "instagram" | "facebook" | "x" | "
 
 export default function Footer() {
   const socialLinks = [
-    { name: "Instagram", platform: "instagram" as const, url: "https://instagram.com/sproutsim" },
+    { name: "Instagram", platform: "instagram" as const, url: "https://www.instagram.com/sproutsimofficial" },
     { name: "Facebook", platform: "facebook" as const, url: "https://facebook.com/sproutsim" },
     { name: "X (Twitter)", platform: "x" as const, url: "https://x.com/sproutsim" },
     { name: "LinkedIn", platform: "linkedin" as const, url: "https://linkedin.com/company/sproutsim" },
-    { name: "TikTok", platform: "tiktok" as const, url: "https://tiktok.com/@sproutsim" },
-    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/?text=Hi%20SproutSIM%20Non-PTA%20Support" },
+    { name: "TikTok", platform: "tiktok" as const, url: "https://tiktok.com/@sproutsimofficial" },
+    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/+923001234567?text=Hi%20SproutSIM%2C%20I%20need%20Non-PTA%20eSIM%20support" },
   ];
 
   return (

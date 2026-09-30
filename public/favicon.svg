@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#123C2A"/>
+  
+  <!-- Globe circle outline -->
+  <circle cx="32" cy="40" r="16" fill="none" stroke="#A7E8C1" stroke-width="1.5" opacity="0.9"/>
+  
+  <!-- Globe latitude lines -->
+  <path d="M16 40 Q24 36 32 40 Q40 44 48 40" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M17 34 Q24.5 30 32 34 Q39.5 38 47 34" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <path d="M18 46 Q25 42.5 32 46 Q39 49.5 46 46" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.5"/>
+  
+  <!-- Globe vertical center line -->
+  <path d="M32 24 Q28 32 32 40 Q36 48 32 56" stroke="#A7E8C1" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.6"/>
+  
+  <!-- Left leaf -->
+  <path d="M24 27 C16 22 13 10 20 6 C21 14 24 22 24 27 Z" fill="#2FBF71"/>
+  <path d="M24 27 C22 20 19 14 20 6" stroke="#123C2A" stroke-width="1" stroke-linecap="round" fill="none"/>
+  
+  <!-- Right leaf -->
+  <path d="M32 26 C32 18 38 8 46 7 C42 14 36 21 32 26 Z" fill="#2FBF71"/>
+  <path d="M32 26 C35 20 40 13 46 7" stroke="#123C2A" stroke-width="1" stroke-linecap="round" fill="none"/>
+</svg>
