@@ -3,7 +3,7 @@ import Image from "next/image";
 
 interface LogoProps {
   className?: string;
-  variant?: "dark" | "white" | "iconOnly";
+  variant?: "dark" | "white" | "twotone" | "iconOnly";
   size?: "sm" | "md" | "lg";
 }
 
@@ -98,29 +98,38 @@ export function SproutSimIcon({ className = "w-8 h-8" }: { className?: string })
   );
 }
 
-// Full horizontal logo using the actual brand file
+// Full horizontal logo using the actual brand file with transparent backgrounds
 export function SproutSimLogoImage({
   height = 42,
+  variant = "dark",
   className = "",
 }: {
   width?: number;
   height?: number;
+  variant?: "dark" | "white" | "twotone";
   className?: string;
 }) {
-  const width = Math.round(height * 3);
+  const width = Math.round(height * 4.27);
+  const src =
+    variant === "white"
+      ? "/sproutsim-logo-white.png"
+      : variant === "twotone"
+      ? "/sproutsim-logo-twotone.png"
+      : "/sproutsim-logo-dark.png";
+
   return (
     <Image
-      src="/sproutsim-logo.jpg"
+      src={src}
       alt="SproutSIM - Stay Connected Anywhere"
       width={width}
       height={height}
-      className={`h-auto object-contain rounded-lg ${className}`}
+      className={`h-auto object-contain ${className}`}
       priority
     />
   );
 }
 
-// Icon-only logo using the square app icon file
+// Icon-only logo using the square app icon file with transparent corners
 export function SproutSimIconImage({
   size = 40,
   className = "",
@@ -130,11 +139,11 @@ export function SproutSimIconImage({
 }) {
   return (
     <Image
-      src="/sproutsim-icon.jpg"
+      src="/sproutsim-icon.png"
       alt="SproutSIM Icon"
       width={size}
       height={size}
-      className={`rounded-xl object-cover ${className}`}
+      className={`rounded-2xl object-contain ${className}`}
       priority
     />
   );
@@ -146,9 +155,9 @@ export default function Logo({
   size = "md",
 }: LogoProps) {
   const sizeMap = {
-    sm: { height: 38, width: 114, iconSize: 36 },
-    md: { height: 48, width: 144, iconSize: 44 },
-    lg: { height: 56, width: 168, iconSize: 52 },
+    sm: { height: 34, width: 145, iconSize: 34 },
+    md: { height: 42, width: 180, iconSize: 42 },
+    lg: { height: 50, width: 214, iconSize: 50 },
   }[size];
 
   if (variant === "iconOnly") {
@@ -160,15 +169,22 @@ export default function Logo({
     );
   }
 
+  const src =
+    variant === "white"
+      ? "/sproutsim-logo-white.png"
+      : variant === "twotone"
+      ? "/sproutsim-logo-twotone.png"
+      : "/sproutsim-logo-dark.png";
+
   return (
     <div className={`inline-flex items-center select-none ${className}`}>
       <Image
-        src="/sproutsim-logo.jpg"
+        src={src}
         alt="SproutSIM - Stay Connected Anywhere"
         width={sizeMap.width}
         height={sizeMap.height}
         style={{ height: `${sizeMap.height}px`, width: "auto" }}
-        className="rounded-xl object-contain shadow-sm border border-emerald-950/20 bg-black brightness-110 contrast-115 transition-transform hover:scale-[1.02]"
+        className="object-contain transition-transform hover:scale-[1.02]"
         priority
       />
     </div>
