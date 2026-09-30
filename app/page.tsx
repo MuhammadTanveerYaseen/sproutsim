@@ -6,7 +6,6 @@ import Hero from "./components/Hero";
 import DestinationGrid from "./components/DestinationGrid";
 import HowItWorks from "./components/HowItWorks";
 import WhySproutSim from "./components/WhySproutSim";
-import AppShowcase from "./components/AppShowcase";
 import CompatibilityChecker from "./components/CompatibilityChecker";
 import Testimonials from "./components/Testimonials";
 import FAQ from "./components/FAQ";
@@ -77,9 +76,6 @@ export default function Home() {
 
       {/* Why SproutSIM & Brand Promise (2-column, 2-row mobile grid) */}
       <WhySproutSim />
-
-      {/* Interactive Mobile App Showcase (Clean vector icons, zero emojis) */}
-      <AppShowcase />
 
       {/* Device Compatibility Checker (2-column mobile grid) */}
       <CompatibilityChecker />
