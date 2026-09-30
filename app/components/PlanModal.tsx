@@ -2,13 +2,15 @@
 
 import React, { useState } from "react";
 import { PAKISTAN_PLANS, PakistanPackage, CURRENCY_RATES, CurrencyCode } from "../data/destinations";
-import { X, Check, ShieldCheck, Smartphone, ArrowRight, Copy, CheckCircle, Mail, Loader2, Lock } from "lucide-react";
+import { X, Check, ShieldCheck, Smartphone, ArrowRight, Copy, CheckCircle, Mail, Loader2, Lock, Sparkles } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 interface PlanModalProps {
   initialPlan?: PakistanPackage | null;
   currency: CurrencyCode;
   isOpen: boolean;
   onClose: () => void;
+  onOpenProfile?: () => void;
 }
 
 export default function PlanModal({
@@ -16,7 +18,9 @@ export default function PlanModal({
   currency,
   isOpen,
   onClose,
+  onOpenProfile,
 }: PlanModalProps) {
+  const { addPurchasedEsim } = useAuth();
   const [selectedPlanId, setSelectedPlanId] = useState<string>(
     initialPlan?.id || PAKISTAN_PLANS.find((p) => p.popular)?.id || PAKISTAN_PLANS[0].id
   );
@@ -72,6 +76,7 @@ export default function PlanModal({
       console.error("Email dispatch notice:", err);
     } finally {
       setIsSending(false);
+      addPurchasedEsim(selectedPlan, email);
       setCheckoutStep("success");
     }
   };
@@ -355,12 +360,27 @@ export default function PlanModal({
                 </button>
               </div>
 
-              <button
-                onClick={handleResetAndClose}
-                className="w-full py-3 rounded-xl bg-[#123C2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#1A523A] transition-colors"
-              >
-                Done
-              </button>
+              <div className="space-y-2 pt-1">
+                {onOpenProfile && (
+                  <button
+                    onClick={() => {
+                      handleResetAndClose();
+                      onOpenProfile();
+                    }}
+                    className="w-full py-3 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors shadow-sm"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>View in My Profile &amp; Track MBs</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={handleResetAndClose}
+                  className="w-full py-2.5 rounded-xl bg-[#123C2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#1A523A] transition-colors"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           )}
         </div>

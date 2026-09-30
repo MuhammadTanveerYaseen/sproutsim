@@ -56,7 +56,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#F5F7F2] text-[#1C2420] antialiased overflow-x-hidden">
+      <body className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#1C2420] antialiased overflow-x-hidden">
         {children}
       </body>
     </html>

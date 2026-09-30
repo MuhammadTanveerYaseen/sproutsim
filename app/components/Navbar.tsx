@@ -3,23 +3,31 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
 import { CURRENCY_RATES, CurrencyCode } from "../data/destinations";
-import { Globe, ChevronDown, Menu, X, ArrowRight, ShieldCheck, Smartphone } from "lucide-react";
+import { Globe, ChevronDown, Menu, X, ArrowRight, ShieldCheck, Smartphone, User, Sparkles } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 interface NavbarProps {
   currentCurrency: CurrencyCode;
   onCurrencyChange: (c: CurrencyCode) => void;
   onOpenPlan: () => void;
+  onOpenAuth: () => void;
+  onOpenProfile: () => void;
 }
 
 export default function Navbar({
   currentCurrency,
   onCurrencyChange,
   onOpenPlan,
+  onOpenAuth,
+  onOpenProfile,
 }: NavbarProps) {
+  const { user, isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currencyDropdownOpen, setCurrencyDropdownOpen] = useState(false);
 
   const currencies = Object.keys(CURRENCY_RATES) as CurrencyCode[];
+  const activeEsim = user?.activeEsims?.[0];
+  const remainingGB = activeEsim ? (activeEsim.dataRemainingMB / 1024).toFixed(1) : null;
 
   return (
     <header className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#E0E7E2]">
@@ -125,6 +133,40 @@ export default function Navbar({
               )}
             </div>
 
+            {/* User Profile or Log In Button */}
+            {isAuthenticated && user ? (
+              <button
+                type="button"
+                onClick={onOpenProfile}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border-2 border-[#123C2A] bg-[#F5F7F2] hover:bg-[#E9F8F0] transition-colors"
+                title="Open Profile & Track Data"
+              >
+                <div className="w-6 h-6 rounded-lg bg-[#2FBF71] text-white flex items-center justify-center text-[10px] font-black">
+                  {user.avatar || user.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div className="text-left">
+                  <div className="text-[11px] font-bold text-[#123C2A] leading-tight flex items-center gap-1">
+                    <span>{user.name.split(" ")[0]}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#2FBF71]"></span>
+                  </div>
+                  {remainingGB && (
+                    <div className="text-[9px] font-black text-[#2FBF71] leading-tight">
+                      {remainingGB} GB Left
+                    </div>
+                  )}
+                </div>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onOpenAuth}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#E0E7E2] hover:border-[#123C2A] bg-white text-xs font-bold text-[#123C2A] transition-colors"
+              >
+                <User className="w-3.5 h-3.5 text-[#2FBF71]" />
+                <span>Log In</span>
+              </button>
+            )}
+
             {/* Instant Delivery Badge */}
             <div className="px-2.5 py-1.5 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-xs font-bold text-[#123C2A] flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#2FBF71]" />
@@ -141,20 +183,44 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Mobile Actions: Compact CTA + Menu Button */}
-          <div className="flex items-center space-x-2 md:hidden">
+          {/* Mobile Actions: Profile/Login + Compact CTA + Menu Button */}
+          <div className="flex items-center space-x-1.5 md:hidden">
+            {isAuthenticated && user ? (
+              <button
+                onClick={onOpenProfile}
+                className="p-1.5 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] flex items-center gap-1 text-[11px] font-bold"
+                aria-label="My eSIM Profile"
+              >
+                <div className="w-5 h-5 rounded-md bg-[#2FBF71] text-white flex items-center justify-center text-[9px] font-black">
+                  {user.avatar || user.name.slice(0, 2).toUpperCase()}
+                </div>
+                {remainingGB && (
+                  <span className="text-[#123C2A] font-extrabold pr-0.5">
+                    {remainingGB}G
+                  </span>
+                )}
+              </button>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="px-2.5 py-1.5 rounded-lg border border-[#E0E7E2] bg-white text-[#123C2A] text-[11px] font-bold"
+              >
+                Log In
+              </button>
+            )}
+
             <button
               onClick={onOpenPlan}
-              className="px-3 py-1.5 rounded-lg bg-[#2FBF71] hover:bg-[#26A561] text-white text-xs font-bold uppercase tracking-wider transition-colors"
+              className="px-2.5 py-1.5 rounded-lg bg-[#2FBF71] hover:bg-[#26A561] text-white text-[11px] font-bold uppercase tracking-wider transition-colors"
             >
               Get eSIM
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-[#123C2A] hover:bg-[#F5F7F2] transition-colors focus:outline-none"
+              className="p-1.5 rounded-xl text-[#123C2A] hover:bg-[#F5F7F2] transition-colors focus:outline-none"
               aria-label="Toggle Navigation Menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -163,6 +229,50 @@ export default function Navbar({
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#FFFFFF] border-b border-[#E0E7E2] px-5 pt-3 pb-6 space-y-4">
+          
+          {/* User Profile Quick Banner in Mobile Menu */}
+          {isAuthenticated && user ? (
+            <div
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenProfile();
+              }}
+              className="p-3 bg-[#E9F8F0] rounded-xl border border-[#A7E8C1] flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#2FBF71] text-white flex items-center justify-center font-bold text-xs">
+                  {user.avatar || user.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-xs font-extrabold text-[#123C2A]">{user.name}</div>
+                  <div className="text-[10px] text-[#2FBF71] font-bold">
+                    {remainingGB ? `Active eSIM: ${remainingGB} GB Remaining` : "View Profile Dashboard"}
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-[#123C2A]" />
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenAuth();
+              }}
+              className="p-3 bg-[#F5F7F2] rounded-xl border border-[#E0E7E2] flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#123C2A] text-white flex items-center justify-center">
+                  <User className="w-4 h-4 text-[#2FBF71]" />
+                </div>
+                <div>
+                  <div className="text-xs font-extrabold text-[#123C2A]">Sign In / Register</div>
+                  <div className="text-[10px] text-[#5E6E66]">Track your active eSIM data</div>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-[#123C2A]" />
+            </div>
+          )}
+
           <nav className="flex flex-col space-y-3">
             <a
               href="#plans"

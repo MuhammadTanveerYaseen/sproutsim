@@ -12,12 +12,17 @@ import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
 import FloatingSupport from "./components/FloatingSupport";
 import PlanModal from "./components/PlanModal";
+import AuthModal from "./components/AuthModal";
+import ProfileModal from "./components/ProfileModal";
+import { AuthProvider } from "./context/AuthContext";
 import { PAKISTAN_PLANS, PakistanPackage, CurrencyCode } from "./data/destinations";
 
-export default function Home() {
+function HomeContent() {
   const [currency, setCurrency] = useState<CurrencyCode>("PKR");
   const [selectedPlan, setSelectedPlan] = useState<PakistanPackage | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const handleOpenPlanFor = (pkg: PakistanPackage) => {
     setSelectedPlan(pkg);
@@ -57,6 +62,8 @@ export default function Home() {
         currentCurrency={currency}
         onCurrencyChange={setCurrency}
         onOpenPlan={handleOpenDefaultModal}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
       {/* Hero Section with 2x2 Mobile Grid & Live Pakistan Active eSIM Card */}
@@ -98,7 +105,32 @@ export default function Home() {
         currency={currency}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
+      />
+
+      {/* User Login & Sign Up Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      {/* User Profile & Active eSIM Data Tracker Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        onBrowsePlans={() => {
+          const el = document.getElementById("plans");
+          el?.scrollIntoView({ behavior: "smooth" });
+        }}
       />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthProvider>
+      <HomeContent />
+    </AuthProvider>
   );
 }
