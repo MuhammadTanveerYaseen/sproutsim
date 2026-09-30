@@ -52,7 +52,7 @@ function SocialIcon({ platform }: { platform: "instagram" | "facebook" | "x" | "
 export default function Footer() {
   const socialLinks = [
     { name: "Instagram", platform: "instagram" as const, url: "https://www.instagram.com/sproutsimofficial" },
-    { name: "Facebook", platform: "facebook" as const, url: "https://facebook.com/sproutsim" },
+    { name: "Facebook", platform: "facebook" as const, url: "https://www.facebook.com/share/1Fx3Sxxoav/?mibextid=wwXIfr" },
     { name: "X (Twitter)", platform: "x" as const, url: "https://x.com/sproutsim" },
     { name: "LinkedIn", platform: "linkedin" as const, url: "https://linkedin.com/company/sproutsim" },
     { name: "TikTok", platform: "tiktok" as const, url: "https://tiktok.com/@sproutsimofficial" },
