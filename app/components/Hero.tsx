@@ -21,35 +21,35 @@ export default function Hero({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: Headline, Non-PTA Value Prop & 2x2 Mobile Trust Grid */}
-          <div className="lg:col-span-7 space-y-5">
+          {/* Left Column: Headline, Value Prop & Mobile Trust Grid */}
+          <div className="lg:col-span-7 space-y-4 sm:space-y-5">
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-[#2FBF71]"></span>
-              <span>100% Non-PTA Approved Data Solution</span>
+              <span>High-Speed 4G Data in Pakistan</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-[#123C2A] tracking-tight leading-[1.15]">
-              Keep Your Non-PTA Phone Online in Pakistan — Zero PTA Tax.
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#123C2A] tracking-tight leading-[1.2]">
+              Keep Your Smartphone Online in Pakistan — Without Device Taxes.
             </h1>
 
             {/* Description */}
-            <p className="text-[#5E6E66] text-sm sm:text-base max-w-xl leading-relaxed">
-              Don&apos;t pay Rs 100,000 to Rs 250,000+ PTA device registration tax. Our international roaming eSIM delivers fast, reliable 4G data to your Non-PTA iPhone &amp; Android without ever getting blocked.
+            <p className="text-[#5E6E66] text-xs sm:text-base max-w-xl leading-relaxed">
+              Avoid paying heavy registration taxes on imported smartphones. SproutSIM delivers fast, reliable 4G data to any eSIM-enabled iPhone &amp; Android without getting blocked.
             </p>
 
             {/* Action Bar */}
-            <div className="bg-[#FFFFFF] p-2 rounded-2xl border-2 border-[#123C2A] shadow-sm max-w-xl flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5 px-2">
+            <div className="bg-[#FFFFFF] p-2 rounded-2xl border-2 border-[#123C2A] shadow-sm max-w-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2.5 px-2 py-1 sm:py-0">
                 <Smartphone className="w-5 h-5 text-[#2FBF71] flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-bold text-[#1C2420]">
-                  Non-PTA High-Speed Data Packages
+                  High-Speed 4G Data Packages
                 </span>
               </div>
               <button
                 onClick={onOpenPakistanModal}
-                className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider transition-colors flex-shrink-0"
+                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider transition-colors flex-shrink-0"
               >
                 <span>View Plans</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -57,13 +57,13 @@ export default function Hero({
             </div>
 
             {/* Quick Pick Chips */}
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              <span className="text-xs font-bold text-[#5E6E66]">Popular:</span>
+            <div className="flex items-center gap-1.5 overflow-x-auto sm:flex-wrap pb-1 sm:pb-0 pt-1">
+              <span className="text-xs font-bold text-[#5E6E66] flex-shrink-0">Popular:</span>
               {quickPicks.map((pick) => (
                 <button
                   key={pick}
                   onClick={() => onFilterPlan(pick)}
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FFFFFF] hover:bg-[#123C2A] hover:text-[#FFFFFF] text-[#1C2420] border border-[#E0E7E2] transition-colors"
+                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FFFFFF] hover:bg-[#123C2A] hover:text-[#FFFFFF] text-[#1C2420] border border-[#E0E7E2] transition-colors whitespace-nowrap flex-shrink-0"
                 >
                   {pick}
                 </button>
@@ -75,46 +75,46 @@ export default function Hero({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 
                 {/* Row 1, Col 1 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <ShieldCheck className="w-4 h-4 text-[#2FBF71]" />
+                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#1C2420] leading-tight">Zero PTA Tax</div>
-                    <div className="text-[10px] text-[#5E6E66]">Save Rs 100K-250K</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">No Device Tax</div>
+                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Save Big</div>
                   </div>
                 </div>
 
                 {/* Row 1, Col 2 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <Lock className="w-4 h-4 text-[#2FBF71]" />
+                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#1C2420] leading-tight">Never Blocked</div>
-                    <div className="text-[10px] text-[#5E6E66]">Works 365 Days</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">Never Blocked</div>
+                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Works 365 Days</div>
                   </div>
                 </div>
 
                 {/* Row 2, Col 1 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <Wifi className="w-4 h-4 text-[#2FBF71]" />
+                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#1C2420] leading-tight">Free Hotspot</div>
-                    <div className="text-[10px] text-[#5E6E66]">Tether Laptop/iPad</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">Free Hotspot</div>
+                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Tether Laptop</div>
                   </div>
                 </div>
 
                 {/* Row 2, Col 2 */}
-                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-4 h-4 text-[#2FBF71]" />
+                <div className="bg-[#FFFFFF] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-[#1C2420] leading-tight">Instant QR</div>
-                    <div className="text-[10px] text-[#5E6E66]">Setup in 60s</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">Instant QR</div>
+                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Setup in 60s</div>
                   </div>
                 </div>
 
@@ -123,33 +123,33 @@ export default function Hero({
 
           </div>
 
-          {/* Right Column: Live Non-PTA eSIM Card Preview */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="w-full max-w-md bg-[#FFFFFF] rounded-3xl border-2 border-[#E0E7E2] p-5 sm:p-6 shadow-sm">
+          {/* Right Column: Live eSIM Card Preview */}
+          <div className="lg:col-span-5 flex justify-center w-full">
+            <div className="w-full max-w-md bg-[#FFFFFF] rounded-3xl border-2 border-[#E0E7E2] p-4 sm:p-6 shadow-sm">
               
               {/* Card Header */}
-              <div className="flex items-center justify-between pb-4 border-b border-[#F5F7F2]">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#123C2A] flex items-center justify-center text-white font-extrabold text-xs tracking-wider">
-                    NON-PTA
+              <div className="flex items-center justify-between pb-3.5 border-b border-[#F5F7F2]">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-[#123C2A] flex items-center justify-center text-white font-extrabold text-[11px] tracking-wider">
+                    SIM
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-[#123C2A]">Non-PTA Device eSIM</h3>
-                    <p className="text-xs font-medium text-[#5E6E66]">Global Roaming • Zero PTA Tax</p>
+                    <h3 className="text-sm font-bold text-[#123C2A]">Pakistan eSIM Data</h3>
+                    <p className="text-[11px] font-medium text-[#5E6E66]">Active Roaming • High-Speed 4G</p>
                   </div>
                 </div>
 
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold">
                   <span className="w-2 h-2 rounded-full bg-[#2FBF71]"></span>
-                  <span>Active &amp; Online</span>
+                  <span>Online</span>
                 </div>
               </div>
 
               {/* Data Meter */}
-              <div className="my-5 bg-[#F5F7F2] p-4 sm:p-5 rounded-2xl border border-[#E0E7E2]">
+              <div className="my-4 sm:my-5 bg-[#F5F7F2] p-3.5 sm:p-5 rounded-2xl border border-[#E0E7E2]">
                 <div className="flex items-baseline justify-between mb-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#5E6E66]">
-                    Non-PTA Data Status
+                    Data Balance
                   </span>
                   <span className="text-xs font-semibold text-[#123C2A]">
                     Pakistan - 30 days
@@ -157,8 +157,8 @@ export default function Hero({
                 </div>
 
                 <div className="flex items-baseline gap-2 mb-3">
-                  <span className="text-3xl font-extrabold text-[#123C2A]">{dataUsage.toFixed(1)} GB</span>
-                  <span className="text-sm font-semibold text-[#5E6E66]">left of 10 GB</span>
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#123C2A]">{dataUsage.toFixed(1)} GB</span>
+                  <span className="text-xs sm:text-sm font-semibold text-[#5E6E66]">left of 10 GB</span>
                 </div>
 
                 {/* Solid Progress Bar */}
@@ -169,9 +169,9 @@ export default function Hero({
                   ></div>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] font-semibold text-[#5E6E66] mt-2">
-                  <span>Data used: {(10 - dataUsage).toFixed(1)} GB</span>
-                  <span>Non-PTA Status: Protected</span>
+                <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-semibold text-[#5E6E66] mt-2">
+                  <span>Used: {(10 - dataUsage).toFixed(1)} GB</span>
+                  <span className="text-[#2FBF71]">Roaming: Active</span>
                 </div>
 
                 {/* Interactive Simulation Button */}
@@ -185,7 +185,7 @@ export default function Hero({
 
                   <button
                     onClick={onOpenPakistanModal}
-                    className="px-4 py-1.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold uppercase tracking-wide transition-colors"
+                    className="px-3.5 py-1.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold uppercase tracking-wide transition-colors"
                   >
                     Top Up
                   </button>
@@ -193,20 +193,20 @@ export default function Hero({
               </div>
 
               {/* 2 Columns & 2 Rows on Mobile for Checklist */}
-              <div className="grid grid-cols-2 gap-2 mb-5">
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[11px] font-bold text-[#1C2420]">
+              <div className="grid grid-cols-2 gap-2 mb-4 sm:mb-5">
+                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                  <span className="truncate">No PTA Tax</span>
+                  <span className="truncate">No Device Tax</span>
                 </div>
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[11px] font-bold text-[#1C2420]">
+                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
                   <span className="truncate">Never Blocked</span>
                 </div>
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[11px] font-bold text-[#1C2420]">
+                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
                   <span className="truncate">Instant QR Email</span>
                 </div>
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[11px] font-bold text-[#1C2420]">
+                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
                   <span className="truncate">Free Hotspot</span>
                 </div>
@@ -215,9 +215,9 @@ export default function Hero({
               {/* Bottom Action Button */}
               <button
                 onClick={onOpenPakistanModal}
-                className="w-full py-3.5 rounded-xl bg-[#123C2A] hover:bg-[#1A523A] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-3 sm:py-3.5 rounded-xl bg-[#123C2A] hover:bg-[#1A523A] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
               >
-                <span>Browse Non-PTA Plans (From Rs 525)</span>
+                <span>Browse eSIM Plans (From Rs 525)</span>
                 <ArrowRight className="w-4 h-4 text-[#2FBF71]" />
               </button>
 

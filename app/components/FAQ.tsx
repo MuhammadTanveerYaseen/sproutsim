@@ -8,24 +8,24 @@ export default function FAQ() {
 
   const faqs = [
     {
-      q: "Does this truly work on Non-PTA iPhones & Android phones?",
-      a: "Yes, 100%! SproutSIM is an international roaming data profile. In Pakistan, PTA blocks local Pakistani physical SIM cards (like Jazz, Zong, Telenor, Ufone) from latching onto towers if the device's IMEI hasn't paid PTA tax. However, international roaming data profiles are exempt from local device block lists and operate normally.",
+      q: "Does this work on imported or unregistered smartphones in Pakistan?",
+      a: "Yes, 100%! SproutSIM is an international roaming data profile. In Pakistan, local telecom operators block local physical SIM cards if a device's IMEI has unpaid taxes. However, international data roaming operates on global telecom agreements that remain active and unrestricted.",
     },
     {
-      q: "Will my Non-PTA device get blocked after 60 days?",
-      a: "No! The 60-day limit only applies to local Pakistani SIMs inserted into Non-PTA hardware. Because SproutSIM operates over global roaming protocols, it does not trigger the 60-day PTA timer. You can use it year-round by simply renewing or topping up your data allowance.",
+      q: "Will my connection get blocked after 60 days?",
+      a: "No! The 60-day limit only applies to local Pakistani physical SIMs inserted into unregistered hardware. Because SproutSIM operates over global roaming protocols, it does not trigger the 60-day timer. You can use it year-round simply by renewing or topping up your data allowance.",
     },
     {
-      q: "Can I make voice calls and use WhatsApp on my Non-PTA phone?",
-      a: "Yes! All your internet-based calling apps — including WhatsApp audio/video calls, FaceTime, Zoom, Telegram, and Messenger — work in crystal-clear HD. You also keep your original WhatsApp number even if the phone has no local physical SIM.",
+      q: "Can I make voice calls and use WhatsApp with SproutSIM?",
+      a: "Yes! All internet-based calling apps — including WhatsApp audio/video calls, FaceTime, Zoom, Telegram, and Messenger — work in crystal-clear HD. You also keep your existing WhatsApp phone number and chat history intact.",
     },
     {
-      q: "Can I share my Non-PTA data with other devices using Hotspot?",
-      a: "Absolutely! Personal Hotspot and tethering are completely unlocked. You can turn on your Non-PTA iPhone hotspot and provide internet to your laptop, tablet, or another phone anywhere in Pakistan.",
+      q: "Can I share my mobile data with other devices using Hotspot?",
+      a: "Absolutely! Personal Hotspot and tethering are completely unlocked. You can turn on your hotspot and provide fast internet to your laptop, tablet, or another phone anywhere in Pakistan.",
     },
     {
       q: "Do I need to provide a Pakistani CNIC or visit a franchise?",
-      a: "No paperwork or franchise visits are required. SproutSIM is 100% digital. You purchase your package online, receive your QR code via Hostinger business email, scan it into your phone's cellular settings, and get online instantly.",
+      a: "No paperwork or franchise visits are required. SproutSIM is 100% digital. You purchase your package online, receive your QR code via Hostinger business email, scan it into your phone's cellular settings, and get online in under 2 minutes.",
     },
     {
       q: "What happens if I run out of data before the month ends?",
@@ -41,13 +41,13 @@ export default function FAQ() {
         <div className="text-center max-w-xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
             <HelpCircle className="w-3.5 h-3.5 text-[#2FBF71]" />
-            <span>Non-PTA Questions Answered</span>
+            <span>Got Questions?</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
             Frequently Asked Questions
           </h2>
           <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-            Everything you need to know about keeping your Non-PTA phone connected in Pakistan.
+            Everything you need to know about setting up and using SproutSIM in Pakistan.
           </p>
         </div>
 

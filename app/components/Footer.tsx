@@ -70,13 +70,13 @@ export default function Footer() {
           <div className="lg:col-span-5 space-y-4">
             <Logo variant="white" size="md" />
             <p className="text-xs text-[#A7E8C1] leading-relaxed max-w-sm">
-              SproutSIM is Pakistan&apos;s leading international roaming data service engineered specifically for Non-PTA iPhones &amp; Androids. Stay connected 365 days a year without paying heavy PTA device registration taxes.
+              SproutSIM delivers reliable, unrestricted 4G mobile data across Pakistan for all eSIM-compatible smartphones. Stay connected 365 days a year without device registration hurdles.
             </p>
 
             <div className="pt-1 text-[11px] text-[#A7E8C1] space-y-1 font-medium">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2FBF71]"></span>
-                <span>Zero PTA Device Tax • Never Blocked</span>
+                <span>Unrestricted Roaming • Never Blocked</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2FBF71]"></span>
@@ -84,8 +84,8 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#2FBF71]" />
-                <a href="mailto:support@sproutsim.com" className="hover:text-white transition-colors">
-                  support@sproutsim.com
+                <a href="mailto:business@sproutsim.cloud" className="hover:text-white transition-colors">
+                  business@sproutsim.cloud
                 </a>
               </div>
             </div>
@@ -118,7 +118,7 @@ export default function Footer() {
             {/* Quick Links */}
             <div className="space-y-2.5">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#2FBF71]">
-                Non-PTA Packages
+                Data Packages
               </h4>
               <ul className="space-y-1.5 text-xs font-semibold text-[#F5F7F2]">
                 <li>
@@ -154,35 +154,35 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Non-PTA Devices */}
+            {/* Universal Device Compatibility */}
             <div className="space-y-2.5">
               <h4 className="text-[11px] font-bold uppercase tracking-wider text-[#2FBF71]">
-                Supported Devices
+                Universal Device Support
               </h4>
               <ul className="space-y-1.5 text-xs font-semibold text-[#F5F7F2]">
                 <li>
                   <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
-                    Non-PTA iPhone 16 / 15
+                    All eSIM iPhones
                   </a>
                 </li>
                 <li>
                   <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
-                    Non-PTA iPhone 14 / 13
+                    All eSIM Samsung Galaxy
                   </a>
                 </li>
                 <li>
                   <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
-                    Non-PTA iPhone 12 / 11
+                    All eSIM Google Pixel
                   </a>
                 </li>
                 <li>
                   <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
-                    Samsung Galaxy S24 / S23
+                    Dial *#06# to Verify EID
                   </a>
                 </li>
                 <li>
                   <a href="#compatibility" className="hover:text-[#2FBF71] transition-colors">
-                    Google Pixel 9 / 8 / 7
+                    Free Hotspot Sharing
                   </a>
                 </li>
               </ul>

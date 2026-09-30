@@ -6,29 +6,29 @@ export default function HowItWorks() {
     {
       num: "01",
       icon: Compass,
-      title: "Choose Data Allowance",
-      desc: "Select the GB package tailored for your Non-PTA device (1 GB trial up to Unlimited).",
+      title: "Choose Data Package",
+      desc: "Select the data package that fits your needs (1 GB starter trial up to Unlimited).",
       badge: "Step One",
     },
     {
       num: "02",
       icon: CreditCard,
       title: "Instant Digital Checkout",
-      desc: "Pay securely in PKR or USD. No Pakistani CNIC, passport, or franchise biometric needed.",
+      desc: "Pay securely in PKR or USD. No physical paperwork, queues, or biometric delays.",
       badge: "Step Two",
     },
     {
       num: "03",
       icon: QrCode,
-      title: "Scan on Non-PTA Phone",
-      desc: "Go to Settings &rarr; Cellular &rarr; Add eSIM and scan your QR code. Takes under 60 seconds.",
+      title: "Scan on Your Phone",
+      desc: "Open Settings &rarr; Cellular &rarr; Add eSIM and scan your delivered QR code.",
       badge: "Step Three",
     },
     {
       num: "04",
       icon: Wifi,
-      title: "Turn on Roaming & Enjoy",
-      desc: "Enable Data Roaming. Your Non-PTA phone connects to high-speed 4G data that never gets blocked.",
+      title: "Turn on Roaming & Connect",
+      desc: "Enable Data Roaming. Your device connects to reliable high-speed 4G data instantly.",
       badge: "Step Four",
     },
   ];
@@ -43,10 +43,10 @@ export default function HowItWorks() {
             <span>Simple 4-Step Process</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-            How to Setup Your Non-PTA eSIM
+            How to Setup Your SproutSIM eSIM
           </h2>
           <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-            Activate data on any Non-PTA smartphone in under 2 minutes without paying any PTA tax.
+            Activate high-speed mobile data on any eSIM smartphone in under 2 minutes.
           </p>
         </div>
 

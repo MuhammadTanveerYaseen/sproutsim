@@ -26,19 +26,19 @@ export default function WhySproutSim() {
   ];
 
   return (
-    <section id="why-non-pta" className="py-12 sm:py-20 bg-[#FFFFFF] border-b border-[#E0E7E2]">
+    <section id="why-sproutsim" className="py-12 sm:py-20 bg-[#FFFFFF] border-b border-[#E0E7E2]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Header */}
         <div className="text-center max-w-xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
-            <span>The Non-PTA Solution</span>
+            <span>The Smarter Connectivity Solution</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-            Why Use SproutSIM on Non-PTA Phones?
+            Why Choose SproutSIM in Pakistan?
           </h2>
           <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-            Enjoy full mobile internet independence on imported iPhones and premium Android devices in Pakistan.
+            Enjoy full mobile internet independence on imported and unlocked smartphones across Pakistan.
           </p>
         </div>
 
@@ -65,26 +65,26 @@ export default function WhySproutSim() {
 
                 <div className="mt-3 pt-2 border-t border-[#E0E7E2] flex items-center gap-1 text-[10px] font-bold text-[#2FBF71]">
                   <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">Non-PTA Verified</span>
+                  <span className="truncate">Active &amp; Verified</span>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Non-PTA Promise Callout */}
-        <div className="bg-[#FFFFFF] rounded-2xl border-2 border-[#123C2A] p-6 sm:p-8">
+        {/* Guarantee Promise Callout */}
+        <div className="bg-[#FFFFFF] rounded-2xl border-2 border-[#123C2A] p-5 sm:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             
             <div className="lg:col-span-8 space-y-2">
               <span className="text-[11px] font-bold text-[#2FBF71] uppercase tracking-wider block">
-                The Non-PTA Guarantee
+                The SproutSIM Guarantee
               </span>
               <h3 className="text-xl sm:text-2xl font-extrabold text-[#123C2A]">
-                Zero PTA Device Tax. 100% Reliable 4G Data.
+                Zero Registration Taxes. 100% Reliable 4G Data.
               </h3>
               <p className="text-xs sm:text-sm text-[#5E6E66] leading-relaxed">
-                SproutSIM enables Non-PTA smartphones to stay connected 365 days a year across Pakistan without paying exorbitant PTA IMEI taxes. We provide the legitimate global roaming pathway that keeps your device online.
+                SproutSIM enables smartphones to stay connected 365 days a year across Pakistan without paying exorbitant device taxes. We provide the legitimate global roaming pathway that keeps your device online.
               </p>
             </div>
 

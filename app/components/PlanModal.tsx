@@ -121,10 +121,10 @@ export default function PlanModal({
             <div className="space-y-5">
               <div>
                 <h3 className="text-xs sm:text-sm font-bold text-[#123C2A] uppercase tracking-wider mb-1">
-                  Choose your Non-PTA data package
+                  Choose your data package
                 </h3>
                 <p className="text-xs text-[#5E6E66]">
-                  Instant QR delivery. Unlocks high-speed data without paying device taxes.
+                  Instant QR delivery. High-speed 4G data active in under 2 minutes.
                 </p>
               </div>
 
@@ -176,15 +176,15 @@ export default function PlanModal({
                 })}
               </div>
 
-              {/* Non-PTA Perks Grid: 2 columns and 2 rows on mobile */}
+              {/* Perks Grid: 2 columns and 2 rows on mobile */}
               <div className="bg-[#F5F7F2] p-3.5 rounded-2xl border border-[#E0E7E2]">
                 <div className="text-[11px] font-bold text-[#123C2A] uppercase tracking-wider mb-2">
-                  Non-PTA Protection Guarantee:
+                  Included with Every Package:
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-semibold text-[#5E6E66]">
                   <div className="flex items-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                    <span>Zero PTA Tax Needed</span>
+                    <span>No Device Tax Needed</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Lock className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
@@ -196,7 +196,7 @@ export default function PlanModal({
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                    <span>Instant Hostinger Mail</span>
+                    <span>Instant Email Dispatch</span>
                   </div>
                 </div>
               </div>
@@ -222,10 +222,10 @@ export default function PlanModal({
                   ← Back to plan selection
                 </button>
                 <h3 className="text-base sm:text-lg font-extrabold text-[#123C2A]">
-                  Non-PTA Delivery Details
+                  eSIM Delivery Details
                 </h3>
                 <p className="text-xs text-[#5E6E66]">
-                  Enter your email address where Hostinger business mail will dispatch your eSIM activation QR code.
+                  Enter your email address where your eSIM activation QR code will be dispatched.
                 </p>
               </div>
 
@@ -236,7 +236,7 @@ export default function PlanModal({
                   <span>{formatPrice(selectedPlan)}</span>
                 </div>
                 <div className="flex justify-between items-center text-[#5E6E66]">
-                  <span>PTA Device Tax</span>
+                  <span>Device Registration Tax</span>
                   <span className="text-[#2FBF71] font-bold">Rs 0 (EXEMPT)</span>
                 </div>
                 <div className="flex justify-between items-center text-[#5E6E66]">
@@ -295,10 +295,10 @@ export default function PlanModal({
 
               <div>
                 <h3 className="text-lg font-extrabold text-[#123C2A]">
-                  Non-PTA eSIM Ready!
+                  Your eSIM is Ready!
                 </h3>
                 <p className="text-xs text-[#5E6E66] max-w-xs mx-auto mt-1">
-                  Dispatched via Hostinger to <strong className="text-[#123C2A]">{email}</strong>. Scan the QR code below on your Non-PTA phone now.
+                  Dispatched to <strong className="text-[#123C2A]">{email}</strong>. Scan the QR code below on your phone now.
                 </p>
               </div>
 

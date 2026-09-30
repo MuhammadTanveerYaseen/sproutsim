@@ -15,15 +15,15 @@ export default function AppShowcase() {
           {/* Left Text & 2x2 Mobile Feature Grid */}
           <div className="lg:col-span-6 space-y-5">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider">
-              <span>Non-PTA Mobile Management</span>
+              <span>Real-Time Mobile Management</span>
             </div>
 
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight leading-tight">
-              Manage Your Non-PTA Connection in Real Time.
+              Manage Your Data Connection in Real Time.
             </h2>
 
             <p className="text-xs sm:text-base text-[#5E6E66] leading-relaxed">
-              Track live data consumption, check renewal dates, and top up gigabytes with 1 tap. Your Non-PTA device stays protected and connected 24/7 anywhere in Pakistan.
+              Track live data consumption, check renewal dates, and top up gigabytes with 1 tap. Your device stays connected and protected 24/7 across Pakistan.
             </p>
 
             {/* 2 Columns & 2 Rows on Mobile for Features */}
@@ -147,14 +147,14 @@ export default function AppShowcase() {
                     <div className="flex items-center justify-between">
                       <Logo size="sm" />
                       <div className="w-7 h-7 rounded-full bg-[#123C2A] text-white text-[10px] font-bold flex items-center justify-center">
-                        PTA-FREE
+                        ACTIVE
                       </div>
                     </div>
 
                     <div>
-                      <span className="text-[11px] text-[#5E6E66]">Device Protected</span>
+                      <span className="text-[11px] text-[#5E6E66]">Device Connected</span>
                       <h4 className="text-base font-extrabold text-[#123C2A]">
-                        Non-PTA iPhone 15 Pro
+                        eSIM Smartphone
                       </h4>
                     </div>
 
@@ -163,12 +163,12 @@ export default function AppShowcase() {
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-bold text-[#5E6E66]">Active Profile</span>
                         <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#E9F8F0] text-[#2FBF71]">
-                          Online • No Block
+                          Online • Active
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="font-extrabold text-sm text-[#123C2A]">Non-PTA 10 GB Pack</div>
+                          <div className="font-extrabold text-sm text-[#123C2A]">Pakistan 10 GB Pack</div>
                           <div className="text-[10px] text-[#5E6E66]">4G High-Speed Data</div>
                         </div>
                         <button
@@ -185,7 +185,7 @@ export default function AppShowcase() {
                       <div className="text-[11px] font-bold text-[#123C2A] mb-1.5">Active Status</div>
                       <div className="grid grid-cols-2 gap-1.5 text-[10px] font-bold">
                         <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
-                          <span className="text-[#2FBF71]">PTA Tax</span>
+                          <span className="text-[#2FBF71]">Device Tax</span>
                           <div className="text-[9px] text-[#5E6E66] font-normal">Exempt ($0)</div>
                         </div>
                         <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
@@ -197,7 +197,7 @@ export default function AppShowcase() {
                           <div className="text-[9px] text-[#5E6E66] font-normal">Unlocked</div>
                         </div>
                         <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2]">
-                          <span className="text-[#2FBF71]">WhatsApp</span>
+                          <span className="text-[#2FBF71]">Apps &amp; Calls</span>
                           <div className="text-[9px] text-[#5E6E66] font-normal">Active</div>
                         </div>
                       </div>
@@ -212,13 +212,13 @@ export default function AppShowcase() {
                       <button onClick={() => setActiveTab("home")} className="text-xs font-bold text-[#5E6E66]">
                         ‹ Back
                       </button>
-                      <span className="text-xs font-bold text-[#123C2A]">Non-PTA Plans</span>
+                      <span className="text-xs font-bold text-[#123C2A]">Data Plans</span>
                     </div>
 
                     <div className="bg-[#123C2A] text-white p-2.5 rounded-xl flex items-center justify-between">
                       <div>
-                        <div className="text-[9px] text-[#A7E8C1]">Device Type</div>
-                        <div className="text-xs font-extrabold">Non-PTA Approved</div>
+                        <div className="text-[9px] text-[#A7E8C1]">Coverage</div>
+                        <div className="text-xs font-extrabold">Pakistan 4G/LTE</div>
                       </div>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#2FBF71]">Zero Tax</span>
                     </div>

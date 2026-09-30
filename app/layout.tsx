@@ -2,23 +2,22 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SproutSIM – Pakistan Non-PTA eSIM Data | Zero PTA Tax",
+  title: "SproutSIM – Pakistan 4G eSIM Data | Stay Connected Anywhere",
   description:
-    "Keep your Non-PTA iPhone & Android connected in Pakistan without paying PTA tax. High-speed 4G data that never gets blocked. Instant QR code delivery via SproutSIM.",
+    "Keep your smartphone connected in Pakistan without registration hurdles. High-speed 4G data that never gets blocked. Instant QR code delivery via SproutSIM.",
   keywords: [
-    "Non-PTA eSIM",
-    "Pakistan Non-PTA data",
-    "Non-PTA iPhone data Pakistan",
-    "eSIM Pakistan without PTA tax",
-    "Non PTA sim Pakistan",
+    "eSIM Pakistan",
+    "Pakistan eSIM data",
+    "iPhone eSIM Pakistan",
+    "eSIM Pakistan data roaming",
     "SproutSIM",
     "sproutsimofficial",
   ],
   authors: [{ name: "SPROUTSIM" }],
   openGraph: {
-    title: "SproutSIM – Pakistan Non-PTA eSIM Data",
+    title: "SproutSIM – Pakistan 4G eSIM Data",
     description:
-      "High-speed 4G data for Non-PTA iPhones & Androids in Pakistan. No PTA tax, never blocked. Get your eSIM QR instantly.",
+      "High-speed 4G data for all eSIM smartphones in Pakistan. Instant QR delivery.",
     siteName: "SproutSIM",
     locale: "en_PK",
     type: "website",
@@ -26,9 +25,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "SproutSIM – Pakistan Non-PTA eSIM Data",
+    title: "SproutSIM – Pakistan 4G eSIM Data",
     description:
-      "High-speed 4G data for Non-PTA devices in Pakistan. Zero PTA tax. Instant QR delivery.",
+      "High-speed 4G data for smartphones in Pakistan. Instant QR delivery.",
     images: ["/og-image.jpg"],
   },
   icons: {
@@ -48,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden scroll-smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -57,7 +56,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-[#F5F7F2] text-[#1C2420] antialiased">
+      <body className="min-h-screen flex flex-col bg-[#F5F7F2] text-[#1C2420] antialiased overflow-x-hidden">
         {children}
       </body>
     </html>

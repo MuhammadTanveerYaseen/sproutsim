@@ -40,10 +40,10 @@ export default function Testimonials() {
         <div className="text-center max-w-xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
             <Heart className="w-3.5 h-3.5 text-[#2FBF71]" />
-            <span>Over 25,000+ Non-PTA Devices Powered</span>
+            <span>Over 25,000+ Active Connections</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-            Trusted by Non-PTA Users Across Pakistan
+            Trusted by Smartphone Users Across Pakistan
           </h2>
           <div className="flex items-center justify-center gap-2 mt-2">
             <div className="flex text-[#2FBF71]">

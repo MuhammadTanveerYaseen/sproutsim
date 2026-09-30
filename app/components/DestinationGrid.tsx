@@ -40,23 +40,23 @@ export default function DestinationGrid({
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
               <ShieldCheck className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>Zero PTA Tax Required</span>
+              <span>Instant QR Activation</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-[#123C2A] tracking-tight">
-              Pakistan Non-PTA eSIM Data Plans
+              Pakistan 4G eSIM Data Plans
             </h2>
             <p className="text-xs sm:text-sm text-[#5E6E66] mt-1 max-w-xl">
-              Engineered exclusively for Non-PTA iPhones &amp; Android devices in Pakistan. Keep WhatsApp, Google Maps, banking apps, and high-speed data active without paying IMEI tax.
+              High-speed mobile data for all eSIM smartphones in Pakistan. Keep WhatsApp, Google Maps, ride-sharing, and streaming active continuously.
             </p>
           </div>
 
           {/* Badges */}
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A]">
-              100% Non-PTA Safe
+              High-Speed 4G/LTE
             </span>
             <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-[#F5F7F2] border border-[#E0E7E2] text-[#123C2A]">
-              No 60-Day Block
+              Never Blocked
             </span>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function DestinationGrid({
                   : "bg-[#F5F7F2] text-[#1C2420] border border-[#E0E7E2] hover:border-[#123C2A]"
               }`}
             >
-              {tier === "All" ? "All Non-PTA Plans" : tier}
+              {tier === "All" ? "All Plans" : tier}
             </button>
           ))}
         </div>
@@ -109,7 +109,7 @@ export default function DestinationGrid({
                   </div>
 
                   <span className="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1] whitespace-nowrap">
-                    Non-PTA
+                    4G eSIM
                   </span>
                 </div>
 
@@ -121,7 +121,7 @@ export default function DestinationGrid({
                   </div>
                   <div className="flex items-center gap-1.5 text-[#123C2A]">
                     <Wifi className="w-3 h-3 text-[#2FBF71] flex-shrink-0" />
-                    <span>Free Hotspot Tethering</span>
+                    <span>Free Hotspot Sharing</span>
                   </div>
                 </div>
 
@@ -134,7 +134,7 @@ export default function DestinationGrid({
               <div className="pt-2 sm:pt-3 border-t border-[#E0E7E2] mt-2">
                 <div className="mb-2">
                   <span className="text-[9px] sm:text-[10px] uppercase font-semibold text-[#5E6E66] block">
-                    Zero PTA Tax Price
+                    Package Price
                   </span>
                   <span className="text-sm sm:text-xl font-extrabold text-[#123C2A] block leading-tight">
                     {formatPrice(pkg)}
@@ -153,18 +153,18 @@ export default function DestinationGrid({
           ))}
         </div>
 
-        {/* Why Non-PTA Devices Stay Connected Section: Exact 2 columns and 2 rows on mobile */}
-        <div id="why-non-pta" className="pt-8 border-t border-[#E0E7E2]">
+        {/* Why SproutSIM Keeps You Connected Section: Exact 2 columns and 2 rows on mobile */}
+        <div id="why-sproutsim" className="pt-8 border-t border-[#E0E7E2]">
           <div className="text-center max-w-xl mx-auto mb-8">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] text-xs font-bold uppercase tracking-wider mb-2">
               <Lock className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>How It Works Legally</span>
+              <span>Continuous Connectivity</span>
             </div>
             <h3 className="text-xl sm:text-3xl font-extrabold text-[#123C2A]">
-              How SproutSIM Works on Non-PTA Phones
+              How SproutSIM Keeps You Online in Pakistan
             </h3>
             <p className="text-xs sm:text-sm text-[#5E6E66] mt-1">
-              Local physical SIMs get IMEI-blocked by PTA after 60 days. Our international roaming profile is officially exempt from local PTA block lists.
+              Local physical SIMs stop working on unregistered devices after 60 days. SproutSIM utilizes legitimate international roaming channels that remain active year-round.
             </p>
           </div>
 
