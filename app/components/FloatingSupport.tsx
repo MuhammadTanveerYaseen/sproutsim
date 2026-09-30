@@ -43,7 +43,7 @@ export default function FloatingSupport() {
           {/* Quick Action */}
           <div className="p-2.5 bg-white border-t border-[#E0E7E2]">
             <a
-              href="https://wa.me/?text=Hi%20SproutSIM,%20I%20need%20help%20with%20Pakistan%20eSIM"
+              href="https://wa.me/923086379663?text=Hi%20SproutSIM,%20I%20need%20help%20with%20Pakistan%20eSIM"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2 px-3 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors"

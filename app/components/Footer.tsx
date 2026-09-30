@@ -56,7 +56,7 @@ export default function Footer() {
     { name: "X (Twitter)", platform: "x" as const, url: "https://x.com/sproutsim" },
     { name: "LinkedIn", platform: "linkedin" as const, url: "https://linkedin.com/company/sproutsim" },
     { name: "TikTok", platform: "tiktok" as const, url: "https://tiktok.com/@sproutsimofficial" },
-    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/+923001234567?text=Hi%20SproutSIM%2C%20I%20need%20Non-PTA%20eSIM%20support" },
+    { name: "WhatsApp", platform: "whatsapp" as const, url: "https://wa.me/923086379663?text=Hi%20SproutSIM%2C%20I%20need%20Non-PTA%20eSIM%20support" },
   ];
 
   return (
