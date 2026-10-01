@@ -214,6 +214,12 @@ export default function Footer() {
                     Privacy &amp; Terms
                   </a>
                 </li>
+                <li>
+                  <a href="/admin" className="hover:text-[#2FBF71] transition-colors flex items-center gap-1.5 font-medium">
+                    <Lock className="w-3 h-3 text-[#2FBF71]" />
+                    <span>Admin Console</span>
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -232,6 +238,14 @@ export default function Footer() {
               <ShieldCheck className="w-4 h-4 text-[#2FBF71]" />
               <span>SSL 256-bit Encrypted Checkout</span>
             </span>
+            <span className="text-[#1A523A] hidden sm:inline">•</span>
+            <a
+              href="/admin"
+              className="text-[#A7E8C1] hover:text-[#2FBF71] transition-colors flex items-center gap-1 font-medium"
+            >
+              <Lock className="w-3.5 h-3.5 text-[#2FBF71]" />
+              <span>Admin Console</span>
+            </a>
           </div>
         </div>
 

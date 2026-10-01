@@ -136,3 +136,40 @@ export async function sendEsimOrderEmail(payload: EsimEmailPayload) {
     messageId: info.messageId,
   };
 }
+
+export async function testSmtpConnection(): Promise<{ success: boolean; message: string; host?: string }> {
+  const transporter = getHostingerTransporter();
+  if (!transporter) {
+    return {
+      success: false,
+      message: "Hostinger credentials (HOSTINGER_SMTP_USER / HOSTINGER_SMTP_PASS) are missing in .env.local",
+    };
+  }
+
+  try {
+    await transporter.verify();
+    return {
+      success: true,
+      message: "Hostinger SMTP verified successfully! Ready to dispatch.",
+      host: process.env.HOSTINGER_SMTP_HOST || "smtp.hostinger.com",
+    };
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err?.message || String(err),
+      host: process.env.HOSTINGER_SMTP_HOST || "smtp.hostinger.com",
+    };
+  }
+}
+
+export async function sendAdminTestEmail(targetEmail: string) {
+  return sendEsimOrderEmail({
+    to: targetEmail,
+    planName: "Admin System Test Package",
+    dataAllowance: "10 GB",
+    validity: "30 Days",
+    priceFormatted: "Rs 0 (Test)",
+    lpaCode: "LPA:1$smdp.gloesim.com$ADMIN-TEST-ACTIVATION",
+    smdpAddress: "smdp.gloesim.com",
+  });
+}
