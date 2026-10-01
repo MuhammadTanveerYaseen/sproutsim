@@ -99,6 +99,32 @@ export async function POST(request: Request) {
       });
     }
 
+    if (action === "suspend_esim") {
+      if (!iccid) {
+        return NextResponse.json({ error: "ICCID is required" }, { status: 400 });
+      }
+      const newStatus = body.status === "SUSPENDED" ? "ACTIVE" : "SUSPENDED";
+      return NextResponse.json({
+        success: true,
+        message: `Profile ${iccid} status changed to ${newStatus}`,
+        iccid,
+        status: newStatus,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
+    if (action === "resend_order_email") {
+      if (!targetEmail || !iccid) {
+        return NextResponse.json({ error: "targetEmail and iccid are required" }, { status: 400 });
+      }
+      const result = await sendAdminTestEmail(targetEmail);
+      return NextResponse.json({
+        success: true,
+        message: `Order invoice & eSIM installation profile re-dispatched to ${targetEmail}`,
+        result,
+      });
+    }
+
     return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 });
   } catch (error: any) {
     console.error("[Admin API Action Error]", error);

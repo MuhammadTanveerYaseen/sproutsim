@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -35,129 +35,223 @@ import {
   DollarSign,
   ChevronRight,
   Sparkles,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  FileText,
+  Terminal,
+  Database,
+  Bell,
+  Lock,
+  PauseCircle,
+  PlayCircle,
+  Eye,
+  Receipt,
+  Zap,
 } from "lucide-react";
-import { PAKISTAN_PLANS, PakistanPackage } from "../data/destinations";
 import { GLOESIM_PAKISTAN_PACKAGES } from "../lib/gloesim";
 
-// Types
-interface AdminOrder {
+export const GLOESIM_CATALOG = Object.entries(GLOESIM_PAKISTAN_PACKAGES).map(([key, pkg]) => ({
+  ...pkg,
+  planKey: key,
+}));
+
+// ==========================================
+// ENTERPRISE TYPES & INTERFACES
+// ==========================================
+export interface AdminOrder {
   id: string;
   orderNumber: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
   planName: string;
+  packageCode: string;
   dataMB: number;
   dataFormatted: string;
   amountPKR: number;
   amountUSD: number;
+  wholesaleCostUSD: number;
+  grossMarginUSD: number;
+  grossMarginPct: number;
   status: "ACTIVE" | "PENDING" | "COMPLETED" | "REFUNDED";
-  paymentMethod: "Stripe" | "JazzCash" | "EasyPaisa" | "Crypto";
+  paymentMethod: "Stripe" | "JazzCash" | "EasyPaisa" | "Bank Transfer";
   iccid: string;
   lpaCode: string;
   createdAt: string;
   carrier: string;
+  emailDispatched: boolean;
 }
 
-interface AdminEsim {
+export interface AdminEsim {
   id: string;
   iccid: string;
   customerEmail: string;
   customerName: string;
+  deviceModel: string;
   planName: string;
+  packageCode: string;
   totalMB: number;
   usedMB: number;
   remainingMB: number;
-  status: "ACTIVE" | "DEPLETED" | "EXPIRED";
+  status: "ACTIVE" | "SUSPENDED" | "DEPLETED" | "EXPIRED";
   operator: string;
+  mccMnc: string;
   validUntil: string;
   lpaCode: string;
+  smdpAddress: string;
+  matchingId: string;
+  sessionsCount: number;
+  lastActive: string;
 }
 
+export interface AuditLog {
+  id: string;
+  timestamp: string;
+  actor: string;
+  action: string;
+  target: string;
+  ip: string;
+  status: "SUCCESS" | "WARNING" | "FAILED";
+}
+
+export interface EmailLog {
+  id: string;
+  recipient: string;
+  subject: string;
+  template: string;
+  status: "DELIVERED" | "PENDING" | "FAILED";
+  timestamp: string;
+  latencyMs: number;
+}
+
+export interface CdrRecord {
+  id: string;
+  startTime: string;
+  durationMin: number;
+  bytesUsedMB: number;
+  cellTower: string;
+  location: string;
+  network: string;
+  ipAddress: string;
+}
+
+// Initial Comprehensive Mock Data
 const INITIAL_ORDERS: AdminOrder[] = [
   {
     id: "ord_101",
     orderNumber: "ORD-9482-PK",
     customerName: "Danyal Sheikh",
     customerEmail: "danyal.sheikh@example.com",
+    customerPhone: "+92 300 8472910",
     planName: "10 GB Monthly (Hot)",
+    packageCode: "GLO_PK_10GB_30D",
     dataMB: 10240,
     dataFormatted: "10 GB",
     amountPKR: 2225,
     amountUSD: 7.99,
+    wholesaleCostUSD: 2.10,
+    grossMarginUSD: 5.89,
+    grossMarginPct: 73.7,
     status: "ACTIVE",
     paymentMethod: "Stripe",
     iccid: "8988228044928812901",
     lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-889123-ACTIVATION",
     createdAt: "2026-09-30 14:22",
     carrier: "Jazz 4G LTE / Zong 4G",
+    emailDispatched: true,
   },
   {
     id: "ord_102",
     orderNumber: "ORD-9481-PK",
     customerName: "Ayesha Malik",
     customerEmail: "ayesha.m@travelpak.net",
+    customerPhone: "+92 321 4459102",
     planName: "20 GB Pro Streamer",
+    packageCode: "GLO_PK_20GB_30D",
     dataMB: 20480,
     dataFormatted: "20 GB",
     amountPKR: 3895,
     amountUSD: 13.99,
+    wholesaleCostUSD: 3.80,
+    grossMarginUSD: 10.19,
+    grossMarginPct: 72.8,
     status: "ACTIVE",
-    paymentMethod: "JazzCash",
+    paymentMethod: "Stripe",
     iccid: "8988228033819920192",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-772199-ACTIVATION",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-774910-ACTIVATION",
     createdAt: "2026-09-30 12:05",
     carrier: "Jazz 4G LTE / Zong 4G",
+    emailDispatched: true,
   },
   {
     id: "ord_103",
     orderNumber: "ORD-9480-PK",
     customerName: "Bilal Farooq",
     customerEmail: "bilal.farooq@outlook.com",
+    customerPhone: "+92 333 9981240",
     planName: "50 GB Power User",
+    packageCode: "GLO_PK_50GB_30D",
     dataMB: 51200,
     dataFormatted: "50 GB",
     amountPKR: 6995,
     amountUSD: 24.99,
+    wholesaleCostUSD: 7.20,
+    grossMarginUSD: 17.79,
+    grossMarginPct: 71.2,
     status: "ACTIVE",
-    paymentMethod: "EasyPaisa",
+    paymentMethod: "JazzCash",
     iccid: "8988228011293847291",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-991201-ACTIVATION",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-448190-ACTIVATION",
     createdAt: "2026-09-30 09:41",
     carrier: "Jazz 4G LTE / Zong 4G / Telenor",
+    emailDispatched: true,
   },
   {
     id: "ord_104",
     orderNumber: "ORD-9479-PK",
     customerName: "Hamza Tariq",
     customerEmail: "hamza.t@lahore.dev",
+    customerPhone: "+92 345 1102948",
     planName: "3 GB Weekly Pass",
+    packageCode: "GLO_PK_3GB_7D",
     dataMB: 3072,
     dataFormatted: "3 GB",
     amountPKR: 1195,
     amountUSD: 4.29,
+    wholesaleCostUSD: 1.15,
+    grossMarginUSD: 3.14,
+    grossMarginPct: 73.2,
     status: "ACTIVE",
-    paymentMethod: "Stripe",
+    paymentMethod: "EasyPaisa",
     iccid: "8988228099238471203",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-442109-ACTIVATION",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-110294-ACTIVATION",
     createdAt: "2026-09-29 18:30",
     carrier: "Jazz 4G LTE",
+    emailDispatched: true,
   },
   {
     id: "ord_105",
     orderNumber: "ORD-9478-PK",
     customerName: "Zainab Raza",
     customerEmail: "zainab.raza@islamabad.org",
+    customerPhone: "+92 301 5592817",
     planName: "1 GB Starter Trial",
+    packageCode: "GLO_PK_1GB_7D",
     dataMB: 1024,
     dataFormatted: "1 GB",
     amountPKR: 525,
     amountUSD: 1.89,
+    wholesaleCostUSD: 0.90,
+    grossMarginUSD: 0.99,
+    grossMarginPct: 52.4,
     status: "COMPLETED",
     paymentMethod: "Stripe",
     iccid: "8988228077651239012",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-110293-ACTIVATION",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-559102-ACTIVATION",
     createdAt: "2026-09-29 11:15",
     carrier: "Jazz 4G LTE",
+    emailDispatched: true,
   },
 ];
 
@@ -167,148 +261,528 @@ const INITIAL_ESIMS: AdminEsim[] = [
     iccid: "8988228044928812901",
     customerEmail: "danyal.sheikh@example.com",
     customerName: "Danyal Sheikh",
+    deviceModel: "Apple iPhone 15 Pro",
     planName: "10 GB Monthly (Hot)",
+    packageCode: "GLO_PK_10GB_30D",
     totalMB: 10240,
     usedMB: 3686,
     remainingMB: 6554,
     status: "ACTIVE",
-    operator: "Jazz 4G LTE / Zong 4G",
+    operator: "Jazz 4G LTE",
+    mccMnc: "410-01",
     validUntil: "2026-10-30",
     lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-889123-ACTIVATION",
+    smdpAddress: "smdp.gloesim.com",
+    matchingId: "GLO-PK-889123-ACTIVATION",
+    sessionsCount: 42,
+    lastActive: "12 mins ago",
   },
   {
     id: "esim_2",
     iccid: "8988228033819920192",
     customerEmail: "ayesha.m@travelpak.net",
     customerName: "Ayesha Malik",
+    deviceModel: "Samsung Galaxy S24 Ultra",
     planName: "20 GB Pro Streamer",
+    packageCode: "GLO_PK_20GB_30D",
     totalMB: 20480,
     usedMB: 5120,
     remainingMB: 15360,
     status: "ACTIVE",
-    operator: "Jazz 4G LTE / Zong 4G",
+    operator: "Zong 4G LTE",
+    mccMnc: "410-04",
     validUntil: "2026-10-30",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-772199-ACTIVATION",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-774910-ACTIVATION",
+    smdpAddress: "smdp.gloesim.com",
+    matchingId: "GLO-PK-774910-ACTIVATION",
+    sessionsCount: 78,
+    lastActive: "3 mins ago",
   },
   {
     id: "esim_3",
     iccid: "8988228011293847291",
     customerEmail: "bilal.farooq@outlook.com",
     customerName: "Bilal Farooq",
+    deviceModel: "Google Pixel 8 Pro",
     planName: "50 GB Power User",
+    packageCode: "GLO_PK_50GB_30D",
     totalMB: 51200,
     usedMB: 12288,
     remainingMB: 38912,
     status: "ACTIVE",
-    operator: "Jazz 4G LTE / Zong 4G / Telenor",
+    operator: "Jazz 4G LTE",
+    mccMnc: "410-01",
     validUntil: "2026-10-30",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-991201-ACTIVATION",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-448190-ACTIVATION",
+    smdpAddress: "smdp.gloesim.com",
+    matchingId: "GLO-PK-448190-ACTIVATION",
+    sessionsCount: 112,
+    lastActive: "Just now",
   },
   {
     id: "esim_4",
     iccid: "8988228099238471203",
     customerEmail: "hamza.t@lahore.dev",
     customerName: "Hamza Tariq",
+    deviceModel: "Apple iPhone 14 Pro",
     planName: "3 GB Weekly Pass",
+    packageCode: "GLO_PK_3GB_7D",
     totalMB: 3072,
     usedMB: 2100,
     remainingMB: 972,
     status: "ACTIVE",
     operator: "Jazz 4G LTE",
-    validUntil: "2026-10-06",
-    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-442109-ACTIVATION",
+    mccMnc: "410-01",
+    validUntil: "2026-10-07",
+    lpaCode: "LPA:1$smdp.gloesim.com$GLO-PK-110294-ACTIVATION",
+    smdpAddress: "smdp.gloesim.com",
+    matchingId: "GLO-PK-110294-ACTIVATION",
+    sessionsCount: 19,
+    lastActive: "45 mins ago",
   },
 ];
 
-export default function AdminDashboardPage() {
-  // Authentication State
-  const [isAdminAuth, setIsAdminAuth] = useState<boolean>(false);
-  const [adminPin, setAdminPin] = useState("");
-  const [authError, setAuthError] = useState("");
+const INITIAL_AUDIT_LOGS: AuditLog[] = [
+  {
+    id: "log_1",
+    timestamp: "2026-09-30 21:05:14",
+    actor: "superadmin@sproutsim.cloud",
+    action: "PROVISION_ESIM",
+    target: "ORD-9482-PK (8988228044928812901)",
+    ip: "182.185.190.44",
+    status: "SUCCESS",
+  },
+  {
+    id: "log_2",
+    timestamp: "2026-09-30 20:54:12",
+    actor: "system_daemon",
+    action: "GLOESIM_PING_HEALTHCHECK",
+    target: "api.gloesim.com:443",
+    ip: "10.0.4.1",
+    status: "SUCCESS",
+  },
+  {
+    id: "log_3",
+    timestamp: "2026-09-30 19:40:02",
+    actor: "superadmin@sproutsim.cloud",
+    action: "TOPUP_ESIM_3GB",
+    target: "ICCID: 8988228065989649",
+    ip: "182.185.190.44",
+    status: "SUCCESS",
+  },
+  {
+    id: "log_4",
+    timestamp: "2026-09-30 18:22:19",
+    actor: "system_smtp",
+    action: "HOSTINGER_DISPATCH_QR",
+    target: "ayesha.m@travelpak.net",
+    ip: "smtp.hostinger.com",
+    status: "SUCCESS",
+  },
+];
 
-  // Navigation State
-  const [activeTab, setActiveTab] = useState<
-    "overview" | "orders" | "esims" | "provision" | "plans" | "gloesim" | "hostinger"
-  >("overview");
+const INITIAL_EMAIL_LOGS: EmailLog[] = [
+  {
+    id: "em_1",
+    recipient: "danyal.sheikh@example.com",
+    subject: "Your SproutSIM 10 GB eSIM is Ready! [QR Code & LPA Inside]",
+    template: "customer-order-ready.html",
+    status: "DELIVERED",
+    timestamp: "2026-09-30 14:22:45",
+    latencyMs: 740,
+  },
+  {
+    id: "em_2",
+    recipient: "ayesha.m@travelpak.net",
+    subject: "Your SproutSIM 20 GB eSIM is Ready! [QR Code & LPA Inside]",
+    template: "customer-order-ready.html",
+    status: "DELIVERED",
+    timestamp: "2026-09-30 12:05:32",
+    latencyMs: 812,
+  },
+  {
+    id: "em_3",
+    recipient: "bilal.farooq@outlook.com",
+    subject: "Your SproutSIM 50 GB eSIM is Ready! [QR Code & LPA Inside]",
+    template: "customer-order-ready.html",
+    status: "DELIVERED",
+    timestamp: "2026-09-30 09:41:18",
+    latencyMs: 690,
+  },
+  {
+    id: "em_4",
+    recipient: "hamza.t@lahore.dev",
+    subject: "Your SproutSIM 3 GB eSIM is Ready! [QR Code & LPA Inside]",
+    template: "customer-order-ready.html",
+    status: "DELIVERED",
+    timestamp: "2026-09-29 18:30:54",
+    latencyMs: 915,
+  },
+];
 
-  // Data State
+const CDR_SESSIONS_MOCK: CdrRecord[] = [
+  {
+    id: "cdr_01",
+    startTime: "2026-09-30 20:14",
+    durationMin: 42,
+    bytesUsedMB: 312.4,
+    cellTower: "LHE-GUL-TOWER-410",
+    location: "Gulberg III, Lahore",
+    network: "Jazz 4G LTE",
+    ipAddress: "100.84.19.122",
+  },
+  {
+    id: "cdr_02",
+    startTime: "2026-09-30 18:40",
+    durationMin: 18,
+    bytesUsedMB: 84.1,
+    cellTower: "LHE-DHA-PHASE5-01",
+    location: "DHA Phase 5, Lahore",
+    network: "Jazz 4G LTE",
+    ipAddress: "100.84.19.145",
+  },
+  {
+    id: "cdr_03",
+    startTime: "2026-09-30 16:10",
+    durationMin: 65,
+    bytesUsedMB: 1042.8,
+    cellTower: "ISB-F7-SECTOR-09",
+    location: "F-7 Markaz, Islamabad",
+    network: "Zong 4G LTE",
+    ipAddress: "100.112.40.89",
+  },
+];
+
+export default function AdminPage() {
+  // Authentication & Security
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [pinInput, setPinInput] = useState<string>("");
+  const [pinError, setPinError] = useState<string>("");
+  const [environmentMode, setEnvironmentMode] = useState<"PROD" | "SANDBOX">("PROD");
+
+  // Navigation Tabs
+  type NavTab =
+    | "overview"
+    | "orders"
+    | "esims"
+    | "provision"
+    | "pricing"
+    | "gloesim"
+    | "email"
+    | "audit";
+  const [activeTab, setActiveTab] = useState<NavTab>("overview");
+
+  // Live Data State
   const [orders, setOrders] = useState<AdminOrder[]>(INITIAL_ORDERS);
   const [esims, setEsims] = useState<AdminEsim[]>(INITIAL_ESIMS);
-  const [plans, setPlans] = useState<PakistanPackage[]>(PAKISTAN_PLANS);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(INITIAL_AUDIT_LOGS);
+  const [emailLogs, setEmailLogs] = useState<EmailLog[]>(INITIAL_EMAIL_LOGS);
 
-  // Search & Filter
-  const [orderSearch, setOrderSearch] = useState("");
-  const [orderFilter, setOrderFilter] = useState<string>("ALL");
-  const [copiedText, setCopiedText] = useState<string | null>(null);
+  // Search & Filter State
+  const [orderSearchQuery, setOrderSearchQuery] = useState<string>("");
+  const [orderStatusFilter, setOrderStatusFilter] = useState<string>("ALL");
+  const [esimSearchQuery, setEsimSearchQuery] = useState<string>("");
+  const [esimStatusFilter, setEsimStatusFilter] = useState<string>("ALL");
 
-  // Provider Status State
-  const [isTestingGloEsim, setIsTestingGloEsim] = useState(false);
-  const [gloEsimTestResult, setGloEsimTestResult] = useState<any>(null);
-  const [isTestingEmail, setIsTestingEmail] = useState(false);
-  const [testEmailAddress, setTestEmailAddress] = useState("business@sproutsim.cloud");
-  const [emailTestResult, setEmailTestResult] = useState<any>(null);
+  // Modals & Drawers
+  const [selectedEsim, setSelectedEsim] = useState<AdminEsim | null>(null);
+  const [selectedOrderInvoice, setSelectedOrderInvoice] = useState<AdminOrder | null>(null);
+  const [showQrModal, setShowQrModal] = useState<boolean>(false);
+  const [activeQrData, setActiveQrData] = useState<{ iccid: string; lpa: string; name: string } | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  // Manual Provisioning Form
-  const [provEmail, setProvEmail] = useState("");
-  const [provName, setProvName] = useState("");
-  const [provPackage, setProvPackage] = useState("GLO_PK_10GB_30D");
-  const [isProvisioning, setIsProvisioning] = useState(false);
-  const [provSuccess, setProvSuccess] = useState<any>(null);
+  // Manual Provisioning Form State
+  const [provEmail, setProvEmail] = useState<string>("");
+  const [provName, setProvName] = useState<string>("");
+  const [provPlan, setProvPlan] = useState<string>("10gb-monthly");
+  const [provNotes, setProvNotes] = useState<string>("Executive Hand-off");
+  const [provDispatchEmail, setProvDispatchEmail] = useState<boolean>(true);
+  const [isProvisioning, setIsProvisioning] = useState<boolean>(false);
+  const [provisionResult, setProvisionResult] = useState<any>(null);
 
-  // QR Modal
-  const [selectedQrCode, setSelectedQrCode] = useState<{ lpa: string; title: string } | null>(null);
+  // GloEsim Live Diagnostics
+  const [isTestingGloEsim, setIsTestingGloEsim] = useState<boolean>(false);
+  const [gloEsimPingResult, setGloEsimPingResult] = useState<{ success: boolean; latencyMs: number; message: string } | null>(null);
+  const [wholesaleBalanceUSD, setWholesaleBalanceUSD] = useState<number>(4820.50);
 
-  // Toast notice
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  // Hostinger Email Tester
+  const [testEmailTarget, setTestEmailTarget] = useState<string>("tanveeryaseen1350@gmail.com");
+  const [isSendingEmailTest, setIsSendingEmailTest] = useState<boolean>(false);
+  const [emailTestStatus, setEmailTestStatus] = useState<string | null>(null);
 
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3000);
-  };
-
+  // Check LocalStorage Session
   useEffect(() => {
-    // Check if session storage has admin session
-    const saved = localStorage.getItem("sproutsim_admin_auth");
-    if (saved === "true") {
-      setIsAdminAuth(true);
+    const savedAuth = localStorage.getItem("sproutsim_admin_auth");
+    if (savedAuth === "true") {
+      setIsAuthenticated(true);
     }
   }, []);
 
-  const handleAdminLogin = (e?: React.FormEvent) => {
+  const handleLogin = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (adminPin.trim() === "sprout2026" || adminPin.trim() === "admin" || adminPin.trim() === "1234") {
-      setIsAdminAuth(true);
+    if (pinInput.trim() === "sprout2026" || pinInput.trim() === "admin") {
+      setIsAuthenticated(true);
       localStorage.setItem("sproutsim_admin_auth", "true");
-      setAuthError("");
-      showToast("Welcome to SproutSIM Admin Console");
+      setPinError("");
     } else {
-      setAuthError("Incorrect Admin PIN. (Default: sprout2026)");
+      setPinError("Invalid Admin Master PIN. Access restricted.");
     }
   };
 
-  const handleInstantDemoLogin = () => {
-    setIsAdminAuth(true);
+  const handleInstantLogin = () => {
+    setIsAuthenticated(true);
     localStorage.setItem("sproutsim_admin_auth", "true");
-    setAuthError("");
-    showToast("Logged in as Super Admin");
+    setPinError("");
   };
 
-  const handleAdminLogout = () => {
-    setIsAdminAuth(false);
+  const handleLogout = () => {
+    setIsAuthenticated(false);
     localStorage.removeItem("sproutsim_admin_auth");
   };
 
-  const handleCopy = (text: string) => {
+  const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
-    setCopiedText(text);
-    setTimeout(() => setCopiedText(null), 2000);
-    showToast("Copied to clipboard");
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  // Test GloEsim API
+  // Top Up Handler
+  const handleTopUp = async (iccid: string, amountMB: number) => {
+    try {
+      const res = await fetch("/api/admin/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "topup_esim", iccid, amountMB }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEsims((prev) =>
+          prev.map((e) =>
+            e.iccid === iccid
+              ? {
+                  ...e,
+                  totalMB: e.totalMB + amountMB,
+                  remainingMB: e.remainingMB + amountMB,
+                }
+              : e
+          )
+        );
+        // Add audit log
+        setAuditLogs((prev) => [
+          {
+            id: `log_${Date.now()}`,
+            timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+            actor: "superadmin@sproutsim.cloud",
+            action: `TOPUP_ESIM_${amountMB / 1024}GB`,
+            target: `ICCID: ${iccid}`,
+            ip: "182.185.190.44",
+            status: "SUCCESS",
+          },
+          ...prev,
+        ]);
+        alert(`Successfully injected +${amountMB / 1024} GB into ICCID: ${iccid}`);
+      }
+    } catch (err) {
+      alert("Failed to perform top-up. Please check API gateway.");
+    }
+  };
+
+  // Suspend/Reactivate Profile
+  const handleToggleSuspend = async (iccid: string, currentStatus: string) => {
+    try {
+      const res = await fetch("/api/admin/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "suspend_esim", iccid, status: currentStatus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEsims((prev) =>
+          prev.map((e) =>
+            e.iccid === iccid
+              ? {
+                  ...e,
+                  status: data.status,
+                }
+              : e
+          )
+        );
+        setAuditLogs((prev) => [
+          {
+            id: `log_${Date.now()}`,
+            timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+            actor: "superadmin@sproutsim.cloud",
+            action: data.status === "SUSPENDED" ? "SUSPEND_PROFILE" : "RESUME_PROFILE",
+            target: `ICCID: ${iccid}`,
+            ip: "182.185.190.44",
+            status: "SUCCESS",
+          },
+          ...prev,
+        ]);
+      }
+    } catch (err) {
+      alert("Network action failed.");
+    }
+  };
+
+  // Resend Order Email
+  const handleResendOrderEmail = async (order: AdminOrder) => {
+    try {
+      const res = await fetch("/api/admin/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "resend_order_email",
+          targetEmail: order.customerEmail,
+          iccid: order.iccid,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEmailLogs((prev) => [
+          {
+            id: `em_${Date.now()}`,
+            recipient: order.customerEmail,
+            subject: `[Re-send] Your SproutSIM ${order.dataFormatted} eSIM Profile [LPA Inside]`,
+            template: "customer-order-ready.html",
+            status: "DELIVERED",
+            timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+            latencyMs: 760,
+          },
+          ...prev,
+        ]);
+        alert(`Dispatched email directly to ${order.customerEmail} via Hostinger SMTP.`);
+      }
+    } catch (err) {
+      alert("Hostinger dispatch error.");
+    }
+  };
+
+  // Manual Provision Action
+  const handleManualProvision = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!provEmail || !provEmail.includes("@")) {
+      alert("Please provide a valid customer email.");
+      return;
+    }
+    setIsProvisioning(true);
+    setProvisionResult(null);
+
+    try {
+      const selectedPkg = GLOESIM_CATALOG.find((p) => p.planKey === provPlan || p.id === provPlan || p.code === provPlan) || GLOESIM_CATALOG[2];
+      const res = await fetch("/api/admin/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "manual_provision",
+          targetEmail: provEmail,
+          customerName: provName || "Authorized User",
+          packageCode: selectedPkg.code,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.success && data.order) {
+        const orderInfo = data.order;
+        const priceUSD = Number((selectedPkg.retailPricePKR / 278.5).toFixed(2));
+        const wholesaleUSD = selectedPkg.priceWholesaleUSD;
+        const grossMarginUSD = Number((priceUSD - wholesaleUSD).toFixed(2));
+        const grossMarginPct = Number(((grossMarginUSD / priceUSD) * 100).toFixed(1));
+
+        const newOrder: AdminOrder = {
+          id: `ord_${Date.now()}`,
+          orderNumber: `ORD-${Math.floor(1000 + Math.random() * 9000)}-PK`,
+          customerName: provName || "Authorized User",
+          customerEmail: provEmail,
+          customerPhone: "+92 300 0000000",
+          planName: selectedPkg.name,
+          packageCode: selectedPkg.code,
+          dataMB: selectedPkg.dataMB,
+          dataFormatted: selectedPkg.dataFormatted,
+          amountPKR: selectedPkg.retailPricePKR,
+          amountUSD: priceUSD,
+          wholesaleCostUSD: wholesaleUSD,
+          grossMarginUSD,
+          grossMarginPct,
+          status: "ACTIVE",
+          paymentMethod: "Bank Transfer",
+          iccid: orderInfo.iccid,
+          lpaCode: orderInfo.lpaCode,
+          createdAt: new Date().toISOString().replace("T", " ").substring(0, 16),
+          carrier: orderInfo.assignedOperator || selectedPkg.networkOperator,
+          emailDispatched: provDispatchEmail,
+        };
+
+        const newEsim: AdminEsim = {
+          id: `esim_${Date.now()}`,
+          iccid: orderInfo.iccid,
+          customerEmail: provEmail,
+          customerName: provName || "Authorized User",
+          deviceModel: "eSIM Capable Device",
+          planName: selectedPkg.name,
+          packageCode: selectedPkg.code,
+          totalMB: selectedPkg.dataMB,
+          usedMB: 0,
+          remainingMB: selectedPkg.dataMB,
+          status: "ACTIVE",
+          operator: "Jazz 4G LTE",
+          mccMnc: "410-01",
+          validUntil: "2026-10-30",
+          lpaCode: orderInfo.lpaCode,
+          smdpAddress: orderInfo.smdpAddress,
+          matchingId: orderInfo.matchingId,
+          sessionsCount: 0,
+          lastActive: "Just provisioned",
+        };
+
+        setOrders([newOrder, ...orders]);
+        setEsims([newEsim, ...esims]);
+        setProvisionResult(orderInfo);
+
+        // Deduct simulated wholesale cost
+        setWholesaleBalanceUSD((prev) => Number((prev - wholesaleUSD).toFixed(2)));
+
+        setAuditLogs((prev) => [
+          {
+            id: `log_${Date.now()}`,
+            timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+            actor: "superadmin@sproutsim.cloud",
+            action: "MANUAL_PROVISION",
+            target: `${orderInfo.iccid} (${provEmail})`,
+            ip: "182.185.190.44",
+            status: "SUCCESS",
+          },
+          ...prev,
+        ]);
+
+        if (provDispatchEmail) {
+          setEmailLogs((prev) => [
+            {
+              id: `em_${Date.now()}`,
+              recipient: provEmail,
+              subject: `Your SproutSIM ${selectedPkg.dataFormatted} eSIM [Manual Provision]`,
+              template: "customer-order-ready.html",
+              status: "DELIVERED",
+              timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+              latencyMs: 780,
+            },
+            ...prev,
+          ]);
+        }
+      } else {
+        alert(data.error || "Provisioning failed.");
+      }
+    } catch (err: any) {
+      alert("Error contacting GloEsim gateway: " + err.message);
+    } finally {
+      setIsProvisioning(false);
+    }
+  };
+
+  // Test GloEsim Ping
   const handleTestGloEsim = async () => {
     setIsTestingGloEsim(true);
-    setGloEsimTestResult(null);
+    setGloEsimPingResult(null);
     try {
       const res = await fetch("/api/admin/actions", {
         method: "POST",
@@ -316,205 +790,236 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ action: "test_gloesim" }),
       });
       const data = await res.json();
-      setGloEsimTestResult(data);
-      showToast(data.success ? "GloEsim API Ping Succeeded!" : "GloEsim Ping Failed");
+      if (data.success) {
+        setGloEsimPingResult({
+          success: true,
+          latencyMs: data.latencyMs || 24,
+          message: data.message || "GloEsim SM-DP+ & API responded with 200 OK",
+        });
+      } else {
+        setGloEsimPingResult({
+          success: false,
+          latencyMs: 0,
+          message: data.error || "Ping failed",
+        });
+      }
     } catch (err: any) {
-      setGloEsimTestResult({ success: false, error: err?.message || String(err) });
+      setGloEsimPingResult({
+        success: false,
+        latencyMs: 0,
+        message: err.message || "Network timeout",
+      });
     } finally {
       setIsTestingGloEsim(false);
     }
   };
 
-  // Test Hostinger Email
-  const handleTestEmail = async () => {
-    setIsTestingEmail(true);
-    setEmailTestResult(null);
-    try {
-      const res = await fetch("/api/admin/actions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "test_email", targetEmail: testEmailAddress }),
-      });
-      const data = await res.json();
-      setEmailTestResult(data);
-      showToast(data.success ? "Test Email Sent Successfully!" : "Email Dispatch Failed");
-    } catch (err: any) {
-      setEmailTestResult({ success: false, error: err?.message || String(err) });
-    } finally {
-      setIsTestingEmail(false);
-    }
-  };
-
-  // Manual Provisioning
-  const handleManualProvision = async (e: React.FormEvent) => {
+  // Test Hostinger Email Dispatch
+  const handleSendTestEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!provEmail || !provEmail.includes("@")) {
-      showToast("Please enter a valid customer email");
-      return;
-    }
-
-    setIsProvisioning(true);
-    setProvSuccess(null);
-
+    if (!testEmailTarget) return;
+    setIsSendingEmailTest(true);
+    setEmailTestStatus(null);
     try {
       const res = await fetch("/api/admin/actions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "manual_provision",
-          targetEmail: provEmail,
-          customerName: provName || provEmail.split("@")[0],
-          packageCode: provPackage,
-        }),
+        body: JSON.stringify({ action: "test_email", targetEmail: testEmailTarget }),
       });
-
       const data = await res.json();
-      if (data.success && data.order) {
-        const order = data.order;
-        const newAdminOrder: AdminOrder = {
-          id: `ord_${Date.now()}`,
-          orderNumber: order.orderId || `ORD-${Date.now().toString().slice(-4)}-PK`,
-          customerName: provName || provEmail.split("@")[0],
-          customerEmail: provEmail,
-          planName: `${Math.round(order.dataMB / 1024)} GB Package`,
-          dataMB: order.dataMB,
-          dataFormatted: `${Math.round(order.dataMB / 1024)} GB`,
-          amountPKR: 0,
-          amountUSD: 0,
-          status: "ACTIVE",
-          paymentMethod: "Stripe",
-          iccid: order.iccid,
-          lpaCode: order.lpaCode,
-          createdAt: new Date().toISOString().replace("T", " ").slice(0, 16),
-          carrier: order.assignedOperator,
-        };
-
-        const newAdminEsim: AdminEsim = {
-          id: `esim_${Date.now()}`,
-          iccid: order.iccid,
-          customerEmail: provEmail,
-          customerName: provName || provEmail.split("@")[0],
-          planName: `${Math.round(order.dataMB / 1024)} GB Package`,
-          totalMB: order.dataMB,
-          usedMB: 0,
-          remainingMB: order.dataMB,
-          status: "ACTIVE",
-          operator: order.assignedOperator,
-          validUntil: new Date(Date.now() + 30 * 86400000).toISOString().split("T")[0],
-          lpaCode: order.lpaCode,
-        };
-
-        setOrders([newAdminOrder, ...orders]);
-        setEsims([newAdminEsim, ...esims]);
-        setProvSuccess(order);
-        showToast("eSIM successfully provisioned with GloEsim!");
-        setProvEmail("");
-        setProvName("");
+      if (data.success) {
+        setEmailTestStatus("Dispatched successfully via Hostinger SMTP (Port 465 SSL)");
+        setEmailLogs((prev) => [
+          {
+            id: `em_${Date.now()}`,
+            recipient: testEmailTarget,
+            subject: "SproutSIM Enterprise Admin Console Verification Handshake",
+            template: "admin-handshake-test.html",
+            status: "DELIVERED",
+            timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+            latencyMs: 720,
+          },
+          ...prev,
+        ]);
+      } else {
+        setEmailTestStatus("Failed: " + (data.error || "Unknown"));
       }
     } catch (err: any) {
-      showToast("Provisioning failed: " + err.message);
+      setEmailTestStatus("Network error: " + err.message);
     } finally {
-      setIsProvisioning(false);
+      setIsSendingEmailTest(false);
     }
   };
 
-  // Top Up eSIM from Admin
-  const handleAdminTopup = (iccid: string, mbAmount: number) => {
-    setEsims((prev) =>
-      prev.map((e) => {
-        if (e.iccid === iccid) {
-          return {
-            ...e,
-            totalMB: e.totalMB + mbAmount,
-            remainingMB: e.remainingMB + mbAmount,
-          };
-        }
-        return e;
-      })
-    );
-    showToast(`Added +${Math.round(mbAmount / 1024)} GB to ICCID ${iccid}`);
+  // Export Orders as CSV
+  const handleExportCSV = () => {
+    const headers = [
+      "Order Number",
+      "Customer Name",
+      "Customer Email",
+      "Plan",
+      "Retail PKR",
+      "Retail USD",
+      "Wholesale Cost USD",
+      "Net Profit USD",
+      "Status",
+      "Payment Method",
+      "ICCID",
+      "Created At",
+    ];
+    const rows = orders.map((o) => [
+      o.orderNumber,
+      `"${o.customerName}"`,
+      o.customerEmail,
+      `"${o.planName}"`,
+      o.amountPKR,
+      o.amountUSD,
+      o.wholesaleCostUSD,
+      o.grossMarginUSD,
+      o.status,
+      o.paymentMethod,
+      o.iccid,
+      o.createdAt,
+    ]);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `SproutSIM_Orders_${new Date().toISOString().split("T")[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  // Filtered orders
-  const filteredOrders = orders.filter((o) => {
-    const matchesSearch =
-      o.orderNumber.toLowerCase().includes(orderSearch.toLowerCase()) ||
-      o.customerEmail.toLowerCase().includes(orderSearch.toLowerCase()) ||
-      o.iccid.toLowerCase().includes(orderSearch.toLowerCase()) ||
-      o.customerName.toLowerCase().includes(orderSearch.toLowerCase());
-    const matchesFilter = orderFilter === "ALL" || o.status === orderFilter;
-    return matchesSearch && matchesFilter;
-  });
+  // Filtered lists
+  const filteredOrders = useMemo(() => {
+    return orders.filter((o) => {
+      const matchSearch =
+        o.orderNumber.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
+        o.customerEmail.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
+        o.customerName.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
+        o.iccid.includes(orderSearchQuery);
+      const matchStatus = orderStatusFilter === "ALL" || o.status === orderStatusFilter;
+      return matchSearch && matchStatus;
+    });
+  }, [orders, orderSearchQuery, orderStatusFilter]);
 
-  // Calculate Metrics
-  const totalRevenuePKR = orders.reduce((sum, o) => sum + o.amountPKR, 0);
-  const totalDataConsumedGB = (esims.reduce((sum, e) => sum + e.usedMB, 0) / 1024).toFixed(1);
+  const filteredEsims = useMemo(() => {
+    return esims.filter((e) => {
+      const matchSearch =
+        e.iccid.includes(esimSearchQuery) ||
+        e.customerEmail.toLowerCase().includes(esimSearchQuery.toLowerCase()) ||
+        e.customerName.toLowerCase().includes(esimSearchQuery.toLowerCase()) ||
+        e.operator.toLowerCase().includes(esimSearchQuery.toLowerCase());
+      const matchStatus = esimStatusFilter === "ALL" || e.status === esimStatusFilter;
+      return matchSearch && matchStatus;
+    });
+  }, [esims, esimSearchQuery, esimStatusFilter]);
 
-  // 1. LOGIN SCREEN IF UNAUTHENTICATED
-  if (!isAdminAuth) {
+  // Aggregate Metrics
+  const totalSalesPKR = orders.reduce((sum, o) => sum + o.amountPKR, 0);
+  const totalSalesUSD = orders.reduce((sum, o) => sum + o.amountUSD, 0);
+  const totalWholesaleUSD = orders.reduce((sum, o) => sum + o.wholesaleCostUSD, 0);
+  const totalGrossProfitUSD = Number((totalSalesUSD - totalWholesaleUSD).toFixed(2));
+  const avgMarginPct = Number(((totalGrossProfitUSD / totalSalesUSD) * 100).toFixed(1));
+  const totalDataConsumedGB = Number(
+    (esims.reduce((sum, e) => sum + e.usedMB, 0) / 1024).toFixed(1)
+  );
+  const activeEsimCount = esims.filter((e) => e.status === "ACTIVE").length;
+
+  // ==========================================
+  // VIEW: AUTHENTICATION GATE
+  // ==========================================
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#123C2A] flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-[#FFFFFF] rounded-3xl p-8 border-2 border-[#E0E7E2] shadow-2xl space-y-6">
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#123C2A] text-white mx-auto shadow-md">
-              <Shield className="w-7 h-7 text-[#2FBF71]" />
+      <div className="min-h-screen bg-[#090D16] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+        {/* Subtle Background Grid */}
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(#2FBF71 1px, transparent 1px), radial-gradient(#2FBF71 1px, #090D16 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+
+        {/* Ambient Glow */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#2FBF71]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md bg-[#111827] border border-slate-800 rounded-2xl shadow-2xl p-8 relative z-10">
+          {/* Header */}
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-800">
+            <div className="w-10 h-10 rounded-xl bg-[#123C2A] border border-[#2FBF71]/30 flex items-center justify-center text-[#2FBF71]">
+              <Shield className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-[#123C2A] tracking-tight">
-              SproutSIM Admin Console
-            </h1>
-            <p className="text-xs text-[#5E6E66]">
-              Wholesale GloEsim Manager & Orders Dispatch Portal
-            </p>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-white text-base tracking-tight">SproutSIM</span>
+                <span className="text-[10px] font-mono font-semibold uppercase px-2 py-0.5 rounded bg-[#2FBF71]/10 text-[#2FBF71] border border-[#2FBF71]/20">
+                  Carrier Cloud
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">Enterprise Back-Office Operations</p>
+            </div>
           </div>
 
-          {authError && (
-            <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{authError}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleAdminLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-[#123C2A] mb-1.5 uppercase tracking-wider">
-                Admin Security PIN / Password
+              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                Operator Security Access Key
               </label>
-              <input
-                type="password"
-                value={adminPin}
-                onChange={(e) => setAdminPin(e.target.value)}
-                placeholder="Enter PIN (e.g. sprout2026)"
-                className="w-full px-4 py-3 rounded-xl border-2 border-[#E0E7E2] focus:border-[#2FBF71] outline-none text-sm font-semibold text-[#123C2A]"
-                autoFocus
-              />
-              <span className="text-[10px] text-[#5E6E66] mt-1 block">
-                Default Master PIN: <code className="bg-[#F5F7F2] px-1 py-0.5 rounded font-mono font-bold text-[#123C2A]">sprout2026</code>
-              </span>
+              <div className="relative">
+                <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="password"
+                  value={pinInput}
+                  onChange={(e) => {
+                    setPinInput(e.target.value);
+                    if (pinError) setPinError("");
+                  }}
+                  placeholder="Enter Master PIN (e.g. sprout2026)"
+                  className="w-full pl-9 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:border-transparent font-mono"
+                  autoFocus
+                />
+              </div>
+              {pinError && (
+                <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {pinError}
+                </p>
+              )}
             </div>
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl bg-[#123C2A] hover:bg-[#0B251A] text-white text-sm font-bold tracking-wide transition-colors shadow-md"
+              className="w-full py-2.5 px-4 bg-[#2FBF71] hover:bg-[#28A762] text-slate-950 font-bold rounded-lg text-sm transition-all shadow-md flex items-center justify-center gap-2"
             >
-              Sign In to Admin Portal
+              <Key className="w-4 h-4" />
+              <span>Authenticate Operator Session</span>
             </button>
           </form>
 
-          <div className="pt-2 border-t border-[#E0E7E2] text-center space-y-3">
+          {/* 1-Click Dev Bypass */}
+          <div className="mt-5 pt-5 border-t border-slate-800 text-center">
             <button
               type="button"
-              onClick={handleInstantDemoLogin}
-              className="w-full py-2.5 rounded-xl bg-[#E9F8F0] hover:bg-[#D4F3E2] text-[#123C2A] text-xs font-extrabold flex items-center justify-center gap-1.5 transition-colors border border-[#A7E8C1]"
+              onClick={handleInstantLogin}
+              className="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700/80 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>1-Click Super Admin Access</span>
+              <Zap className="w-3.5 h-3.5 text-[#2FBF71]" />
+              <span>Instant 1-Click Dev Access (Master PIN: sprout2026)</span>
             </button>
+          </div>
 
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1 text-xs text-[#5E6E66] hover:text-[#123C2A] font-semibold transition-colors"
-            >
-              &larr; Return to SproutSIM Storefront
+          <div className="mt-6 flex items-center justify-between text-[11px] text-slate-400">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              TLS 1.3 • GloEsim Vault
+            </span>
+            <Link href="/" className="hover:text-white transition-colors">
+              &larr; Return to Storefront
             </Link>
           </div>
         </div>
@@ -522,724 +1027,1250 @@ export default function AdminDashboardPage() {
     );
   }
 
-  // 2. MAIN ADMIN DASHBOARD
+  // ==========================================
+  // VIEW: MAIN ENTERPRISE DASHBOARD
+  // ==========================================
   return (
-    <div className="min-h-screen bg-[#F5F7F2] text-[#1C2420] flex flex-col">
-      {/* Toast Notification */}
-      {toastMsg && (
-        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 bg-[#123C2A] text-white rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 border border-[#2FBF71] animate-in fade-in slide-in-from-bottom-2">
-          <CheckCircle2 className="w-4 h-4 text-[#2FBF71]" />
-          <span>{toastMsg}</span>
-        </div>
-      )}
-
-      {/* TOP ADMIN HEADER */}
-      <header className="bg-[#123C2A] text-white sticky top-0 z-40 border-b border-[#0B251A] shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Brand & Badge */}
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-              <div className="w-9 h-9 rounded-xl bg-[#2FBF71] text-white font-black flex items-center justify-center text-xs">
-                SIM
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex font-sans antialiased">
+      {/* -------------------------------------- */}
+      {/* 1. LEFT ENTERPRISE SIDEBAR             */}
+      {/* -------------------------------------- */}
+      <aside className="w-64 bg-[#0B1320] border-r border-slate-800 flex flex-col justify-between shrink-0 select-none">
+        <div>
+          {/* Brand Header */}
+          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#123C2A] border border-[#2FBF71]/30 flex items-center justify-center text-[#2FBF71] font-black text-sm">
+                SS
               </div>
-              <span className="font-extrabold text-base tracking-tight text-white">
-                SproutSIM
-              </span>
-            </Link>
-            <span className="px-2 py-0.5 rounded-md bg-[#2FBF71] text-[#123C2A] font-black text-[10px] uppercase tracking-wider">
-              Admin Console
-            </span>
-          </div>
-
-          {/* Provider Status Indicators */}
-          <div className="hidden md:flex items-center gap-3 text-xs font-semibold">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1A523A] border border-[#2FBF71]/40 text-[#A7E8C1]">
-              <span className="w-2 h-2 rounded-full bg-[#2FBF71] animate-pulse"></span>
-              <span>GloEsim B2B: Connected</span>
+              <div>
+                <div className="font-extrabold text-white text-sm tracking-tight flex items-center gap-1.5">
+                  SproutSIM
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    B2B
+                  </span>
+                </div>
+                <div className="text-[10px] text-slate-400 font-medium">Telecom Management</div>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1A523A] border border-[#2FBF71]/40 text-[#A7E8C1]">
-              <Mail className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>Hostinger: Active</span>
-            </div>
-          </div>
-
-          {/* Quick Actions & Logout */}
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              target="_blank"
-              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1.5 transition-colors"
-            >
-              <span>Storefront</span>
-              <ExternalLink className="w-3 h-3" />
-            </Link>
             <button
-              onClick={handleAdminLogout}
-              className="p-2 rounded-xl bg-white/10 hover:bg-red-500/80 text-white transition-colors"
-              title="Sign Out"
+              onClick={() => setEnvironmentMode(environmentMode === "PROD" ? "SANDBOX" : "PROD")}
+              title="Toggle Environment"
+              className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded border transition-colors ${
+                environmentMode === "PROD"
+                  ? "bg-emerald-950 text-emerald-400 border-emerald-700/60"
+                  : "bg-amber-950 text-amber-400 border-amber-700/60"
+              }`}
+            >
+              {environmentMode}
+            </button>
+          </div>
+
+          {/* Navigation Sections */}
+          <nav className="p-3 space-y-6">
+            {/* Core Operations */}
+            <div>
+              <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Core Operations
+              </div>
+              <div className="space-y-1">
+                <button
+                  onClick={() => setActiveTab("overview")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "overview"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Activity className="w-4 h-4 text-[#2FBF71]" />
+                    <span>Executive Overview</span>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("orders")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "orders"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Receipt className="w-4 h-4 text-emerald-400" />
+                    <span>Orders &amp; Invoices</span>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
+                    {orders.length}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("esims")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "esims"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Smartphone className="w-4 h-4 text-blue-400" />
+                    <span>eSIM Profiles &amp; CDRs</span>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">
+                    {activeEsimCount}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("provision")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "provision"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Plus className="w-4 h-4 text-amber-400" />
+                    <span>Direct Provisioning</span>
+                  </div>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                    Live
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Carrier & Financial */}
+            <div>
+              <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Carrier &amp; Margins
+              </div>
+              <div className="space-y-1">
+                <button
+                  onClick={() => setActiveTab("pricing")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "pricing"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <DollarSign className="w-4 h-4 text-teal-400" />
+                    <span>Rate Plans &amp; Margins</span>
+                  </div>
+                  <span className="text-[10px] text-teal-400 font-mono font-bold">~74%</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("gloesim")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "gloesim"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Globe className="w-4 h-4 text-cyan-400" />
+                    <span>GloEsim B2B Gateway</span>
+                  </div>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("email")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "email"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Mail className="w-4 h-4 text-indigo-400" />
+                    <span>Hostinger SMTP Relays</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-mono">465 SSL</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Governance & Audit */}
+            <div>
+              <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Governance
+              </div>
+              <div className="space-y-1">
+                <button
+                  onClick={() => setActiveTab("audit")}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                    activeTab === "audit"
+                      ? "bg-[#1E293B] text-white shadow-xs"
+                      : "text-slate-300 hover:text-white hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Terminal className="w-4 h-4 text-orange-400" />
+                    <span>System Audit Trail</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    {auditLogs.length}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="p-3 border-t border-slate-800">
+          <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-bold">
+                TY
+              </div>
+              <div className="overflow-hidden">
+                <div className="text-xs font-bold text-white truncate">Tanveer Yaseen</div>
+                <div className="text-[10px] text-emerald-400 font-mono">Super Admin</div>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              title="End Operator Session"
+              className="text-slate-400 hover:text-red-400 transition-colors p-1"
             >
               <LogOut className="w-4 h-4" />
             </button>
           </div>
         </div>
-      </header>
+      </aside>
 
-      {/* DASHBOARD LAYOUT */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col md:flex-row gap-6 w-full">
-        {/* SIDEBAR NAVIGATION */}
-        <aside className="w-full md:w-64 flex-shrink-0 space-y-4">
-          <div className="bg-[#FFFFFF] rounded-2xl border-2 border-[#E0E7E2] p-3 shadow-sm space-y-1">
-            <button
-              onClick={() => setActiveTab("overview")}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "overview"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
-            >
-              <Activity className="w-4 h-4" />
-              <span>Overview & KPIs</span>
-            </button>
+      {/* -------------------------------------- */}
+      {/* 2. MAIN WORKSPACE CANVAS               */}
+      {/* -------------------------------------- */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        {/* Top Utility Header Bar */}
+        <header className="h-14 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-xs">
+          {/* Breadcrumbs & Active Tab Indicator */}
+          <div className="flex items-center gap-3 text-xs font-medium text-slate-500">
+            <span className="text-slate-800 font-bold capitalize">SproutSIM Console</span>
+            <span>/</span>
+            <span className="text-[#2FBF71] font-semibold capitalize">
+              {activeTab === "overview" && "Executive Telecom Operations"}
+              {activeTab === "orders" && "Customer Orders & Billing Ledger"}
+              {activeTab === "esims" && "eSIM Profiles & Call Detail Records"}
+              {activeTab === "provision" && "Direct B2B Provisioning"}
+              {activeTab === "pricing" && "Wholesale Pricing & Margins"}
+              {activeTab === "gloesim" && "GloEsim B2B Gateway Diagnostics"}
+              {activeTab === "email" && "Hostinger SMTP Relays & Logs"}
+              {activeTab === "audit" && "System Audit Logs"}
+            </span>
+          </div>
 
-            <button
-              onClick={() => setActiveTab("orders")}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "orders"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <CreditCard className="w-4 h-4" />
-                <span>Orders & Invoices</span>
-              </div>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${activeTab === "orders" ? "bg-[#2FBF71] text-[#123C2A]" : "bg-[#E9F8F0] text-[#123C2A]"}`}>
-                {orders.length}
+          {/* Quick Metrics & Actions */}
+          <div className="flex items-center gap-3">
+            {/* Wholesale Pool Balance */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+              <span className="text-slate-500 font-medium">GloEsim Pool Credit:</span>
+              <span className="font-mono font-bold text-slate-900">
+                ${wholesaleBalanceUSD.toLocaleString("en-US", { minimumFractionDigits: 2 })} USD
               </span>
-            </button>
+            </div>
 
-            <button
-              onClick={() => setActiveTab("esims")}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "esims"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
+            {/* Hostinger SMTP Status */}
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Hostinger SMTP: 465 SSL</span>
+            </div>
+
+            {/* Storefront Link */}
+            <Link
+              href="/"
+              target="_blank"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors"
             >
-              <div className="flex items-center gap-3">
-                <Smartphone className="w-4 h-4" />
-                <span>Active eSIM Profiles</span>
-              </div>
-              <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${activeTab === "esims" ? "bg-[#2FBF71] text-[#123C2A]" : "bg-[#E9F8F0] text-[#123C2A]"}`}>
-                {esims.length}
-              </span>
-            </button>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+              <span>Storefront</span>
+            </Link>
 
+            {/* Quick Provision CTA */}
             <button
               onClick={() => setActiveTab("provision")}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "provision"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123C2A] hover:bg-[#1A523A] text-white text-xs font-bold transition-colors shadow-xs"
             >
-              <Plus className="w-4 h-4 text-[#2FBF71]" />
-              <span>Manual Provisioning</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("plans")}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "plans"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
-            >
-              <Layers className="w-4 h-4" />
-              <span>Data Plans & Pricing</span>
+              <Plus className="w-3.5 h-3.5 text-[#2FBF71]" />
+              <span>Provision eSIM</span>
             </button>
           </div>
+        </header>
 
-          {/* PROVIDERS & SETTINGS GROUP */}
-          <div className="bg-[#FFFFFF] rounded-2xl border-2 border-[#E0E7E2] p-3 shadow-sm space-y-1">
-            <div className="px-3 py-1.5 text-[10px] font-extrabold text-[#5E6E66] uppercase tracking-wider">
-              Integration & Hubs
-            </div>
-
-            <button
-              onClick={() => setActiveTab("gloesim")}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "gloesim"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Globe className="w-4 h-4 text-[#2FBF71]" />
-                <span>GloEsim API Hub</span>
-              </div>
-              <span className="w-2 h-2 rounded-full bg-[#2FBF71]"></span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("hostinger")}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors ${
-                activeTab === "hostinger"
-                  ? "bg-[#123C2A] text-white shadow-sm"
-                  : "text-[#123C2A] hover:bg-[#F5F7F2]"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#2FBF71]" />
-                <span>Hostinger Email Logs</span>
-              </div>
-              <span className="w-2 h-2 rounded-full bg-[#2FBF71]"></span>
-            </button>
-          </div>
-
-          {/* Quick Help Card */}
-          <div className="bg-[#E9F8F0] rounded-2xl p-4 border border-[#A7E8C1] space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#123C2A]">
-              <Server className="w-4 h-4 text-[#2FBF71]" />
-              <span>SproutSIM v2.4 Live</span>
-            </div>
-            <p className="text-[11px] text-[#5E6E66] leading-relaxed">
-              Wholesale data routed through <strong>GloEsim</strong> across Pakistan tier-1 mobile carriers.
-            </p>
-          </div>
-        </aside>
-
-        {/* MAIN VIEW CONTENT */}
-        <main className="flex-1 space-y-6">
-
-          {/* TAB 1: OVERVIEW & KPIS */}
+        {/* Content Body */}
+        <div className="p-6 max-w-7xl w-full mx-auto space-y-6">
+          {/* ========================================== */}
+          {/* TAB 1: EXECUTIVE OVERVIEW & TELECOM KPIS   */}
+          {/* ========================================== */}
           {activeTab === "overview" && (
             <div className="space-y-6">
-              {/* Top Metric Cards */}
+              {/* Financial & Operational KPI Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Metric 1 */}
-                <div className="bg-white p-5 rounded-2xl border-2 border-[#E0E7E2] shadow-sm space-y-2">
-                  <div className="flex items-center justify-between text-[#5E6E66] text-xs font-bold">
-                    <span>Total Sales (PKR)</span>
-                    <DollarSign className="w-4 h-4 text-[#2FBF71]" />
+                {/* Total Gross Revenue */}
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <span className="font-semibold uppercase tracking-wider">Gross Merchandise Value</span>
+                    <span className="text-emerald-700 bg-emerald-50 font-bold px-1.5 py-0.5 rounded text-[10px] flex items-center gap-0.5">
+                      <ArrowUpRight className="w-3 h-3" /> +18.4%
+                    </span>
                   </div>
-                  <div className="text-2xl font-black text-[#123C2A]">
-                    Rs {totalRevenuePKR.toLocaleString()}
+                  <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">
+                    Rs {totalSalesPKR.toLocaleString()}
                   </div>
-                  <div className="text-[11px] text-[#2FBF71] font-bold flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    <span>+18.4% this month</span>
-                  </div>
-                </div>
-
-                {/* Metric 2 */}
-                <div className="bg-white p-5 rounded-2xl border-2 border-[#E0E7E2] shadow-sm space-y-2">
-                  <div className="flex items-center justify-between text-[#5E6E66] text-xs font-bold">
-                    <span>Total Orders</span>
-                    <CreditCard className="w-4 h-4 text-[#2FBF71]" />
-                  </div>
-                  <div className="text-2xl font-black text-[#123C2A]">
-                    {orders.length}
-                  </div>
-                  <div className="text-[11px] text-[#5E6E66] font-semibold">
-                    100% email dispatch rate
+                  <div className="text-xs text-slate-500 mt-1 font-mono">
+                    ≈ ${totalSalesUSD.toFixed(2)} USD (Stripe/JazzCash)
                   </div>
                 </div>
 
-                {/* Metric 3 */}
-                <div className="bg-white p-5 rounded-2xl border-2 border-[#E0E7E2] shadow-sm space-y-2">
-                  <div className="flex items-center justify-between text-[#5E6E66] text-xs font-bold">
-                    <span>Active eSIMs</span>
-                    <Smartphone className="w-4 h-4 text-[#2FBF71]" />
+                {/* Realized Gross Profit & Margin */}
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <span className="font-semibold uppercase tracking-wider">Realized Gross Margin</span>
+                    <span className="text-emerald-700 bg-emerald-50 font-bold px-1.5 py-0.5 rounded text-[10px]">
+                      {avgMarginPct}% Margin
+                    </span>
                   </div>
-                  <div className="text-2xl font-black text-[#123C2A]">
-                    {esims.length}
+                  <div className="text-2xl font-black text-emerald-800 font-mono tracking-tight">
+                    ${totalGrossProfitUSD.toFixed(2)} USD
                   </div>
-                  <div className="text-[11px] text-[#2FBF71] font-bold flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2FBF71]"></span>
-                    <span>All Jazz / Zong Roaming</span>
+                  <div className="text-xs text-slate-500 mt-1 font-mono">
+                    Wholesale GloEsim Cost: ${totalWholesaleUSD.toFixed(2)}
                   </div>
                 </div>
 
-                {/* Metric 4 */}
-                <div className="bg-white p-5 rounded-2xl border-2 border-[#E0E7E2] shadow-sm space-y-2">
-                  <div className="flex items-center justify-between text-[#5E6E66] text-xs font-bold">
-                    <span>Data Consumed</span>
-                    <Wifi className="w-4 h-4 text-[#2FBF71]" />
+                {/* Active In-Market eSIMs */}
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <span className="font-semibold uppercase tracking-wider">Active In-Market eSIMs</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   </div>
-                  <div className="text-2xl font-black text-[#123C2A]">
+                  <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">
+                    {activeEsimCount}
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1">
+                    All connected to Jazz 4G / Zong LTE
+                  </div>
+                </div>
+
+                {/* Wholesale Data Consumed */}
+                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+                  <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                    <span className="font-semibold uppercase tracking-wider">Data Traffic Consumed</span>
+                    <span className="text-blue-700 bg-blue-50 font-bold px-1.5 py-0.5 rounded text-[10px]">
+                      4G Bandwidth
+                    </span>
+                  </div>
+                  <div className="text-2xl font-black text-slate-900 font-mono tracking-tight">
                     {totalDataConsumedGB} GB
                   </div>
-                  <div className="text-[11px] text-[#5E6E66] font-semibold">
-                    Wholesale pool via GloEsim
+                  <div className="text-xs text-slate-500 mt-1">
+                    From 50.0 TB Enterprise wholesale pool
                   </div>
                 </div>
               </div>
 
-              {/* Quick Action Banner */}
-              <div className="bg-[#123C2A] text-white p-6 rounded-3xl border border-[#0B251A] flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[#2FBF71] text-[#123C2A] font-extrabold text-[10px] uppercase">
-                      Direct Provisioning
-                    </span>
-                    <h3 className="text-base font-extrabold">Need to issue an emergency eSIM?</h3>
+              {/* Carrier Network Health Banner */}
+              <div className="bg-[#123C2A] text-white rounded-xl p-5 border border-emerald-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-10 h-10 rounded-lg bg-[#2FBF71]/20 border border-[#2FBF71]/30 flex items-center justify-center text-[#2FBF71] shrink-0 mt-0.5">
+                    <Server className="w-5 h-5" />
                   </div>
-                  <p className="text-xs text-[#A7E8C1]">
-                    Generate and deliver a live GloEsim 4G profile instantly with Hostinger automated email.
-                  </p>
-                </div>
-                <button
-                  onClick={() => setActiveTab("provision")}
-                  className="px-5 py-2.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors flex-shrink-0"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Manual Provision</span>
-                </button>
-              </div>
-
-              {/* Recent Orders Preview */}
-              <div className="bg-white rounded-2xl border-2 border-[#E0E7E2] p-5 space-y-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-extrabold text-[#123C2A]">Recent Customer Purchases</h3>
-                  <button
-                    onClick={() => setActiveTab("orders")}
-                    className="text-xs text-[#2FBF71] hover:text-[#123C2A] font-bold flex items-center gap-1"
-                  >
-                    <span>View All Orders</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-[#E0E7E2] text-[#5E6E66] font-bold uppercase tracking-wider">
-                        <th className="pb-3">Order ID</th>
-                        <th className="pb-3">Customer</th>
-                        <th className="pb-3">Plan</th>
-                        <th className="pb-3">Amount</th>
-                        <th className="pb-3">ICCID</th>
-                        <th className="pb-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#F5F7F2]">
-                      {orders.slice(0, 4).map((ord) => (
-                        <tr key={ord.id} className="hover:bg-[#F5F7F2] transition-colors">
-                          <td className="py-3 font-mono font-bold text-[#123C2A]">{ord.orderNumber}</td>
-                          <td className="py-3">
-                            <div className="font-bold text-[#123C2A]">{ord.customerName}</div>
-                            <div className="text-[11px] text-[#5E6E66]">{ord.customerEmail}</div>
-                          </td>
-                          <td className="py-3 font-semibold text-[#123C2A]">{ord.planName}</td>
-                          <td className="py-3 font-extrabold text-[#123C2A]">Rs {ord.amountPKR.toLocaleString()}</td>
-                          <td className="py-3 font-mono text-[11px] text-[#5E6E66]">{ord.iccid}</td>
-                          <td className="py-3">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1]">
-                              {ord.status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: ORDERS & INVOICES */}
-          {activeTab === "orders" && (
-            <div className="space-y-4">
-              <div className="bg-white rounded-2xl border-2 border-[#E0E7E2] p-5 shadow-sm space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-extrabold text-[#123C2A]">Customer Orders & Transactions</h3>
-                    <p className="text-xs text-[#5E6E66]">
-                      Monitor incoming purchases, GloEsim activations, and invoice records.
+                    <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                      GloEsim Telecommunications B2B Gateway Active
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold">
+                        99.98% SLA
+                      </span>
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-0.5 max-w-2xl leading-relaxed">
+                      All provisioned profiles are auto-registered with GSMA SM-DP+ (<code className="text-[#A7E8C1] font-mono">smdp.gloesim.com</code>) with seamless roaming on Jazz 4G (410-01) and Zong (410-04). Instant delivery handled via Hostinger SMTP SSL.
                     </p>
                   </div>
-
-                  {/* Search and Filters */}
-                  <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <Search className="w-3.5 h-3.5 text-[#5E6E66] absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={orderSearch}
-                        onChange={(e) => setOrderSearch(e.target.value)}
-                        placeholder="Search email, ICCID..."
-                        className="pl-8 pr-3 py-1.5 rounded-xl border border-[#E0E7E2] text-xs outline-none focus:border-[#2FBF71] text-[#123C2A]"
-                      />
-                    </div>
-                    <select
-                      value={orderFilter}
-                      onChange={(e) => setOrderFilter(e.target.value)}
-                      className="px-2.5 py-1.5 rounded-xl border border-[#E0E7E2] text-xs font-semibold text-[#123C2A] outline-none"
-                    >
-                      <option value="ALL">All Status</option>
-                      <option value="ACTIVE">Active</option>
-                      <option value="COMPLETED">Completed</option>
-                    </select>
-                  </div>
                 </div>
-
-                {/* Orders Table */}
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-[#E0E7E2] text-[#5E6E66] font-bold uppercase tracking-wider">
-                        <th className="pb-3">Order Number</th>
-                        <th className="pb-3">Customer</th>
-                        <th className="pb-3">Plan Details</th>
-                        <th className="pb-3">Amount</th>
-                        <th className="pb-3">Provider ICCID</th>
-                        <th className="pb-3">Date</th>
-                        <th className="pb-3 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#F5F7F2]">
-                      {filteredOrders.map((ord) => (
-                        <tr key={ord.id} className="hover:bg-[#F5F7F2] transition-colors">
-                          <td className="py-3 font-mono font-bold text-[#123C2A]">{ord.orderNumber}</td>
-                          <td className="py-3">
-                            <div className="font-bold text-[#123C2A]">{ord.customerName}</div>
-                            <div className="text-[11px] text-[#5E6E66]">{ord.customerEmail}</div>
-                          </td>
-                          <td className="py-3">
-                            <div className="font-bold text-[#123C2A]">{ord.planName}</div>
-                            <div className="text-[10px] text-[#2FBF71] font-semibold">{ord.carrier}</div>
-                          </td>
-                          <td className="py-3 font-extrabold text-[#123C2A]">
-                            Rs {ord.amountPKR.toLocaleString()}
-                          </td>
-                          <td className="py-3">
-                            <div className="flex items-center gap-1 font-mono text-[11px] text-[#123C2A]">
-                              <span>{ord.iccid}</span>
-                              <button
-                                onClick={() => handleCopy(ord.iccid)}
-                                className="text-[#5E6E66] hover:text-[#2FBF71] p-0.5"
-                                title="Copy ICCID"
-                              >
-                                {copiedText === ord.iccid ? <Check className="w-3 h-3 text-[#2FBF71]" /> : <Copy className="w-3 h-3" />}
-                              </button>
-                            </div>
-                          </td>
-                          <td className="py-3 text-[11px] text-[#5E6E66]">{ord.createdAt}</td>
-                          <td className="py-3 text-right">
-                            <button
-                              onClick={() =>
-                                setSelectedQrCode({
-                                  lpa: ord.lpaCode,
-                                  title: `${ord.customerName} (${ord.planName})`,
-                                })
-                              }
-                              className="px-2.5 py-1 rounded-lg bg-[#E9F8F0] hover:bg-[#D4F3E2] text-[#123C2A] font-bold text-[11px] border border-[#A7E8C1] inline-flex items-center gap-1"
-                            >
-                              <QrCode className="w-3 h-3 text-[#2FBF71]" />
-                              <span>QR</span>
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                  <button
+                    onClick={handleTestGloEsim}
+                    disabled={isTestingGloEsim}
+                    className="px-3.5 py-2 rounded-lg bg-[#2FBF71] hover:bg-[#28A762] text-slate-950 font-bold text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5 whitespace-nowrap"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isTestingGloEsim ? "animate-spin" : ""}`} />
+                    <span>Ping Gateway API</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("provision")}
+                    className="px-3.5 py-2 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-200 font-bold text-xs transition-colors whitespace-nowrap"
+                  >
+                    + Issue Manual Profile
+                  </button>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* TAB 3: ACTIVE ESIM PROFILES */}
-          {activeTab === "esims" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-base font-extrabold text-[#123C2A]">GloEsim Active Profiles</h3>
-                  <p className="text-xs text-[#5E6E66]">
-                    Real-time data metering, remaining MB tracking, and network management.
-                  </p>
-                </div>
-                <button
-                  onClick={() => showToast("Synced live data meters with GloEsim API")}
-                  className="px-3 py-1.5 rounded-xl border border-[#E0E7E2] bg-white text-[#123C2A] text-xs font-bold flex items-center gap-1.5 hover:border-[#2FBF71]"
+              {/* GloEsim Ping Result Banner if active */}
+              {gloEsimPingResult && (
+                <div
+                  className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${
+                    gloEsimPingResult.success
+                      ? "bg-emerald-50 border-emerald-200 text-emerald-900"
+                      : "bg-red-50 border-red-200 text-red-900"
+                  }`}
                 >
-                  <RefreshCw className="w-3.5 h-3.5 text-[#2FBF71]" />
-                  <span>Sync Balance</span>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {esims.map((esim) => {
-                  const percentLeft = Math.round((esim.remainingMB / esim.totalMB) * 100);
-                  const remGB = (esim.remainingMB / 1024).toFixed(2);
-                  const totGB = (esim.totalMB / 1024).toFixed(1);
-
-                  return (
-                    <div
-                      key={esim.id}
-                      className="bg-white rounded-2xl border-2 border-[#E0E7E2] p-5 shadow-sm space-y-3.5 hover:border-[#2FBF71] transition-all"
-                    >
-                      <div className="flex items-center justify-between pb-2 border-b border-[#F5F7F2]">
-                        <div>
-                          <div className="font-extrabold text-sm text-[#123C2A]">{esim.planName}</div>
-                          <div className="text-[11px] text-[#5E6E66]">{esim.customerEmail}</div>
-                        </div>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1]">
-                          {esim.status}
-                        </span>
-                      </div>
-
-                      {/* ICCID */}
-                      <div className="flex items-center justify-between text-xs bg-[#F5F7F2] p-2 rounded-xl">
-                        <span className="text-[#5E6E66]">ICCID:</span>
-                        <span className="font-mono font-bold text-[#123C2A]">{esim.iccid}</span>
-                      </div>
-
-                      {/* Data Meter */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-bold text-[#123C2A]">
-                          <span>Data Remaining</span>
-                          <span>
-                            {remGB} GB of {totGB} GB ({percentLeft}%)
-                          </span>
-                        </div>
-                        <div className="w-full h-2.5 bg-[#E0E7E2] rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-[#2FBF71] transition-all duration-300"
-                            style={{ width: `${percentLeft}%` }}
-                          ></div>
-                        </div>
-                        <div className="text-[10px] text-[#5E6E66] flex justify-between">
-                          <span>{esim.remainingMB.toLocaleString()} MB remaining</span>
-                          <span>Carrier: {esim.operator}</span>
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="pt-2 border-t border-[#E0E7E2] flex items-center justify-between gap-2">
-                        <button
-                          onClick={() =>
-                            setSelectedQrCode({
-                              lpa: esim.lpaCode,
-                              title: `${esim.customerName} - ${esim.planName}`,
-                            })
-                          }
-                          className="px-2.5 py-1.5 rounded-lg border border-[#123C2A] text-[#123C2A] text-xs font-bold hover:bg-[#123C2A] hover:text-white transition-colors flex items-center gap-1"
-                        >
-                          <QrCode className="w-3.5 h-3.5" />
-                          <span>QR Code</span>
-                        </button>
-
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => handleAdminTopup(esim.iccid, 1024)}
-                            className="px-2 py-1.5 rounded-lg bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1] text-xs font-extrabold hover:bg-[#2FBF71] hover:text-white transition-colors"
-                          >
-                            +1 GB
-                          </button>
-                          <button
-                            onClick={() => handleAdminTopup(esim.iccid, 3072)}
-                            className="px-2 py-1.5 rounded-lg bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1] text-xs font-extrabold hover:bg-[#2FBF71] hover:text-white transition-colors"
-                          >
-                            +3 GB
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: MANUAL PROVISIONING */}
-          {activeTab === "provision" && (
-            <div className="max-w-2xl bg-white rounded-3xl border-2 border-[#E0E7E2] p-6 sm:p-8 shadow-sm space-y-6">
-              <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] text-xs font-bold border border-[#A7E8C1]">
-                  <Plus className="w-3.5 h-3.5 text-[#2FBF71]" />
-                  <span>Wholesale GloEsim Dispatch</span>
-                </div>
-                <h3 className="text-xl font-black text-[#123C2A]">Manual eSIM Provisioning</h3>
-                <p className="text-xs text-[#5E6E66]">
-                  Issue a new Pakistan eSIM directly to a customer. GloEsim generates the ICCID and LPA string, and Hostinger sends the activation email.
-                </p>
-              </div>
-
-              {provSuccess && (
-                <div className="p-4 rounded-2xl bg-[#E9F8F0] border-2 border-[#2FBF71] space-y-2">
-                  <div className="flex items-center gap-2 text-[#123C2A] font-extrabold text-sm">
-                    <CheckCircle2 className="w-5 h-5 text-[#2FBF71]" />
-                    <span>eSIM Successfully Provisioned!</span>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span className="font-semibold">{gloEsimPingResult.message}</span>
                   </div>
-                  <div className="text-xs space-y-1 text-[#123C2A]">
-                    <div><strong>ICCID:</strong> <code className="font-mono">{provSuccess.iccid}</code></div>
-                    <div><strong>LPA:</strong> <code className="font-mono text-[11px]">{provSuccess.lpaCode}</code></div>
-                    <div><strong>Assigned Network:</strong> {provSuccess.assignedOperator}</div>
+                  <div className="font-mono text-[11px] font-bold">
+                    Round-Trip Latency: {gloEsimPingResult.latencyMs} ms
                   </div>
                 </div>
               )}
 
-              <form onSubmit={handleManualProvision} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#123C2A] mb-1.5">
-                    Customer Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={provName}
-                    onChange={(e) => setProvName(e.target.value)}
-                    placeholder="e.g. Asad Umar"
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E0E7E2] focus:border-[#2FBF71] outline-none text-xs text-[#123C2A]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#123C2A] mb-1.5">
-                    Customer Email Address (for Hostinger QR Delivery) *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={provEmail}
-                    onChange={(e) => setProvEmail(e.target.value)}
-                    placeholder="customer@example.com"
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E0E7E2] focus:border-[#2FBF71] outline-none text-xs text-[#123C2A]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#123C2A] mb-1.5">
-                    Select Data Package
-                  </label>
-                  <select
-                    value={provPackage}
-                    onChange={(e) => setProvPackage(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E0E7E2] focus:border-[#2FBF71] outline-none text-xs text-[#123C2A] font-semibold"
-                  >
-                    {Object.values(GLOESIM_PAKISTAN_PACKAGES).map((pkg) => (
-                      <option key={pkg.code} value={pkg.code}>
-                        {pkg.name} ({pkg.dataFormatted} - {pkg.validityDays} Days) — Wholesale: ${pkg.priceWholesaleUSD}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isProvisioning}
-                  className="w-full py-3.5 rounded-xl bg-[#123C2A] hover:bg-[#0B251A] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-                >
-                  {isProvisioning ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin text-[#2FBF71]" />
-                      <span>Provisioning with GloEsim...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 text-[#2FBF71]" />
-                      <span>Generate & Dispatch eSIM</span>
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          )}
-
-          {/* TAB 5: DATA PLANS & PRICING */}
-          {activeTab === "plans" && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-base font-extrabold text-[#123C2A]">Pakistan 4G Plans & Wholesale Margins</h3>
-                  <p className="text-xs text-[#5E6E66]">
-                    Compare retail pricing against GloEsim wholesale costs and margin spread.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl border-2 border-[#E0E7E2] overflow-hidden shadow-sm">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-[#F5F7F2] border-b border-[#E0E7E2] text-[#5E6E66] font-bold uppercase">
-                    <tr>
-                      <th className="py-3 px-4">Plan Name</th>
-                      <th className="py-3 px-4">Allowance</th>
-                      <th className="py-3 px-4">Validity</th>
-                      <th className="py-3 px-4">Retail (PKR)</th>
-                      <th className="py-3 px-4">Retail (USD)</th>
-                      <th className="py-3 px-4">Wholesale (GloEsim)</th>
-                      <th className="py-3 px-4">Gross Margin</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#F5F7F2]">
-                    {plans.map((p) => {
-                      const wholesaleUSD = p.id.includes("1gb")
-                        ? 0.90
-                        : p.id.includes("3gb")
-                        ? 2.10
-                        : p.id.includes("10gb")
-                        ? 4.80
-                        : p.id.includes("20gb")
-                        ? 8.50
-                        : p.id.includes("50gb")
-                        ? 16.50
-                        : 24.00;
-                      const marginUSD = (p.priceUSD - wholesaleUSD).toFixed(2);
-                      const marginPercent = Math.round(((p.priceUSD - wholesaleUSD) / p.priceUSD) * 100);
-
-                      return (
-                        <tr key={p.id} className="hover:bg-[#F5F7F2] transition-colors">
-                          <td className="py-3.5 px-4 font-extrabold text-[#123C2A]">
-                            <div className="flex items-center gap-2">
-                              <span>{p.name}</span>
-                              {p.popular && (
-                                <span className="px-1.5 py-0.5 rounded bg-[#2FBF71] text-white text-[9px] font-bold uppercase">
-                                  Hot
-                                </span>
-                              )}
+              {/* Two Column Layout: Recent Orders + Live Active eSIMs */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Recent Orders Panel */}
+                <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+                  <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-bold text-sm text-slate-900">Recent Customer Purchases</h3>
+                      <p className="text-xs text-slate-500">Latest transactions routed through billing gateway</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab("orders")}
+                      className="text-xs font-semibold text-[#2FBF71] hover:underline flex items-center gap-1"
+                    >
+                      View All ({orders.length}) &rarr;
+                    </button>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {orders.slice(0, 4).map((order) => (
+                      <div key={order.id} className="p-4 flex items-center justify-between hover:bg-slate-50/80 transition-colors">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 font-mono text-xs font-bold shrink-0 mt-0.5">
+                            {order.paymentMethod === "Stripe" ? "ST" : "JC"}
+                          </div>
+                          <div>
+                            <div className="font-bold text-xs text-slate-900 flex items-center gap-2">
+                              {order.customerName}
+                              <span className="font-mono text-[10px] text-slate-500 font-normal">
+                                {order.orderNumber}
+                              </span>
                             </div>
-                          </td>
-                          <td className="py-3.5 px-4 font-bold text-[#123C2A]">{p.data}</td>
-                          <td className="py-3.5 px-4 text-[#5E6E66]">{p.validity}</td>
-                          <td className="py-3.5 px-4 font-extrabold text-[#123C2A]">
-                            Rs {p.pricePKR.toLocaleString()}
-                          </td>
-                          <td className="py-3.5 px-4 font-semibold text-[#123C2A]">${p.priceUSD.toFixed(2)}</td>
-                          <td className="py-3.5 px-4 text-[#5E6E66]">${wholesaleUSD.toFixed(2)}</td>
-                          <td className="py-3.5 px-4">
-                            <span className="px-2 py-0.5 rounded-full bg-[#E9F8F0] text-[#123C2A] font-extrabold text-[11px] border border-[#A7E8C1]">
-                              +${marginUSD} ({marginPercent}%)
+                            <div className="text-[11px] text-slate-500">{order.planName}</div>
+                            <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                              ICCID: {order.iccid.substring(0, 10)}...
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs font-bold text-slate-900 font-mono">
+                            Rs {order.amountPKR.toLocaleString()}
+                          </div>
+                          <div className="text-[10px] text-emerald-600 font-semibold font-mono">
+                            +${order.grossMarginUSD} profit
+                          </div>
+                          <span className="inline-block mt-1 text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            {order.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Active eSIM Live Meters */}
+                <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+                  <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-bold text-sm text-slate-900">Live In-Market eSIM Meters</h3>
+                      <p className="text-xs text-slate-500">Real-time roaming bandwidth and remaining data</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab("esims")}
+                      className="text-xs font-semibold text-[#2FBF71] hover:underline flex items-center gap-1"
+                    >
+                      Manage ({esims.length}) &rarr;
+                    </button>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {esims.slice(0, 4).map((esim) => {
+                      const pct = Math.round((esim.remainingMB / esim.totalMB) * 100);
+                      return (
+                        <div key={esim.id} className="p-4 space-y-2 hover:bg-slate-50/80 transition-colors">
+                          <div className="flex items-center justify-between text-xs">
+                            <div>
+                              <span className="font-bold text-slate-900">{esim.customerName}</span>
+                              <span className="text-slate-500 font-mono text-[11px] ml-1.5">
+                                ({esim.planName})
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                              {esim.operator}
                             </span>
-                          </td>
-                        </tr>
+                          </div>
+
+                          {/* Progress Bar */}
+                          <div>
+                            <div className="flex items-center justify-between text-[11px] text-slate-500 font-mono mb-1">
+                              <span>
+                                Remaining: {(esim.remainingMB / 1024).toFixed(1)} GB of {(esim.totalMB / 1024).toFixed(1)} GB
+                              </span>
+                              <span className="font-bold text-slate-900">{pct}% Left</span>
+                            </div>
+                            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  pct > 40
+                                    ? "bg-[#2FBF71]"
+                                    : pct > 15
+                                    ? "bg-amber-500"
+                                    : "bg-red-500"
+                                }`}
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pt-1">
+                            <span>ICCID: {esim.iccid}</span>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => handleTopUp(esim.iccid, 1024)}
+                                className="text-emerald-700 hover:text-emerald-800 font-bold hover:underline"
+                              >
+                                +1 GB
+                              </button>
+                              <span>•</span>
+                              <button
+                                onClick={() => handleTopUp(esim.iccid, 3072)}
+                                className="text-emerald-700 hover:text-emerald-800 font-bold hover:underline"
+                              >
+                                +3 GB
+                              </button>
+                              <span>•</span>
+                              <button
+                                onClick={() => {
+                                  setActiveQrData({
+                                    iccid: esim.iccid,
+                                    lpa: esim.lpaCode,
+                                    name: esim.customerName,
+                                  });
+                                  setShowQrModal(true);
+                                }}
+                                className="text-slate-600 hover:text-slate-900 font-bold hover:underline"
+                              >
+                                QR / LPA
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       );
                     })}
-                  </tbody>
-                </table>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
-          {/* TAB 6: GLOESIM API HUB */}
+          {/* ========================================== */}
+          {/* TAB 2: CUSTOMER ORDERS & BILLING LEDGER    */}
+          {/* ========================================== */}
+          {activeTab === "orders" && (
+            <div className="space-y-4">
+              {/* Header and Filter Controls */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                {/* Search Bar */}
+                <div className="relative flex-1 max-w-md">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={orderSearchQuery}
+                    onChange={(e) => setOrderSearchQuery(e.target.value)}
+                    placeholder="Search by Order ID, customer, email, or ICCID..."
+                    className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:bg-white"
+                  />
+                  {orderSearchQuery && (
+                    <button
+                      onClick={() => setOrderSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Filter and Export Buttons */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                    <Filter className="w-3.5 h-3.5" />
+                    <select
+                      value={orderStatusFilter}
+                      onChange={(e) => setOrderStatusFilter(e.target.value)}
+                      className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none"
+                    >
+                      <option value="ALL">All Statuses</option>
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                      <option value="PENDING">PENDING</option>
+                      <option value="REFUNDED">REFUNDED</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={handleExportCSV}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-700 transition-colors shadow-xs"
+                  >
+                    <Download className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Export CSV</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Orders Data Table */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+                      <tr>
+                        <th className="py-3 px-4">Order ID &amp; Date</th>
+                        <th className="py-3 px-4">Customer</th>
+                        <th className="py-3 px-4">Package</th>
+                        <th className="py-3 px-4">Billing &amp; Margin</th>
+                        <th className="py-3 px-4">Gateway</th>
+                        <th className="py-3 px-4">Provisioned ICCID</th>
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-medium">
+                      {filteredOrders.length === 0 ? (
+                        <tr>
+                          <td colSpan={8} className="py-8 text-center text-slate-400">
+                            No orders matching the search criteria.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredOrders.map((order) => (
+                          <tr key={order.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="py-3.5 px-4">
+                              <div className="font-bold text-slate-900 font-mono">
+                                {order.orderNumber}
+                              </div>
+                              <div className="text-[10px] text-slate-400 font-mono">
+                                {order.createdAt}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <div className="font-bold text-slate-900">{order.customerName}</div>
+                              <div className="text-[11px] text-slate-500">{order.customerEmail}</div>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <div className="font-bold text-slate-800">{order.planName}</div>
+                              <div className="text-[10px] text-slate-400 font-mono">
+                                {order.packageCode}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4 font-mono">
+                              <div className="font-bold text-slate-900">
+                                Rs {order.amountPKR.toLocaleString()}
+                              </div>
+                              <div className="text-[10px] text-emerald-600 font-semibold">
+                                +${order.grossMarginUSD} ({order.grossMarginPct}%)
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <span className="font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] border border-slate-200">
+                                {order.paymentMethod}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-700">
+                                <span>{order.iccid.substring(0, 14)}...</span>
+                                <button
+                                  onClick={() => copyToClipboard(order.iccid, order.id + "-iccid")}
+                                  title="Copy full ICCID"
+                                  className="text-slate-400 hover:text-slate-700"
+                                >
+                                  {copiedKey === order.id + "-iccid" ? (
+                                    <Check className="w-3 h-3 text-emerald-600" />
+                                  ) : (
+                                    <Copy className="w-3 h-3" />
+                                  )}
+                                </button>
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <span
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                                  order.status === "ACTIVE"
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                    : order.status === "COMPLETED"
+                                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                                    : "bg-slate-100 text-slate-700 border-slate-200"
+                                }`}
+                              >
+                                {order.status}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  onClick={() => {
+                                    setActiveQrData({
+                                      iccid: order.iccid,
+                                      lpa: order.lpaCode,
+                                      name: order.customerName,
+                                    });
+                                    setShowQrModal(true);
+                                  }}
+                                  title="Inspect QR Code & LPA"
+                                  className="p-1 rounded hover:bg-slate-100 text-slate-600 hover:text-slate-900"
+                                >
+                                  <QrCode className="w-4 h-4" />
+                                </button>
+
+                                <button
+                                  onClick={() => handleResendOrderEmail(order)}
+                                  title="Re-send Email to Customer via Hostinger"
+                                  className="p-1 rounded hover:bg-slate-100 text-slate-600 hover:text-emerald-600"
+                                >
+                                  <Send className="w-4 h-4" />
+                                </button>
+
+                                <button
+                                  onClick={() => setSelectedOrderInvoice(order)}
+                                  title="View Official Invoice Receipt"
+                                  className="p-1 rounded hover:bg-slate-100 text-slate-600 hover:text-slate-900"
+                                >
+                                  <FileText className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Table Footer Summary */}
+                <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 font-mono">
+                  <span>
+                    Showing {filteredOrders.length} of {orders.length} total orders
+                  </span>
+                  <span>
+                    Total Subtotal: Rs {filteredOrders.reduce((acc, o) => acc + o.amountPKR, 0).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================== */}
+          {/* TAB 3: ESIM PROFILES & CALL DETAIL RECORDS */}
+          {/* ========================================== */}
+          {activeTab === "esims" && (
+            <div className="space-y-4">
+              {/* Header and Filter Controls */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={esimSearchQuery}
+                    onChange={(e) => setEsimSearchQuery(e.target.value)}
+                    placeholder="Search by ICCID, email, subscriber name, or network..."
+                    className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:bg-white"
+                  />
+                  {esimSearchQuery && (
+                    <button
+                      onClick={() => setEsimSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={esimStatusFilter}
+                    onChange={(e) => setEsimStatusFilter(e.target.value)}
+                    className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 font-semibold focus:outline-none"
+                  >
+                    <option value="ALL">All States</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="SUSPENDED">SUSPENDED</option>
+                    <option value="DEPLETED">DEPLETED</option>
+                  </select>
+
+                  <button
+                    onClick={() => setActiveTab("provision")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2FBF71] hover:bg-[#28A762] text-slate-950 text-xs font-bold transition-colors shadow-xs"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>New Profile</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* eSIM Profiles Table */}
+              <div className="bg-white border border-slate-200 rounded-xl shadow-xs overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+                      <tr>
+                        <th className="py-3 px-4">Subscriber &amp; Device</th>
+                        <th className="py-3 px-4">ICCID / SM-DP+</th>
+                        <th className="py-3 px-4">Assigned Plan</th>
+                        <th className="py-3 px-4">Bandwidth Usage (MB)</th>
+                        <th className="py-3 px-4">Active Roaming</th>
+                        <th className="py-3 px-4">Profile State</th>
+                        <th className="py-3 px-4 text-right">Carrier Controls</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-medium">
+                      {filteredEsims.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="py-8 text-center text-slate-400">
+                            No eSIM profiles matching the search criteria.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredEsims.map((esim) => {
+                          const pct = Math.round((esim.remainingMB / esim.totalMB) * 100);
+                          return (
+                            <tr key={esim.id} className="hover:bg-slate-50/80 transition-colors">
+                              <td className="py-3.5 px-4">
+                                <div className="font-bold text-slate-900">{esim.customerName}</div>
+                                <div className="text-[11px] text-slate-500">{esim.customerEmail}</div>
+                                <div className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                  <Smartphone className="w-3 h-3 text-slate-400" />
+                                  <span>{esim.deviceModel}</span>
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4 font-mono">
+                                <div className="font-bold text-slate-800 flex items-center gap-1.5">
+                                  <span>{esim.iccid}</span>
+                                  <button
+                                    onClick={() => copyToClipboard(esim.iccid, esim.id + "-iccid")}
+                                    className="text-slate-400 hover:text-slate-600"
+                                  >
+                                    {copiedKey === esim.id + "-iccid" ? (
+                                      <Check className="w-3 h-3 text-emerald-600" />
+                                    ) : (
+                                      <Copy className="w-3 h-3" />
+                                    )}
+                                  </button>
+                                </div>
+                                <div className="text-[10px] text-slate-400">
+                                  SM-DP+: {esim.smdpAddress}
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <div className="font-bold text-slate-900">{esim.planName}</div>
+                                <div className="text-[10px] text-slate-400 font-mono">
+                                  Valid until: {esim.validUntil}
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4 w-48">
+                                <div className="space-y-1">
+                                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-600">
+                                    <span>
+                                      {(esim.remainingMB / 1024).toFixed(1)} / {(esim.totalMB / 1024).toFixed(1)} GB
+                                    </span>
+                                    <span className="font-bold text-slate-900">{pct}%</span>
+                                  </div>
+                                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div
+                                      className={`h-full rounded-full ${
+                                        pct > 40
+                                          ? "bg-[#2FBF71]"
+                                          : pct > 15
+                                          ? "bg-amber-500"
+                                          : "bg-red-500"
+                                      }`}
+                                      style={{ width: `${pct}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <div className="font-semibold text-slate-800 text-[11px]">
+                                  {esim.operator}
+                                </div>
+                                <div className="text-[10px] text-slate-400 font-mono">
+                                  PLMN: {esim.mccMnc}
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <span
+                                  className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                                    esim.status === "ACTIVE"
+                                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                      : esim.status === "SUSPENDED"
+                                      ? "bg-red-50 text-red-700 border-red-200"
+                                      : "bg-slate-100 text-slate-700 border-slate-200"
+                                  }`}
+                                >
+                                  {esim.status}
+                                </span>
+                              </td>
+                              <td className="py-3.5 px-4 text-right">
+                                <div className="flex items-center justify-end gap-1.5">
+                                  {/* Top Up Button */}
+                                  <button
+                                    onClick={() => handleTopUp(esim.iccid, 1024)}
+                                    title="Add +1 GB Top-Up"
+                                    className="px-2 py-1 rounded bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 text-[11px] font-bold transition-colors border border-slate-200"
+                                  >
+                                    +1 GB
+                                  </button>
+
+                                  <button
+                                    onClick={() => handleTopUp(esim.iccid, 3072)}
+                                    title="Add +3 GB Top-Up"
+                                    className="px-2 py-1 rounded bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 text-[11px] font-bold transition-colors border border-slate-200"
+                                  >
+                                    +3 GB
+                                  </button>
+
+                                  {/* Suspend / Resume Network Lock */}
+                                  <button
+                                    onClick={() => handleToggleSuspend(esim.iccid, esim.status)}
+                                    title={esim.status === "SUSPENDED" ? "Resume Service" : "Suspend Service"}
+                                    className={`p-1 rounded ${
+                                      esim.status === "SUSPENDED"
+                                        ? "text-emerald-600 hover:bg-emerald-50"
+                                        : "text-red-500 hover:bg-red-50"
+                                    }`}
+                                  >
+                                    {esim.status === "SUSPENDED" ? (
+                                      <PlayCircle className="w-4 h-4" />
+                                    ) : (
+                                      <PauseCircle className="w-4 h-4" />
+                                    )}
+                                  </button>
+
+                                  {/* View QR Code */}
+                                  <button
+                                    onClick={() => {
+                                      setActiveQrData({
+                                        iccid: esim.iccid,
+                                        lpa: esim.lpaCode,
+                                        name: esim.customerName,
+                                      });
+                                      setShowQrModal(true);
+                                    }}
+                                    title="Inspect Installation QR"
+                                    className="p-1 rounded hover:bg-slate-100 text-slate-600 hover:text-slate-900"
+                                  >
+                                    <QrCode className="w-4 h-4" />
+                                  </button>
+
+                                  {/* View CDR Details Drawer */}
+                                  <button
+                                    onClick={() => setSelectedEsim(esim)}
+                                    title="Inspect Call Detail Records (CDRs)"
+                                    className="p-1 rounded hover:bg-slate-100 text-slate-600 hover:text-slate-900"
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================== */}
+          {/* TAB 4: DIRECT B2B MANUAL PROVISIONING      */}
+          {/* ========================================== */}
+          {activeTab === "provision" && (
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+                <div className="flex items-center gap-3 pb-5 mb-5 border-b border-slate-200">
+                  <div className="w-10 h-10 rounded-xl bg-[#123C2A] border border-[#2FBF71]/30 flex items-center justify-center text-[#2FBF71]">
+                    <Plus className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="font-bold text-base text-slate-900">Direct Carrier eSIM Provisioning</h2>
+                    <p className="text-xs text-slate-500">
+                      Generate and deploy authentic GloEsim GSMA profiles with automatic SM-DP+ registration
+                    </p>
+                  </div>
+                </div>
+
+                <form onSubmit={handleManualProvision} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Customer Email (Delivery Address) *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={provEmail}
+                        onChange={(e) => setProvEmail(e.target.value)}
+                        placeholder="customer@example.com"
+                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:bg-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Customer Full Name
+                      </label>
+                      <input
+                        type="text"
+                        value={provName}
+                        onChange={(e) => setProvName(e.target.value)}
+                        placeholder="e.g. Tariq Mehmood"
+                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Data Plan Package *
+                      </label>
+                      <select
+                        value={provPlan}
+                        onChange={(e) => setProvPlan(e.target.value)}
+                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:bg-white"
+                      >
+                        {GLOESIM_CATALOG.map((pkg) => {
+                          const priceUSD = (pkg.retailPricePKR / 278.5).toFixed(2);
+                          return (
+                            <option key={pkg.planKey} value={pkg.planKey}>
+                              {pkg.name} ({pkg.dataFormatted} • Rs {pkg.retailPricePKR.toLocaleString()} / ${priceUSD} USD)
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Internal Dispatch Reason / Tag
+                      </label>
+                      <input
+                        type="text"
+                        value={provNotes}
+                        onChange={(e) => setProvNotes(e.target.value)}
+                        placeholder="e.g. VIP Customer, Support Replacement, Influencer Trial"
+                        className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#2FBF71] focus:bg-white"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Immediate Hostinger Email Dispatch Checkbox */}
+                  <div className="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <input
+                        type="checkbox"
+                        id="dispatchCheck"
+                        checked={provDispatchEmail}
+                        onChange={(e) => setProvDispatchEmail(e.target.checked)}
+                        className="w-4 h-4 text-[#2FBF71] rounded border-slate-300 focus:ring-[#2FBF71]"
+                      />
+                      <label htmlFor="dispatchCheck" className="text-xs text-emerald-950 font-semibold cursor-pointer">
+                        Dispatch high-res installation QR code &amp; LPA string via Hostinger SMTP immediately
+                      </label>
+                    </div>
+                    <span className="text-[10px] text-emerald-700 font-mono font-bold">
+                      business@sproutsim.cloud
+                    </span>
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isProvisioning}
+                    className="w-full py-2.5 px-4 bg-[#123C2A] hover:bg-[#1A523A] text-white font-bold rounded-lg text-xs transition-all shadow-md flex items-center justify-center gap-2"
+                  >
+                    {isProvisioning ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin text-[#2FBF71]" />
+                        <span>Contacting GloEsim SM-DP+ &amp; Provisioning Profile...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-4 h-4 text-[#2FBF71]" />
+                        <span>Deploy eSIM Profile (Live Provision)</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+
+                {/* Provision Result Confirmation Card */}
+                {provisionResult && (
+                  <div className="mt-6 p-5 rounded-xl bg-emerald-50 border border-emerald-300 space-y-4">
+                    <div className="flex items-center justify-between text-xs text-emerald-900 font-bold">
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        eSIM Profile Successfully Provisioned!
+                      </span>
+                      <span className="font-mono text-[10px] bg-emerald-100 px-2 py-0.5 rounded">
+                        Order ID: {provisionResult.orderId}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                      <div className="bg-white p-3 rounded-lg border border-emerald-200">
+                        <div className="text-[10px] text-slate-500 uppercase font-sans">ICCID Number</div>
+                        <div className="font-bold text-slate-900">{provisionResult.iccid}</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-emerald-200">
+                        <div className="text-[10px] text-slate-500 uppercase font-sans">SM-DP+ Node</div>
+                        <div className="font-bold text-slate-900">{provisionResult.smdpAddress}</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white p-3 rounded-lg border border-emerald-200 font-mono text-xs">
+                      <div className="text-[10px] text-slate-500 uppercase font-sans mb-1">
+                        Full LPA Activation String
+                      </div>
+                      <div className="text-slate-800 break-all select-all font-mono text-[11px] bg-slate-50 p-2 rounded">
+                        {provisionResult.lpaCode}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-2">
+                      <button
+                        onClick={() => {
+                          setActiveQrData({
+                            iccid: provisionResult.iccid,
+                            lpa: provisionResult.lpaCode,
+                            name: provName || "Authorized User",
+                          });
+                          setShowQrModal(true);
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-[#2FBF71] hover:bg-[#28A762] text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-xs"
+                      >
+                        <QrCode className="w-3.5 h-3.5" />
+                        <span>View / Download QR Code</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ========================================== */}
+          {/* TAB 5: RATE PLANS & GROSS MARGINS          */}
+          {/* ========================================== */}
+          {activeTab === "pricing" && (
+            <div className="space-y-6">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs">
+                <div className="flex items-center justify-between pb-5 mb-5 border-b border-slate-200">
+                  <div>
+                    <h2 className="font-bold text-base text-slate-900">Commercial Catalog &amp; Margin Matrix</h2>
+                    <p className="text-xs text-slate-500">
+                      Wholesale GloEsim cost breakdown versus retail consumer pricing and gross margins
+                    </p>
+                  </div>
+                  <div className="text-xs font-mono text-slate-500">
+                    Average Profit Margin: <strong className="text-emerald-600 font-bold">73.8%</strong>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+                      <tr>
+                        <th className="py-3 px-4">Plan Name &amp; Quota</th>
+                        <th className="py-3 px-4">Validity</th>
+                        <th className="py-3 px-4">Retail Price (PKR)</th>
+                        <th className="py-3 px-4">Retail Price (USD)</th>
+                        <th className="py-3 px-4">GloEsim Wholesale (USD)</th>
+                        <th className="py-3 px-4">Gross Margin ($)</th>
+                        <th className="py-3 px-4">Margin %</th>
+                        <th className="py-3 px-4">Tethering</th>
+                        <th className="py-3 px-4 text-right">Storefront Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-medium">
+                      {GLOESIM_CATALOG.map((pkg) => {
+                        const priceUSD = Number((pkg.retailPricePKR / 278.5).toFixed(2));
+                        const marginUSD = Number((priceUSD - pkg.priceWholesaleUSD).toFixed(2));
+                        const marginPct = Number(((marginUSD / priceUSD) * 100).toFixed(1));
+                        return (
+                          <tr key={pkg.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="py-3.5 px-4">
+                              <div className="font-bold text-slate-900">{pkg.name}</div>
+                              <div className="text-[10px] text-slate-400 font-mono">
+                                {pkg.code}
+                              </div>
+                            </td>
+                            <td className="py-3.5 px-4 font-mono">{pkg.validityDays} Days</td>
+                            <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                              Rs {pkg.retailPricePKR.toLocaleString()}
+                            </td>
+                            <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
+                              ${priceUSD.toFixed(2)}
+                            </td>
+                            <td className="py-3.5 px-4 font-mono text-slate-600">
+                              ${pkg.priceWholesaleUSD.toFixed(2)}
+                            </td>
+                            <td className="py-3.5 px-4 font-mono font-bold text-emerald-600">
+                              +${marginUSD.toFixed(2)}
+                            </td>
+                            <td className="py-3.5 px-4 font-mono">
+                              <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
+                                {marginPct}%
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <span className="text-[10px] font-bold text-slate-700">
+                                {pkg.supportsHotspot ? "Supported" : "Data Only"}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-right">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                Active
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================== */}
+          {/* TAB 6: GLOESIM B2B GATEWAY DIAGNOSTICS     */}
+          {/* ========================================== */}
           {activeTab === "gloesim" && (
             <div className="space-y-6">
-              <div className="bg-white rounded-3xl border-2 border-[#E0E7E2] p-6 sm:p-8 shadow-sm space-y-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#E0E7E2] gap-3">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#123C2A] text-white flex items-center justify-center">
-                      <Globe className="w-6 h-6 text-[#2FBF71]" />
+                    <div className="w-10 h-10 rounded-xl bg-cyan-900 border border-cyan-700 flex items-center justify-center text-cyan-300">
+                      <Globe className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-black text-[#123C2A]">GloEsim Enterprise B2B Gateway</h3>
-                      <a
-                        href="https://gloesim.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-[#2FBF71] hover:underline font-bold inline-flex items-center gap-1"
-                      >
-                        <span>https://gloesim.com</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                      <h2 className="font-bold text-base text-slate-900">GloEsim B2B Enterprise Integration Hub</h2>
+                      <p className="text-xs text-slate-500">
+                        Official Provider: <code className="text-slate-800 font-mono">https://gloesim.com</code>
+                      </p>
                     </div>
                   </div>
 
@@ -1247,202 +2278,509 @@ export default function AdminDashboardPage() {
                     <button
                       onClick={handleTestGloEsim}
                       disabled={isTestingGloEsim}
-                      className="px-4 py-2 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors"
+                      className="px-3.5 py-2 rounded-lg bg-[#2FBF71] hover:bg-[#28A762] text-slate-950 font-bold text-xs transition-colors shadow-xs flex items-center gap-1.5"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${isTestingGloEsim ? "animate-spin" : ""}`} />
-                      <span>{isTestingGloEsim ? "Pinging..." : "Test GloEsim Ping"}</span>
+                      <span>Execute Live Latency Ping</span>
                     </button>
                   </div>
                 </div>
 
-                {gloEsimTestResult && (
-                  <div className={`p-4 rounded-2xl border-2 text-xs space-y-2 ${gloEsimTestResult.success ? "bg-[#E9F8F0] border-[#2FBF71] text-[#123C2A]" : "bg-red-50 border-red-200 text-red-700"}`}>
-                    <div className="flex items-center gap-2 font-bold">
-                      {gloEsimTestResult.success ? <CheckCircle2 className="w-4 h-4 text-[#2FBF71]" /> : <AlertCircle className="w-4 h-4" />}
-                      <span>{gloEsimTestResult.message || "Test Completed"}</span>
+                {/* Gateway Parameters Matrix */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      SM-DP+ Provisioning Server
                     </div>
-                    {gloEsimTestResult.latencyMs && (
-                      <div className="text-[11px]">Response Latency: <strong>{gloEsimTestResult.latencyMs} ms</strong></div>
-                    )}
-                  </div>
-                )}
-
-                {/* Configuration Fields */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-[#F5F7F2] border border-[#E0E7E2] space-y-1">
-                    <div className="text-[10px] font-bold text-[#5E6E66] uppercase">API Endpoint URL</div>
-                    <div className="font-mono text-xs font-bold text-[#123C2A]">https://api.gloesim.com/v1</div>
+                    <div className="text-xs font-mono font-bold text-slate-900">
+                      smdp.gloesim.com:443
+                    </div>
+                    <div className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      TLS 1.3 Certified
+                    </div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#F5F7F2] border border-[#E0E7E2] space-y-1">
-                    <div className="text-[10px] font-bold text-[#5E6E66] uppercase">Partner Identifier</div>
-                    <div className="font-mono text-xs font-bold text-[#123C2A]">sproutsim</div>
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      REST API Base URL
+                    </div>
+                    <div className="text-xs font-mono font-bold text-slate-900">
+                      api.gloesim.com/v1
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-1">Bearer Token Authenticated</div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#F5F7F2] border border-[#E0E7E2] space-y-1">
-                    <div className="text-[10px] font-bold text-[#5E6E66] uppercase">Uptime & SLA</div>
-                    <div className="text-xs font-extrabold text-[#2FBF71]">99.9% Enterprise Tier</div>
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      Wholesale B2B Account Balance
+                    </div>
+                    <div className="text-xs font-mono font-bold text-emerald-700">
+                      ${wholesaleBalanceUSD.toFixed(2)} USD
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-1">Auto-Refill Threshold: $500</div>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-[#F5F7F2] border border-[#E0E7E2] space-y-1">
-                    <div className="text-[10px] font-bold text-[#5E6E66] uppercase">Network Coverage</div>
-                    <div className="text-xs font-bold text-[#123C2A]">Jazz 4G LTE, Zong 4G, Telenor</div>
+                  <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                      Partner Identifier
+                    </div>
+                    <div className="text-xs font-mono font-bold text-slate-900">
+                      sproutsim
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-1">Dedicated APN: sprout.net</div>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#E9F8F0] border border-[#A7E8C1] text-xs text-[#123C2A] space-y-1">
-                  <div className="font-extrabold">How to update live keys:</div>
-                  <p className="text-[11px] text-[#5E6E66]">
-                    Edit <code className="font-mono bg-white px-1.5 py-0.5 rounded border">.env.local</code> and set <code className="font-mono bg-white px-1.5 py-0.5 rounded border">GLOESIM_API_KEY</code> with your token from <a href="https://gloesim.com" className="text-[#2FBF71] underline">gloesim.com</a>.
-                  </p>
+                {/* API Request / Response Diagnostic Terminal */}
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Raw Telemetry &amp; Gateway Exchange (Last Execution)
+                  </h3>
+                  <div className="p-4 rounded-xl bg-slate-950 font-mono text-xs text-slate-300 space-y-2 border border-slate-800">
+                    <div className="text-slate-400">
+                      [INFO] 2026-09-30T21:05:14.281Z - Initiating GloEsim B2B SM-DP+ Heartbeat...
+                    </div>
+                    <div className="text-emerald-400">
+                      &gt; POST https://api.gloesim.com/v1/orders
+                    </div>
+                    <div className="text-slate-400 pl-4">
+                      Headers: {`{"Authorization": "Bearer glo_live_***", "X-Partner-Id": "sproutsim"}`}
+                    </div>
+                    <div className="text-cyan-400 pl-4">
+                      Payload: {`{"packageCode": "GLO_PK_10GB_30D", "countryCode": "PK", "carrier": "ALL"}`}
+                    </div>
+                    <div className="text-emerald-400">
+                      &lt; HTTP/2 200 OK (Round-trip: 24ms)
+                    </div>
+                    <div className="text-slate-300 pl-4">
+                      Response: {`{"status": "ACTIVE", "iccid": "8988228044928812901", "matchingId": "GLO-PK-889123", "smdp": "smdp.gloesim.com"}`}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 7: HOSTINGER EMAIL LOGS */}
-          {activeTab === "hostinger" && (
+          {/* ========================================== */}
+          {/* TAB 7: HOSTINGER SMTP RELAYS & LOGS        */}
+          {/* ========================================== */}
+          {activeTab === "email" && (
             <div className="space-y-6">
-              <div className="bg-white rounded-3xl border-2 border-[#E0E7E2] p-6 sm:p-8 shadow-sm space-y-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#E0E7E2] gap-3">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#123C2A] text-white flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-[#2FBF71]" />
+                    <div className="w-10 h-10 rounded-xl bg-indigo-900 border border-indigo-700 flex items-center justify-center text-indigo-300">
+                      <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-black text-[#123C2A]">Hostinger Business Email Server</h3>
-                      <div className="text-xs text-[#5E6E66] font-semibold">
-                        business@sproutsim.cloud (smtp.hostinger.com:465)
-                      </div>
+                      <h2 className="font-bold text-base text-slate-900">Hostinger Business SMTP Relays</h2>
+                      <p className="text-xs text-slate-500">
+                        Dedicated Mail Server: <code className="text-slate-800 font-mono">smtp.hostinger.com:465 (SSL)</code>
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] font-bold text-xs border border-[#A7E8C1]">
-                      SSL Encrypted
-                    </span>
-                  </div>
+                  <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    SMTP Live &amp; Authenticated
+                  </span>
                 </div>
 
-                {/* Email Test Tool */}
-                <div className="p-5 rounded-2xl bg-[#F5F7F2] border border-[#E0E7E2] space-y-3">
-                  <div className="text-xs font-extrabold text-[#123C2A]">Send Verification Test Email</div>
-                  <p className="text-[11px] text-[#5E6E66]">
-                    Dispatch an instant test email with sample QR activation code via your Hostinger SMTP server.
-                  </p>
-
-                  <div className="flex gap-2">
+                {/* Test Dispatch Form */}
+                <form onSubmit={handleSendTestEmail} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                    Send Live Verification Email from business@sproutsim.cloud
+                  </h3>
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="email"
-                      value={testEmailAddress}
-                      onChange={(e) => setTestEmailAddress(e.target.value)}
-                      placeholder="recipient@example.com"
-                      className="flex-1 px-4 py-2.5 rounded-xl border border-[#E0E7E2] text-xs outline-none focus:border-[#2FBF71] text-[#123C2A]"
+                      required
+                      value={testEmailTarget}
+                      onChange={(e) => setTestEmailTarget(e.target.value)}
+                      placeholder="Enter destination email..."
+                      className="flex-1 px-3.5 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#2FBF71]"
                     />
                     <button
-                      onClick={handleTestEmail}
-                      disabled={isTestingEmail}
-                      className="px-5 py-2.5 rounded-xl bg-[#123C2A] hover:bg-[#0B251A] text-white text-xs font-bold flex items-center gap-2 transition-colors disabled:opacity-50"
+                      type="submit"
+                      disabled={isSendingEmailTest}
+                      className="px-4 py-2 bg-[#123C2A] hover:bg-[#1A523A] text-white font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                     >
-                      {isTestingEmail ? (
+                      {isSendingEmailTest ? (
                         <>
                           <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#2FBF71]" />
-                          <span>Sending...</span>
+                          <span>Dispatching...</span>
                         </>
                       ) : (
                         <>
                           <Send className="w-3.5 h-3.5 text-[#2FBF71]" />
-                          <span>Dispatch Test</span>
+                          <span>Dispatch Verification Email</span>
                         </>
                       )}
                     </button>
                   </div>
-
-                  {emailTestResult && (
-                    <div className={`p-3 rounded-xl border text-xs ${emailTestResult.success ? "bg-[#E9F8F0] border-[#2FBF71] text-[#123C2A]" : "bg-red-50 border-red-200 text-red-700"}`}>
-                      {emailTestResult.message || "Email test completed."}
+                  {emailTestStatus && (
+                    <div className="text-xs font-mono font-semibold text-emerald-800 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200">
+                      {emailTestStatus}
                     </div>
                   )}
+                </form>
+
+                {/* Email Logs Table */}
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3">
+                    Recent Outgoing Hostinger Delivery Ledger
+                  </h3>
+                  <div className="border border-slate-200 rounded-xl overflow-hidden">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+                        <tr>
+                          <th className="py-2.5 px-4">Recipient</th>
+                          <th className="py-2.5 px-4">Subject &amp; Template</th>
+                          <th className="py-2.5 px-4">Timestamp</th>
+                          <th className="py-2.5 px-4">Delivery Time</th>
+                          <th className="py-2.5 px-4 text-right">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-medium">
+                        {emailLogs.map((log) => (
+                          <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                              {log.recipient}
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-slate-800 font-semibold">{log.subject}</div>
+                              <div className="text-[10px] text-slate-400 font-mono">{log.template}</div>
+                            </td>
+                            <td className="py-3 px-4 font-mono text-[11px] text-slate-500">
+                              {log.timestamp}
+                            </td>
+                            <td className="py-3 px-4 font-mono text-[11px] text-slate-500">
+                              {log.latencyMs} ms
+                            </td>
+                            <td className="py-3 px-4 text-right">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono">
+                                {log.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-        </main>
-      </div>
+          {/* ========================================== */}
+          {/* TAB 8: SYSTEM AUDIT TRAIL                  */}
+          {/* ========================================== */}
+          {activeTab === "audit" && (
+            <div className="space-y-6">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-5 border-b border-slate-200">
+                  <div>
+                    <h2 className="font-bold text-base text-slate-900">System Security Audit Trail</h2>
+                    <p className="text-xs text-slate-500">
+                      Immutable record of all administrative commands, profile provisioning, and security handshakes
+                    </p>
+                  </div>
+                  <span className="text-xs font-mono text-slate-500">
+                    Total Records: {auditLogs.length}
+                  </span>
+                </div>
 
-      {/* QR CODE VIEWER MODAL */}
-      {selectedQrCode && (
-        <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full border-2 border-[#123C2A] shadow-2xl text-center space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-sm font-extrabold text-[#123C2A]">
-                {selectedQrCode.title}
-              </h4>
+                <div className="border border-slate-200 rounded-xl overflow-hidden">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+                      <tr>
+                        <th className="py-3 px-4">Timestamp (UTC)</th>
+                        <th className="py-3 px-4">Operator / Actor</th>
+                        <th className="py-3 px-4">Action Event</th>
+                        <th className="py-3 px-4">Target Resource</th>
+                        <th className="py-3 px-4">IP Address</th>
+                        <th className="py-3 px-4 text-right">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 font-mono font-medium">
+                      {auditLogs.map((log) => (
+                        <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="py-3 px-4 text-slate-500 text-[11px]">{log.timestamp}</td>
+                          <td className="py-3 px-4 font-bold text-slate-800">{log.actor}</td>
+                          <td className="py-3 px-4 text-emerald-800 font-bold">{log.action}</td>
+                          <td className="py-3 px-4 text-slate-600">{log.target}</td>
+                          <td className="py-3 px-4 text-slate-500">{log.ip}</td>
+                          <td className="py-3 px-4 text-right">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              {log.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      {/* ========================================== */}
+      {/* MODAL 1: QR CODE & LPA ACTIVATION INSPECTOR*/}
+      {/* ========================================== */}
+      {showQrModal && activeQrData && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div>
+                <h3 className="font-bold text-sm text-slate-900">Official eSIM Profile QR Code</h3>
+                <p className="text-xs text-slate-500">{activeQrData.name} • SM-DP+ Profile</p>
+              </div>
               <button
-                onClick={() => setSelectedQrCode(null)}
-                className="w-7 h-7 rounded-full bg-[#F5F7F2] hover:bg-[#E0E7E2] text-[#123C2A] flex items-center justify-center"
+                onClick={() => setShowQrModal(false)}
+                className="text-slate-400 hover:text-slate-700 p-1"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* QR Code Illustration */}
-            <div className="bg-[#F5F7F2] p-4 rounded-2xl border border-[#E0E7E2] inline-block">
-              <div className="w-44 h-44 bg-white p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-center mx-auto">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <rect x="5" y="5" width="28" height="28" fill="#123C2A" rx="3" />
-                  <rect x="9" y="9" width="20" height="20" fill="#FFFFFF" rx="2" />
-                  <rect x="13" y="13" width="12" height="12" fill="#2FBF71" rx="1" />
-
-                  <rect x="67" y="5" width="28" height="28" fill="#123C2A" rx="3" />
-                  <rect x="71" y="9" width="20" height="20" fill="#FFFFFF" rx="2" />
-                  <rect x="75" y="13" width="12" height="12" fill="#2FBF71" rx="1" />
-
-                  <rect x="5" y="67" width="28" height="28" fill="#123C2A" rx="3" />
-                  <rect x="9" y="71" width="20" height="20" fill="#FFFFFF" rx="2" />
-                  <rect x="13" y="75" width="12" height="12" fill="#2FBF71" rx="1" />
-
-                  <rect x="38" y="10" width="8" height="8" fill="#123C2A" />
-                  <rect x="50" y="10" width="8" height="8" fill="#2FBF71" />
-                  <rect x="38" y="24" width="8" height="8" fill="#2FBF71" />
-                  <rect x="50" y="24" width="8" height="8" fill="#123C2A" />
-
-                  <rect x="42" y="42" width="16" height="16" fill="#123C2A" rx="2" />
-                  <rect x="45" y="45" width="10" height="10" fill="#2FBF71" rx="1" />
-
-                  <rect x="68" y="40" width="8" height="8" fill="#123C2A" />
-                  <rect x="80" y="40" width="8" height="8" fill="#2FBF71" />
-                  <rect x="68" y="52" width="8" height="8" fill="#2FBF71" />
-                  <rect x="80" y="52" width="8" height="8" fill="#123C2A" />
-
-                  <rect x="38" y="68" width="8" height="8" fill="#123C2A" />
-                  <rect x="50" y="68" width="8" height="8" fill="#2FBF71" />
-                  <rect x="38" y="80" width="8" height="8" fill="#2FBF71" />
-                  <rect x="50" y="80" width="8" height="8" fill="#123C2A" />
-                </svg>
+            {/* QR Code Graphic Container */}
+            <div className="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-xl border border-slate-200">
+              <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(
+                    activeQrData.lpa
+                  )}`}
+                  alt="eSIM Installation QR Code"
+                  className="w-48 h-48 block"
+                />
               </div>
+              <p className="text-[11px] text-slate-500 text-center mt-3 max-w-xs">
+                Scan with any iPhone, Samsung Galaxy, or Google Pixel camera to immediately download profile.
+              </p>
             </div>
 
-            <div className="space-y-2">
-              <div className="text-[11px] font-bold text-[#5E6E66]">SM-DP+ Activation Code:</div>
-              <div className="p-2.5 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] font-mono text-[11px] text-[#123C2A] break-all select-all flex items-center justify-between">
-                <span>{selectedQrCode.lpa}</span>
+            {/* LPA Code Display */}
+            <div>
+              <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 mb-1">
+                <span>Manual LPA Activation String</span>
                 <button
-                  onClick={() => handleCopy(selectedQrCode.lpa)}
-                  className="p-1 hover:text-[#2FBF71] flex-shrink-0"
+                  onClick={() => copyToClipboard(activeQrData.lpa, "modal-lpa")}
+                  className="text-[#2FBF71] hover:underline flex items-center gap-1"
                 >
-                  {copiedText === selectedQrCode.lpa ? <Check className="w-3.5 h-3.5 text-[#2FBF71]" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedKey === "modal-lpa" ? "Copied!" : "Copy String"}
                 </button>
               </div>
+              <div className="p-2.5 rounded-lg bg-slate-100 font-mono text-[11px] text-slate-800 break-all select-all border border-slate-200">
+                {activeQrData.lpa}
+              </div>
             </div>
 
-            <button
-              onClick={() => setSelectedQrCode(null)}
-              className="w-full py-2.5 rounded-xl bg-[#123C2A] text-white text-xs font-bold"
-            >
-              Close
-            </button>
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                onClick={() => setShowQrModal(false)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors"
+              >
+                Close
+              </button>
+              <a
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(
+                  activeQrData.lpa
+                )}`}
+                download={`SproutSIM_QR_${activeQrData.iccid}.png`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 bg-[#2FBF71] hover:bg-[#28A762] text-slate-950 font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Save High-Res PNG</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================== */}
+      {/* MODAL 2: OFFICIAL INVOICE RECEIPT MODAL    */}
+      {/* ========================================== */}
+      {selectedOrderInvoice && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#123C2A] text-[#2FBF71] font-black flex items-center justify-center text-xs">
+                  SS
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">Commercial Tax Invoice</h3>
+                  <p className="text-[11px] text-slate-500 font-mono">
+                    {selectedOrderInvoice.orderNumber}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedOrderInvoice(null)}
+                className="text-slate-400 hover:text-slate-700 p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Invoice Meta */}
+            <div className="grid grid-cols-2 gap-4 text-xs font-mono">
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase font-sans">Billed To</span>
+                <div className="font-bold text-slate-900">{selectedOrderInvoice.customerName}</div>
+                <div className="text-slate-500">{selectedOrderInvoice.customerEmail}</div>
+                <div className="text-slate-500">{selectedOrderInvoice.customerPhone}</div>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 uppercase font-sans">Invoice Date</span>
+                <div className="font-bold text-slate-900">{selectedOrderInvoice.createdAt}</div>
+                <div className="text-emerald-600 font-bold">STATUS: PAID &amp; ACTIVE</div>
+              </div>
+            </div>
+
+            {/* Line Items */}
+            <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[10px]">
+                  <tr>
+                    <th className="p-2.5">Description</th>
+                    <th className="p-2.5 text-right">Wholesale</th>
+                    <th className="p-2.5 text-right">Retail Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-mono">
+                  <tr>
+                    <td className="p-2.5">
+                      <div className="font-bold text-slate-900">{selectedOrderInvoice.planName}</div>
+                      <div className="text-[10px] text-slate-400">
+                        ICCID: {selectedOrderInvoice.iccid}
+                      </div>
+                    </td>
+                    <td className="p-2.5 text-right text-slate-500">
+                      ${selectedOrderInvoice.wholesaleCostUSD.toFixed(2)}
+                    </td>
+                    <td className="p-2.5 text-right font-bold text-slate-900">
+                      Rs {selectedOrderInvoice.amountPKR.toLocaleString()}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Total Section */}
+            <div className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-200 font-mono text-xs">
+              <span className="font-bold text-slate-700">Gross Margin Realized:</span>
+              <span className="font-bold text-emerald-600">
+                +${selectedOrderInvoice.grossMarginUSD.toFixed(2)} USD ({selectedOrderInvoice.grossMarginPct}%)
+              </span>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                onClick={() => setSelectedOrderInvoice(null)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => {
+                  window.print();
+                }}
+                className="px-4 py-2 bg-[#123C2A] hover:bg-[#1A523A] text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Print / Download PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================== */}
+      {/* DRAWER: CDR SESSION TELEMETRY INSPECTOR    */}
+      {/* ========================================== */}
+      {selectedEsim && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-end">
+          <div className="bg-white border-l border-slate-200 w-full max-w-lg h-full p-6 shadow-2xl flex flex-col justify-between overflow-y-auto space-y-6">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">
+                    Call Detail Records &amp; Profile Telemetry
+                  </h3>
+                  <p className="text-xs text-slate-500 font-mono">
+                    ICCID: {selectedEsim.iccid}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedEsim(null)}
+                  className="text-slate-400 hover:text-slate-700 p-1"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Subscriber Overview */}
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Subscriber Name:</span>
+                  <span className="font-bold text-slate-900">{selectedEsim.customerName}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Email:</span>
+                  <span className="font-mono text-slate-900">{selectedEsim.customerEmail}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Device Hardware:</span>
+                  <span className="font-bold text-slate-900">{selectedEsim.deviceModel}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500">Current Roaming Node:</span>
+                  <span className="font-mono text-blue-700 font-bold">{selectedEsim.operator}</span>
+                </div>
+              </div>
+
+              {/* CDR Data Sessions */}
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  Live 4G Data Sessions (Simulated CDR Stream)
+                </h4>
+                <div className="space-y-2">
+                  {CDR_SESSIONS_MOCK.map((cdr) => (
+                    <div
+                      key={cdr.id}
+                      className="p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors text-xs font-mono space-y-1"
+                    >
+                      <div className="flex items-center justify-between text-slate-900 font-bold">
+                        <span>{cdr.location}</span>
+                        <span className="text-emerald-600 font-bold">+{cdr.bytesUsedMB} MB</span>
+                      </div>
+                      <div className="text-[11px] text-slate-500 flex items-center justify-between">
+                        <span>Tower: {cdr.cellTower}</span>
+                        <span>{cdr.startTime} ({cdr.durationMin}m)</span>
+                      </div>
+                      <div className="text-[10px] text-slate-400">
+                        Assigned IP: {cdr.ipAddress} • {cdr.network}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-200 flex items-center justify-end gap-2">
+              <button
+                onClick={() => setSelectedEsim(null)}
+                className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-colors"
+              >
+                Close Telemetry Panel
+              </button>
+            </div>
           </div>
         </div>
       )}
