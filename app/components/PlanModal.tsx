@@ -61,22 +61,35 @@ export default function PlanModal({
     setIsSending(true);
 
     try {
-      await fetch("/api/send-esim", {
+      const response = await fetch("/api/send-esim", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
+          planId: selectedPlan.id,
           planName: `${selectedPlan.name} (4G Data)`,
           dataAllowance: selectedPlan.data,
           validity: selectedPlan.validity,
           priceFormatted: formatPrice(selectedPlan),
         }),
       });
+
+      const resData = await response.json();
+      if (resData?.order) {
+        addPurchasedEsim(selectedPlan, email, {
+          iccid: resData.order.iccid,
+          lpaCode: resData.order.lpaCode,
+          assignedOperator: resData.order.assignedOperator,
+          orderId: resData.order.orderId,
+        });
+      } else {
+        addPurchasedEsim(selectedPlan, email);
+      }
     } catch (err) {
-      console.error("Email dispatch notice:", err);
+      console.error("eSIM checkout notice:", err);
+      addPurchasedEsim(selectedPlan, email);
     } finally {
       setIsSending(false);
-      addPurchasedEsim(selectedPlan, email);
       setCheckoutStep("success");
     }
   };

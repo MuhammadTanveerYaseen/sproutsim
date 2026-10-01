@@ -51,7 +51,16 @@ interface AuthContextType {
   loginWithApple: () => Promise<boolean>;
   demoLogin: () => void;
   logout: () => void;
-  addPurchasedEsim: (pkg: PakistanPackage, email: string) => void;
+  addPurchasedEsim: (
+    pkg: PakistanPackage,
+    email: string,
+    gloDetails?: {
+      iccid?: string;
+      lpaCode?: string;
+      assignedOperator?: string;
+      orderId?: string;
+    }
+  ) => void;
   topUpEsim: (esimId: string, additionalGB: number) => void;
   simulateDataUsage: (esimId: string, mbAmount: number) => void;
 }
@@ -67,7 +76,7 @@ const DEFAULT_DEMO_USER: UserProfile = {
   activeEsims: [
     {
       id: "esim_pk_10gb_live",
-      iccid: "8992010244928812901",
+      iccid: "8988228044928812901",
       planName: "10 GB Monthly Pro (4G)",
       dataTotalMB: 10240,       // 10 GB
       dataUsedMB: 3686,         // 3.6 GB
@@ -77,8 +86,8 @@ const DEFAULT_DEMO_USER: UserProfile = {
       expiresAt: "2026-10-22",
       status: "ACTIVE",
       country: "Pakistan",
-      network: "Jazz / Zong 4G High-Speed Roaming",
-      qrCodeValue: "LPA:1$smdp.sproutsim.io$SPROUTSIM-PK-899201",
+      network: "GloEsim Roaming (Jazz / Zong 4G High-Speed)",
+      qrCodeValue: "LPA:1$smdp.gloesim.com$GLO-PK-889123-ACTIVATION",
     },
   ],
   orderHistory: [
@@ -285,7 +294,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     saveUser(null);
   };
 
-  const addPurchasedEsim = (pkg: PakistanPackage, email: string) => {
+  const addPurchasedEsim = (
+    pkg: PakistanPackage,
+    email: string,
+    gloDetails?: {
+      iccid?: string;
+      lpaCode?: string;
+      assignedOperator?: string;
+      orderId?: string;
+    }
+  ) => {
     let totalMB = 1024;
     if (pkg.data.includes("Unlimited")) totalMB = 102400;
     else {
@@ -296,7 +314,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const validityDays = parseInt(pkg.validity.replace(/\D/g, ""), 10) || 30;
     const now = new Date();
     const expiry = new Date(now.getTime() + validityDays * 86400000);
-    const newIccid = `899201024${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+    const newIccid = gloDetails?.iccid || `89882280${Math.floor(1000000000 + Math.random() * 9000000000)}`;
 
     const newEsim: UserEsim = {
       id: `esim_${Date.now()}`,
@@ -310,12 +328,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       expiresAt: expiry.toISOString().split("T")[0],
       status: "ACTIVE",
       country: "Pakistan",
-      network: "Jazz / Zong 4G High-Speed Roaming",
-      qrCodeValue: `LPA:1$smdp.sproutsim.io$SPROUTSIM-PK-${Date.now().toString().slice(-6)}`,
+      network: gloDetails?.assignedOperator || "GloEsim Roaming (Jazz / Zong 4G High-Speed)",
+      qrCodeValue: gloDetails?.lpaCode || `LPA:1$smdp.gloesim.com$${newIccid}`,
     };
 
     const newOrder: UserOrder = {
-      orderId: `ORD-${Math.floor(1000 + Math.random() * 9000)}-PK`,
+      orderId: gloDetails?.orderId || `ORD-${Math.floor(1000 + Math.random() * 9000)}-PK`,
       planName: pkg.name,
       dataAllowance: pkg.data,
       amountFormatted: `Rs ${pkg.pricePKR.toLocaleString()}`,

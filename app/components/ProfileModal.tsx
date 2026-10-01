@@ -214,6 +214,9 @@ export default function ProfileModal({
 
                         {/* Status Badges */}
                         <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-extrabold text-[#15803D] bg-[#F0FDF4] px-2 py-1 rounded-lg border border-[#BBF7D0]">
+                            GloEsim Provider
+                          </span>
                           <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold">
                             <span className="w-2 h-2 rounded-full bg-[#2FBF71] animate-pulse"></span>
                             <span>{esim.status}</span>
