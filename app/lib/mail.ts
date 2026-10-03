@@ -1,5 +1,12 @@
 import nodemailer from "nodemailer";
 
+import dns from "node:dns";
+try {
+  dns.setDefaultResultOrder?.("ipv4first");
+} catch {
+  // Fallback if not supported
+}
+
 export function getHostingerTransporter() {
   const host = process.env.HOSTINGER_SMTP_HOST || "smtp.hostinger.com";
   const port = parseInt(process.env.HOSTINGER_SMTP_PORT || "465", 10);
@@ -19,7 +26,8 @@ export function getHostingerTransporter() {
       user,
       pass,
     },
-  });
+    family: 4, // Force IPv4 to eliminate IPv6 network route unreachable errors
+  } as any);
 }
 
 export interface EsimEmailPayload {
@@ -101,7 +109,7 @@ export async function sendEsimOrderEmail(payload: EsimEmailPayload) {
           </div>
 
           <p style="font-size: 12px; color: #5E6E66; text-align: center;">
-            Need help? Contact our 24/7 team at <a href="mailto:${fromEmail}" style="color: #2FBF71; font-weight: bold;">${fromEmail}</a> or on WhatsApp.
+            Need help? Contact our 24/7 team at <a href="mailto:${fromEmail}" style="color: #2FBF71; font-weight: bold;">${fromEmail}</a> or on WhatsApp at <a href="https://wa.me/923365131223" style="color: #2FBF71; font-weight: bold;">+92 336 5131223</a>.
           </p>
         </div>
         <div class="footer">
@@ -173,3 +181,143 @@ export async function sendAdminTestEmail(targetEmail: string) {
     smdpAddress: "smdp.gloesim.com",
   });
 }
+
+export interface AdminPaymentAlertPayload {
+  orderId: string;
+  customerEmail: string;
+  customerPhone?: string;
+  customerName?: string;
+  planName: string;
+  dataAllowance: string;
+  validity: string;
+  priceFormatted: string;
+  senderDetails?: string;
+  verifyUrl: string;
+}
+
+export async function sendPaymentVerificationAlertToAdmin(payload: AdminPaymentAlertPayload) {
+  const transporter = getHostingerTransporter();
+  const fromName = process.env.HOSTINGER_FROM_NAME || "SproutSIM Billing Alerts";
+  const fromEmail = process.env.HOSTINGER_FROM_EMAIL || "business@sproutsim.cloud";
+  const adminEmail = process.env.HOSTINGER_FROM_EMAIL || "business@sproutsim.cloud";
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>Payment Verification Required</title>
+    </head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F5F7F2; margin: 0; padding: 20px; color: #1C2420;">
+      <div style="max-width: 580px; margin: 0 auto; background: #FFFFFF; border-radius: 20px; border: 2px solid #123C2A; overflow: hidden;">
+        
+        <!-- Header -->
+        <div style="background-color: #123C2A; color: #FFFFFF; padding: 24px; text-align: center;">
+          <div style="display: inline-block; background-color: #EF4444; color: #FFFFFF; padding: 5px 14px; border-radius: 999px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+            Action Required
+          </div>
+          <h1 style="margin: 0; font-size: 22px; color: #FFFFFF; font-weight: 800;">Customer Sent Payment</h1>
+          <p style="margin: 6px 0 0 0; color: #A7E8C1; font-size: 13px; font-weight: 600;">SproutSIM Payment Verification Alert</p>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 24px;">
+          <p style="font-size: 14px; line-height: 1.5; color: #1C2420; margin-top: 0;">
+            A customer has submitted a manual payment request for a Pakistan eSIM package. Please check your bank account or JazzCash to verify the funds.
+          </p>
+
+          <!-- Order Summary Box -->
+          <div style="background-color: #F8FAF9; border: 1px solid #E0E7E2; border-radius: 14px; padding: 18px; margin: 18px 0;">
+            <div style="padding: 6px 0; font-size: 13px; border-bottom: 1px solid #EAEFEA;">
+              <span style="color: #5E6E66;">Order ID:</span>
+              <strong style="float: right; font-family: monospace; color: #123C2A; font-size: 14px;">${payload.orderId}</strong>
+              <div style="clear: both;"></div>
+            </div>
+
+            <div style="padding: 6px 0; font-size: 13px; border-bottom: 1px solid #EAEFEA;">
+              <span style="color: #5E6E66;">Customer Email:</span>
+              <strong style="float: right; color: #123C2A;">${payload.customerEmail}</strong>
+              <div style="clear: both;"></div>
+            </div>
+
+            <div style="padding: 6px 0; font-size: 13px; border-bottom: 1px solid #EAEFEA;">
+              <span style="color: #5E6E66;">Customer Phone / WhatsApp:</span>
+              <strong style="float: right; color: #123C2A;">${payload.customerPhone || "Not provided"}</strong>
+              <div style="clear: both;"></div>
+            </div>
+
+            <div style="padding: 6px 0; font-size: 13px; border-bottom: 1px solid #EAEFEA;">
+              <span style="color: #5E6E66;">Package:</span>
+              <strong style="float: right; color: #123C2A;">${payload.planName} (${payload.dataAllowance} • ${payload.validity})</strong>
+              <div style="clear: both;"></div>
+            </div>
+
+            <div style="padding: 6px 0; font-size: 13px; border-bottom: 1px solid #EAEFEA;">
+              <span style="color: #5E6E66;">Payment Proof / Sender:</span>
+              <strong style="float: right; color: #2563EB;">${payload.senderDetails || "Transfer Reported"}</strong>
+              <div style="clear: both;"></div>
+            </div>
+
+            <div style="padding: 8px 0 2px 0; font-size: 15px;">
+              <span style="color: #123C2A; font-weight: 800;">Total Amount Due:</span>
+              <strong style="float: right; color: #2FBF71; font-size: 18px; font-weight: 900;">${payload.priceFormatted}</strong>
+              <div style="clear: both;"></div>
+            </div>
+          </div>
+
+          <!-- BULLETPROOF BUTTON: Table-based with 100% inline CSS -->
+          <div style="margin: 24px 0; text-align: center;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="center">
+                  <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td align="center" style="border-radius: 14px; background-color: #2FBF71;">
+                        <a href="${payload.verifyUrl}" target="_blank" style="font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #FFFFFF !important; text-decoration: none; border-radius: 14px; padding: 16px 36px; border: 1px solid #2FBF71; display: inline-block; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; background-color: #2FBF71;">
+                          ✅ APPROVE &amp; VERIFY PAYMENT
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- DIRECT BACKUP LINK BOX (Always visible even if images/buttons blocked) -->
+          <div style="background-color: #E9F8F0; border: 1px solid #A7E8C1; border-radius: 12px; padding: 12px; margin-top: 18px; text-align: center;">
+            <span style="font-size: 11px; font-weight: 800; color: #123C2A; display: block; margin-bottom: 4px; text-transform: uppercase;">
+              Direct Approval Link:
+            </span>
+            <a href="${payload.verifyUrl}" style="color: #123C2A; font-size: 12px; word-break: break-all; font-family: monospace; font-weight: 700; text-decoration: underline;">
+              ${payload.verifyUrl}
+            </a>
+          </div>
+
+          <p style="font-size: 11px; text-align: center; color: #8E9E96; margin-top: 18px; line-height: 1.4;">
+            Once you click this button, the customer's screen will instantly turn green and allow them to generate their live GloEsim GSMA profile.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  if (!transporter) {
+    console.warn("[Admin Payment Alert] Hostinger SMTP not configured; simulated alert logged.");
+    return { success: true, simulated: true };
+  }
+
+  const plainText = `NEW PAYMENT VERIFICATION REQUEST:\n\nOrder ID: ${payload.orderId}\nCustomer Email: ${payload.customerEmail}\nCustomer Phone: ${payload.customerPhone || "Not provided"}\nPackage: ${payload.planName} (${payload.dataAllowance} • ${payload.validity})\nAmount: ${payload.priceFormatted}\nPayment Proof: ${payload.senderDetails || "Transfer Reported"}\n\nCLICK THIS LINK TO APPROVE PAYMENT:\n${payload.verifyUrl}\n\n(Once clicked, customer screen will turn green and activate eSIM)`;
+
+  const info = await transporter.sendMail({
+    from: `"${fromName}" <${fromEmail}>`,
+    to: adminEmail,
+    subject: `🚨 [PAYMENT VERIFICATION NEEDED] Order ${payload.orderId} - ${payload.priceFormatted} from ${payload.customerPhone || payload.customerEmail}`,
+    text: plainText,
+    html: htmlContent,
+  });
+
+  return { success: true, messageId: info.messageId };
+}
+

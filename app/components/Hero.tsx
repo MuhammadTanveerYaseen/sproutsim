@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Zap, ShieldCheck, Smartphone, ArrowRight, CheckCircle2, Wifi, Lock } from "lucide-react";
+import { Zap, ShieldCheck, Smartphone, ArrowRight, CheckCircle2, Wifi, Lock, QrCode, Sparkles, RefreshCw } from "lucide-react";
+import { PAKISTAN_PLANS, PakistanPackage } from "../data/destinations";
 
 interface HeroProps {
-  onOpenPakistanModal: () => void;
+  onOpenPakistanModal: (plan?: PakistanPackage) => void;
   onFilterPlan: (tag: string) => void;
 }
 
@@ -12,214 +13,310 @@ export default function Hero({
   onOpenPakistanModal,
   onFilterPlan,
 }: HeroProps) {
-  const [dataUsage, setDataUsage] = useState(3.6);
+  const [selectedHeroPlan, setSelectedHeroPlan] = useState<PakistanPackage>(
+    PAKISTAN_PLANS.find((p) => p.popular) || PAKISTAN_PLANS[13] || PAKISTAN_PLANS[0]
+  );
+  const [showQrPreview, setShowQrPreview] = useState(false);
+  const [simulatedUsage, setSimulatedUsage] = useState(3.4);
 
-  const quickPicks = ["1 GB Trial", "3 GB Weekly", "10 GB Monthly (Hot)", "20 GB Pro", "50 GB Power", "Unlimited"];
+  const quickDurations = [
+    { label: "1 GB · 3 Days", plan: PAKISTAN_PLANS[0] },
+    { label: "3 GB · 7 Days", plan: PAKISTAN_PLANS[6] || PAKISTAN_PLANS[0] },
+    { label: "10 GB · 30 Days (Hot)", plan: PAKISTAN_PLANS[13] || PAKISTAN_PLANS[0] },
+    { label: "20 GB · 30 Days", plan: PAKISTAN_PLANS[14] || PAKISTAN_PLANS[0] },
+  ];
 
   return (
-    <section className="bg-[#FFFFFF] py-12 sm:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F8FAF9] via-[#FFFFFF] to-[#FFFFFF] py-10 sm:py-16 lg:py-20 border-b border-[#E5EBE7]">
+      {/* Background Subtle Ambience Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-radial from-[#2FBF71]/8 via-transparent to-transparent pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: Headline, Value Prop & Mobile Trust Grid */}
-          <div className="lg:col-span-7 space-y-4 sm:space-y-5">
-            {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-[#2FBF71]"></span>
-              <span>High-Speed 4G Data in Pakistan</span>
+          {/* Left Column: Headline, Value Prop & Quick Selector */}
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+            {/* Live Network Roaming Status Pill */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold tracking-tight shadow-xs">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2FBF71] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2FBF71]"></span>
+              </span>
+              <span>Live 4G/LTE Roaming Active · Jazz 4G &amp; Zong 4G Nodes</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#123C2A] tracking-tight leading-[1.2]">
-              Keep Your Smartphone Online in Pakistan — Without Device Taxes.
-            </h1>
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-5xl lg:text-5xl font-black text-[#123C2A] tracking-tight leading-[1.15]">
+                Continuous 4G Data in Pakistan.{" "}
+                <span className="text-[#2FBF71]">Instant eSIM.</span>
+              </h1>
+              <p className="text-sm sm:text-base text-[#4A5D53] max-w-xl leading-relaxed font-normal">
+                Keep any imported or unlocked smartphone online 365 days a year. Built on carrier-grade international roaming protocols with zero device registration hurdles, zero biometric queues, and instant QR delivery in under 60 seconds.
+              </p>
+            </div>
 
-            {/* Description */}
-            <p className="text-[#5E6E66] text-xs sm:text-base max-w-xl leading-relaxed">
-              Avoid paying heavy registration taxes on imported smartphones. SproutSIM delivers fast, reliable 4G data to any eSIM-enabled iPhone &amp; Android without getting blocked.
-            </p>
-
-            {/* Action Bar */}
-            <div className="bg-[#F5F7F2] p-2 rounded-2xl border-2 border-[#123C2A] shadow-sm max-w-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-              <div className="flex items-center gap-2.5 px-2 py-1 sm:py-0">
-                <Smartphone className="w-5 h-5 text-[#2FBF71] flex-shrink-0" />
-                <span className="text-xs sm:text-sm font-bold text-[#1C2420]">
-                  High-Speed 4G Data Packages
+            {/* Interactive Quick Duration Selector & Action Bar */}
+            <div className="bg-[#FFFFFF] p-3 sm:p-4 rounded-2xl border-2 border-[#123C2A] shadow-md max-w-xl space-y-3">
+              <div className="flex items-center justify-between text-xs font-bold text-[#123C2A]">
+                <span className="flex items-center gap-1.5">
+                  <Smartphone className="w-4 h-4 text-[#2FBF71]" />
+                  <span>Select Trip Duration</span>
+                </span>
+                <span className="text-[#2FBF71] font-mono text-[11px] uppercase tracking-wider">
+                  Instant Setup
                 </span>
               </div>
-              <button
-                onClick={onOpenPakistanModal}
-                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider transition-colors flex-shrink-0"
-              >
-                <span>View Plans</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+
+              {/* Duration Pills */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                {quickDurations.map((item) => {
+                  const isSelected = selectedHeroPlan.id === item.plan.id;
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={() => setSelectedHeroPlan(item.plan)}
+                      className={`px-2.5 py-2 rounded-xl text-xs font-bold transition-all text-center ${
+                        isSelected
+                          ? "bg-[#123C2A] text-white shadow-xs"
+                          : "bg-[#F5F7F2] text-[#1C2420] hover:bg-[#E9F8F0] border border-[#E0E7E2]"
+                      }`}
+                    >
+                      <div className="truncate">{item.plan.data}</div>
+                      <div className="text-[10px] opacity-80">{item.plan.validity}</div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Action Button & Live Selected Price */}
+              <div className="pt-2 border-t border-[#F0F4F2] flex items-center justify-between gap-3">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-[#5E6E66] block">
+                    Starting from
+                  </span>
+                  <div className="text-base sm:text-lg font-black text-[#123C2A] leading-tight">
+                    Rs {selectedHeroPlan.pricePKR.toLocaleString()}{" "}
+                    <span className="text-xs font-normal text-[#5E6E66]">
+                      (${selectedHeroPlan.priceUSD.toFixed(2)} USD)
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onOpenPakistanModal(selectedHeroPlan)}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wide transition-all shadow-sm active:scale-95 flex-shrink-0"
+                >
+                  <span>Get eSIM Now</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Quick Pick Chips */}
-            <div className="flex items-center gap-1.5 overflow-x-auto sm:flex-wrap pb-1 sm:pb-0 pt-1">
-              <span className="text-xs font-bold text-[#5E6E66] flex-shrink-0">Popular:</span>
-              {quickPicks.map((pick) => (
+            <div className="flex items-center gap-1.5 overflow-x-auto sm:flex-wrap pb-1 pt-1">
+              <span className="text-xs font-bold text-[#5E6E66] flex-shrink-0">Popular Plans:</span>
+              {[PAKISTAN_PLANS[0], PAKISTAN_PLANS[6], PAKISTAN_PLANS[10], PAKISTAN_PLANS[13], PAKISTAN_PLANS[14]].map((p) => (
                 <button
-                  key={pick}
-                  onClick={() => onFilterPlan(pick)}
-                  className="px-3 py-1 rounded-full text-xs font-semibold bg-[#F5F7F2] hover:bg-[#123C2A] hover:text-[#FFFFFF] text-[#123C2A] border border-[#E0E7E2] transition-colors whitespace-nowrap flex-shrink-0"
+                  key={p.id}
+                  onClick={() => {
+                    setSelectedHeroPlan(p);
+                    onFilterPlan(p.data);
+                  }}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors whitespace-nowrap flex-shrink-0 ${
+                    selectedHeroPlan.id === p.id
+                      ? "bg-[#123C2A] text-white"
+                      : "bg-[#F5F7F2] hover:bg-[#E9F8F0] text-[#123C2A] border border-[#E0E7E2]"
+                  }`}
                 >
-                  {pick}
+                  {p.data} · Rs {p.pricePKR.toLocaleString()}
                 </button>
               ))}
             </div>
 
-            {/* Trust Badges Bar: Strict 2 columns and 2 rows on mobile */}
-            <div className="pt-4 border-t border-[#E0E7E2]">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
-                
-                {/* Row 1, Col 1 */}
-                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
+            {/* Core Trust Feature Cards */}
+            <div className="pt-3 border-t border-[#E5EBE7]">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="bg-[#FFFFFF] p-2.5 rounded-xl border border-[#E0E7E2] flex items-center gap-2 shadow-2xs hover:border-[#2FBF71] transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck className="w-4 h-4 text-[#2FBF71]" />
                   </div>
-                  <div>
-                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">No Device Tax</div>
-                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Save Big</div>
+                  <div className="overflow-hidden">
+                    <div className="text-xs font-bold text-[#1C2420] truncate">Never Blocked</div>
+                    <div className="text-[10px] text-[#5E6E66]">Global Roaming</div>
                   </div>
                 </div>
 
-                {/* Row 1, Col 2 */}
-                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
+                <div className="bg-[#FFFFFF] p-2.5 rounded-xl border border-[#E0E7E2] flex items-center gap-2 shadow-2xs hover:border-[#2FBF71] transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <Lock className="w-4 h-4 text-[#2FBF71]" />
                   </div>
-                  <div>
-                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">Never Blocked</div>
-                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Works 365 Days</div>
-                  </div>
-                </div>
-
-                {/* Row 2, Col 1 */}
-                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
-                  </div>
-                  <div>
-                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">Free Hotspot</div>
-                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Tether Laptop</div>
+                  <div className="overflow-hidden">
+                    <div className="text-xs font-bold text-[#1C2420] truncate">Zero Tax</div>
+                    <div className="text-[10px] text-[#5E6E66]">Save Big</div>
                   </div>
                 </div>
 
-                {/* Row 2, Col 2 */}
-                <div className="bg-[#F5F7F2] p-2.5 sm:p-3 rounded-xl border border-[#E0E7E2] flex items-center gap-2 hover:border-[#A7E8C1] transition-colors">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#2FBF71]" />
+                <div className="bg-[#FFFFFF] p-2.5 rounded-xl border border-[#E0E7E2] flex items-center gap-2 shadow-2xs hover:border-[#2FBF71] transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <Wifi className="w-4 h-4 text-[#2FBF71]" />
                   </div>
-                  <div>
-                    <div className="text-[11px] sm:text-xs font-bold text-[#1C2420] leading-tight">Instant QR</div>
-                    <div className="text-[9px] sm:text-[10px] text-[#5E6E66]">Setup in 60s</div>
+                  <div className="overflow-hidden">
+                    <div className="text-xs font-bold text-[#1C2420] truncate">Free Hotspot</div>
+                    <div className="text-[10px] text-[#5E6E66]">Laptop Tethering</div>
                   </div>
                 </div>
 
+                <div className="bg-[#FFFFFF] p-2.5 rounded-xl border border-[#E0E7E2] flex items-center gap-2 shadow-2xs hover:border-[#2FBF71] transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-[#E9F8F0] flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-4 h-4 text-[#2FBF71]" />
+                  </div>
+                  <div className="overflow-hidden">
+                    <div className="text-xs font-bold text-[#1C2420] truncate">Instant QR</div>
+                    <div className="text-[10px] text-[#5E6E66]">Setup in 60s</div>
+                  </div>
+                </div>
               </div>
             </div>
 
           </div>
 
-          {/* Right Column: Live eSIM Card Preview */}
+          {/* Right Column: Virtual Interactive eSIM Telecom Card */}
           <div className="lg:col-span-5 flex justify-center w-full">
-            <div className="w-full max-w-md bg-[#FFFFFF] rounded-3xl border-2 border-[#E0E7E2] p-4 sm:p-6 shadow-sm">
+            <div className="w-full max-w-md bg-[#FFFFFF] rounded-3xl border-2 border-[#123C2A] p-5 sm:p-6 shadow-xl relative overflow-hidden">
               
+              {/* Top Accent Gradient Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#2FBF71] via-[#123C2A] to-[#2FBF71]" />
+
               {/* Card Header */}
-              <div className="flex items-center justify-between pb-3.5 border-b border-[#F5F7F2]">
+              <div className="flex items-center justify-between pb-3.5 border-b border-[#F0F4F2]">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#123C2A] flex items-center justify-center text-white font-extrabold text-[11px] tracking-wider">
+                  <div className="w-10 h-10 rounded-xl bg-[#123C2A] flex items-center justify-center text-[#2FBF71] font-black text-xs tracking-wider shadow-xs">
                     SIM
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-[#123C2A]">Pakistan eSIM Data</h3>
-                    <p className="text-[11px] font-medium text-[#5E6E66]">Active Roaming • High-Speed 4G</p>
+                    <h3 className="text-sm font-extrabold text-[#123C2A]">
+                      SproutSIM 4G eSIM
+                    </h3>
+                    <p className="text-[11px] font-medium text-[#5E6E66]">
+                      Jazz 4G LTE • Dual Roaming Node
+                    </p>
                   </div>
                 </div>
 
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold">
-                  <span className="w-2 h-2 rounded-full bg-[#2FBF71]"></span>
-                  <span>Online</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] text-xs font-bold">
+                  <span className="w-2 h-2 rounded-full bg-[#2FBF71] animate-pulse"></span>
+                  <span>Active</span>
                 </div>
               </div>
 
-              {/* Data Meter */}
-              <div className="my-4 sm:my-5 bg-[#F5F7F2] p-3.5 sm:p-5 rounded-2xl border border-[#E0E7E2]">
-                <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#5E6E66]">
-                    Data Balance
-                  </span>
-                  <span className="text-xs font-semibold text-[#123C2A]">
-                    Pakistan - 30 days
-                  </span>
-                </div>
+              {/* eSIM Card Telemetry View (or QR Flip) */}
+              {!showQrPreview ? (
+                <div className="my-4 bg-[#F8FAF9] p-4 rounded-2xl border border-[#E0E7E2] space-y-3.5">
+                  <div className="flex items-baseline justify-between">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#5E6E66] block">
+                        Selected Package
+                      </span>
+                      <span className="text-base font-black text-[#123C2A]">
+                        {selectedHeroPlan.name}
+                      </span>
+                    </div>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#E9F8F0] text-[#123C2A] font-mono">
+                      {selectedHeroPlan.validity}
+                    </span>
+                  </div>
 
-                <div className="flex items-baseline gap-2 mb-3">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-[#123C2A]">{dataUsage.toFixed(1)} GB</span>
-                  <span className="text-xs sm:text-sm font-semibold text-[#5E6E66]">left of 10 GB</span>
-                </div>
+                  {/* Visual Data Meter */}
+                  <div>
+                    <div className="flex items-baseline justify-between mb-1.5">
+                      <span className="text-2xl sm:text-3xl font-black text-[#123C2A]">
+                        {selectedHeroPlan.data}
+                      </span>
+                      <span className="text-xs font-bold text-[#2FBF71]">
+                        Uncapped 4G Speed
+                      </span>
+                    </div>
 
-                {/* Solid Progress Bar */}
-                <div className="w-full h-3 bg-[#E0E7E2] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-[#2FBF71] rounded-full transition-all duration-300"
-                    style={{ width: `${(dataUsage / 10) * 100}%` }}
-                  ></div>
-                </div>
+                    <div className="w-full h-3 bg-[#E0E7E2] rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#2FBF71] to-[#26A561] rounded-full transition-all duration-500"
+                        style={{ width: "85%" }}
+                      />
+                    </div>
 
-                <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-semibold text-[#5E6E66] mt-2">
-                  <span>Used: {(10 - dataUsage).toFixed(1)} GB</span>
-                  <span className="text-[#2FBF71]">Roaming: Active</span>
-                </div>
+                    <div className="flex items-center justify-between text-[11px] font-medium text-[#5E6E66] mt-1.5">
+                      <span>Simulated latency: ~18ms</span>
+                      <span className="text-emerald-700 font-bold">Hotspot: Unrestricted</span>
+                    </div>
+                  </div>
 
-                {/* Interactive Simulation Button */}
-                <div className="mt-4 pt-3 border-t border-[#E0E7E2] flex items-center justify-between">
-                  <button
-                    onClick={() => setDataUsage((prev) => (prev > 1 ? Number((prev - 0.5).toFixed(1)) : 9.5))}
-                    className="text-xs font-bold text-[#123C2A] hover:text-[#2FBF71] underline cursor-pointer"
-                  >
-                    Simulate data (-0.5 GB)
-                  </button>
-
-                  <button
-                    onClick={onOpenPakistanModal}
-                    className="px-3.5 py-1.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] text-xs font-bold uppercase tracking-wide transition-colors"
-                  >
-                    Top Up
-                  </button>
+                  {/* Network Roaming Features */}
+                  <div className="pt-2 border-t border-[#E5EBE7] grid grid-cols-2 gap-2 text-xs">
+                    <div className="flex items-center gap-1.5 text-[#123C2A] font-semibold text-[11px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
+                      <span>Zero Block Risk</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[#123C2A] font-semibold text-[11px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
+                      <span>No CNIC / Biometrics</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[#123C2A] font-semibold text-[11px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
+                      <span>WhatsApp Audio/Video</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[#123C2A] font-semibold text-[11px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
+                      <span>Instant Hostinger Email</span>
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                <div className="my-4 bg-[#F8FAF9] p-4 rounded-2xl border border-[#E0E7E2] flex flex-col items-center text-center space-y-2.5">
+                  <div className="bg-white p-3 rounded-xl border border-[#E0E7E2] shadow-xs">
+                    <img
+                      src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=LPA:1$smdp.sproutsim.io$DEMO-PK-SPROUTSIM-QR"
+                      alt="eSIM Installation QR Code Demo"
+                      className="w-36 h-36 block"
+                    />
+                  </div>
+                  <div className="text-xs font-bold text-[#123C2A]">
+                    Instant QR Scan Delivery
+                  </div>
+                  <p className="text-[11px] text-[#5E6E66] max-w-xs">
+                    Delivered straight to your inbox via Hostinger SMTP. Scan using iPhone or Android Camera to activate in 60s.
+                  </p>
+                </div>
+              )}
+
+              {/* QR Toggle / Simulation Switch */}
+              <div className="flex items-center justify-between mb-4">
+                <button
+                  type="button"
+                  onClick={() => setShowQrPreview(!showQrPreview)}
+                  className="text-xs font-bold text-[#123C2A] hover:text-[#2FBF71] flex items-center gap-1.5 transition-colors"
+                >
+                  <QrCode className="w-3.5 h-3.5 text-[#2FBF71]" />
+                  <span>{showQrPreview ? "View Data Telemetry" : "Preview QR Code Delivery"}</span>
+                </button>
+
+                <span className="text-[11px] font-mono text-[#5E6E66]">
+                  Status: Ready
+                </span>
               </div>
 
-              {/* 2 Columns & 2 Rows on Mobile for Checklist */}
-              <div className="grid grid-cols-2 gap-2 mb-4 sm:mb-5">
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                  <span className="truncate">No Device Tax</span>
-                </div>
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                  <span className="truncate">Never Blocked</span>
-                </div>
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                  <span className="truncate">Instant QR Email</span>
-                </div>
-                <div className="p-2 rounded-xl bg-[#F5F7F2] border border-[#E0E7E2] flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold text-[#1C2420]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#2FBF71] flex-shrink-0" />
-                  <span className="truncate">Free Hotspot</span>
-                </div>
-              </div>
-
-              {/* Bottom Action Button */}
+              {/* Bottom Primary Button */}
               <button
-                onClick={onOpenPakistanModal}
-                className="w-full py-3 sm:py-3.5 rounded-xl bg-[#123C2A] hover:bg-[#1A523A] text-[#FFFFFF] text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors"
+                onClick={() => onOpenPakistanModal(selectedHeroPlan)}
+                className="w-full py-3.5 rounded-xl bg-[#123C2A] hover:bg-[#1A523A] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md active:scale-98"
               >
-                <span>Browse eSIM Plans (From Rs 525)</span>
+                <span>Activate eSIM · Rs {selectedHeroPlan.pricePKR.toLocaleString()}</span>
                 <ArrowRight className="w-4 h-4 text-[#2FBF71]" />
               </button>
+
+              <p className="text-center text-[10px] text-[#5E6E66] mt-2">
+                🔒 Secure 256-Bit SSL Checkout · Instant Delivery · 24/7 WhatsApp Support
+              </p>
 
             </div>
           </div>

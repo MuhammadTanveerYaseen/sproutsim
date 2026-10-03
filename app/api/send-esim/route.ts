@@ -14,15 +14,17 @@ export async function POST(request: Request) {
       );
     }
 
-    // Map plan to GloEsim package code
-    let packageCode = "GLO_PK_10GB_30D";
+    // Map plan to GloEsim package code / UUID
+    let packageCode = planId || "a2db19a9-0a35-4ed8-883f-296d8fe6abf8";
     if (planId && GLOESIM_PAKISTAN_PACKAGES[planId]) {
-      packageCode = GLOESIM_PAKISTAN_PACKAGES[planId].code;
+      packageCode = GLOESIM_PAKISTAN_PACKAGES[planId].id;
+    } else if (planId && planId.length > 20) {
+      packageCode = planId;
     } else if (dataAllowance) {
       const match = Object.values(GLOESIM_PAKISTAN_PACKAGES).find(
         (p) => p.dataFormatted.toLowerCase() === String(dataAllowance).toLowerCase()
       );
-      if (match) packageCode = match.code;
+      if (match) packageCode = match.id;
     }
 
     // 1. Provision eSIM profile with GloEsim provider
@@ -33,20 +35,29 @@ export async function POST(request: Request) {
     });
 
     // 2. Dispatch professional activation email with GloEsim credentials via Hostinger SMTP
-    const emailResult = await sendEsimOrderEmail({
-      to: email,
-      planName: planName || "Pakistan eSIM Package",
-      dataAllowance: dataAllowance || `${Math.round(gloOrder.dataMB / 1024)} GB`,
-      validity: validity || `${gloOrder.validityDays} Days`,
-      priceFormatted: priceFormatted || "Rs 2,225",
-      lpaCode: gloOrder.lpaCode,
-      smdpAddress: gloOrder.smdpAddress,
-    });
+    let emailResult = null;
+    let emailStatus = "pending";
+    try {
+      emailResult = await sendEsimOrderEmail({
+        to: email,
+        planName: planName || "Pakistan eSIM Package",
+        dataAllowance: dataAllowance || `${Math.round(gloOrder.dataMB / 1024)} GB`,
+        validity: validity || `${gloOrder.validityDays} Days`,
+        priceFormatted: priceFormatted || "Rs 2,225",
+        lpaCode: gloOrder.lpaCode,
+        smdpAddress: gloOrder.smdpAddress,
+      });
+      emailStatus = "sent";
+    } catch (emailErr: any) {
+      console.warn("[Hostinger SMTP Notice] Could not deliver email, continuing with profile:", emailErr?.message || emailErr);
+      emailStatus = `delivery_failed: ${emailErr?.message || "Check email address"}`;
+    }
 
     return NextResponse.json({
       success: true,
-      message: "eSIM provisioned via GloEsim and activation email dispatched via Hostinger",
+      message: "eSIM provisioned via GloEsim enterprise provider",
       order: gloOrder,
+      emailStatus,
       emailResult,
     });
   } catch (error: any) {

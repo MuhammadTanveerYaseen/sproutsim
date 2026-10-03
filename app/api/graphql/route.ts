@@ -6,9 +6,9 @@ import {
   getEsimsCollection,
   getAuditLogsCollection,
   getEmailLogsCollection,
-} from "@/app/lib/mongodb";
-import { gloesim, GLOESIM_PAKISTAN_PACKAGES } from "@/app/lib/gloesim";
-import { testSmtpConnection, sendAdminTestEmail } from "@/app/lib/mail";
+} from "../../lib/mongodb";
+import { gloesim, GLOESIM_PAKISTAN_PACKAGES } from "../../lib/gloesim";
+import { testSmtpConnection, sendAdminTestEmail } from "../../lib/mail";
 
 // ==========================================
 // 1. OPTIMIZED GRAPHQL SCHEMA DEFINITIONS

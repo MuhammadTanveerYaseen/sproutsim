@@ -434,7 +434,7 @@ export default function ProfileModal({
           </div>
 
           <a
-            href="https://wa.me/923086379663?text=Hi%20SproutSIM%2C%20I%20need%20help%20with%20my%20active%20eSIM"
+            href="https://wa.me/923365131223?text=Hi%20SproutSIM%2C%20I%20need%20help%20with%20my%20active%20eSIM"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#123C2A] hover:text-[#2FBF71] font-bold text-xs flex items-center gap-1 transition-colors"

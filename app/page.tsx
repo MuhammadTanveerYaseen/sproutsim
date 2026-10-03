@@ -29,8 +29,12 @@ function HomeContent() {
     setIsModalOpen(true);
   };
 
-  const handleOpenDefaultModal = () => {
-    const popular = PAKISTAN_PLANS.find((p) => p.popular) || PAKISTAN_PLANS[0];
+  const handleOpenDefaultModal = (pkg?: PakistanPackage) => {
+    if (pkg && pkg.id) {
+      handleOpenPlanFor(pkg);
+      return;
+    }
+    const popular = PAKISTAN_PLANS.find((p) => p.popular) || PAKISTAN_PLANS[13] || PAKISTAN_PLANS[0];
     handleOpenPlanFor(popular);
   };
 
@@ -38,17 +42,20 @@ function HomeContent() {
     if (tag.includes("1 GB")) {
       const p = PAKISTAN_PLANS.find((x) => x.data === "1 GB");
       if (p) handleOpenPlanFor(p);
+    } else if (tag.includes("2 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "2 GB");
+      if (p) handleOpenPlanFor(p);
     } else if (tag.includes("3 GB")) {
       const p = PAKISTAN_PLANS.find((x) => x.data === "3 GB");
       if (p) handleOpenPlanFor(p);
+    } else if (tag.includes("5 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "5 GB");
+      if (p) handleOpenPlanFor(p);
     } else if (tag.includes("10 GB")) {
-      const p = PAKISTAN_PLANS.find((x) => x.data === "10 GB");
+      const p = PAKISTAN_PLANS.find((x) => x.data === "10 GB" && x.popular) || PAKISTAN_PLANS.find((x) => x.data === "10 GB");
       if (p) handleOpenPlanFor(p);
-    } else if (tag.includes("50 GB")) {
-      const p = PAKISTAN_PLANS.find((x) => x.data === "50 GB");
-      if (p) handleOpenPlanFor(p);
-    } else if (tag.includes("Unlimited")) {
-      const p = PAKISTAN_PLANS.find((x) => x.data === "Unlimited");
+    } else if (tag.includes("20 GB")) {
+      const p = PAKISTAN_PLANS.find((x) => x.data === "20 GB");
       if (p) handleOpenPlanFor(p);
     } else {
       handleOpenDefaultModal();

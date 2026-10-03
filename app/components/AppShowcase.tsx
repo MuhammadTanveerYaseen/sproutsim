@@ -226,19 +226,19 @@ export default function AppShowcase() {
                     <div className="space-y-1.5">
                       <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-between text-xs">
                         <span className="font-bold">1 GB • 7 days</span>
-                        <span className="font-extrabold text-[#123C2A]">Rs 525</span>
+                        <span className="font-extrabold text-[#123C2A]">Rs 382</span>
                       </div>
                       <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-between text-xs">
-                        <span className="font-bold">3 GB • 15 days</span>
-                        <span className="font-extrabold text-[#123C2A]">Rs 1,110</span>
+                        <span className="font-bold">3 GB • 7 days</span>
+                        <span className="font-extrabold text-[#123C2A]">Rs 624</span>
                       </div>
                       <div className="bg-[#E9F8F0] p-2 rounded-xl border-2 border-[#2FBF71] flex items-center justify-between text-xs">
                         <span className="font-bold text-[#123C2A]">10 GB • 30 days</span>
-                        <span className="font-extrabold text-[#2FBF71]">Rs 2,500</span>
+                        <span className="font-extrabold text-[#2FBF71]">Rs 1,482</span>
                       </div>
                       <div className="bg-[#FFFFFF] p-2 rounded-xl border border-[#E0E7E2] flex items-center justify-between text-xs">
-                        <span className="font-bold">Unlimited VIP</span>
-                        <span className="font-extrabold text-[#123C2A]">Rs 12,530</span>
+                        <span className="font-bold">20 GB • 30 days</span>
+                        <span className="font-extrabold text-[#123C2A]">Rs 2,451</span>
                       </div>
                     </div>
 
