@@ -248,7 +248,7 @@ export default function PlanModal({
       subtitle: "Instant Mobile Account / QR",
       bankName: "JazzCash Mobile Account",
       accountTitle: "Muhammad Qadeer",
-      accountNumber: "0336 5131223",
+      accountNumber: "0308 6379663",
       iban: null,
       badge: "Instant",
       logo: "/jazzcash-logo.png",
@@ -263,7 +263,7 @@ export default function PlanModal({
       subtitle: "Instant Mobile Account / Raast",
       bankName: "EasyPaisa Digital Bank",
       accountTitle: "Muhammad Qadeer",
-      accountNumber: "0336 5131223",
+      accountNumber: "0308 6379663",
       iban: null,
       badge: "Instant",
       logo: "/easypaisa-logo.png",
@@ -278,7 +278,7 @@ export default function PlanModal({
       subtitle: "E-Wallet & Raast Transfer",
       bankName: "NayaPay Digital Wallet",
       accountTitle: "Muhammad Qadeer",
-      accountNumber: "0336 5131223",
+      accountNumber: "0308 6379663",
       iban: null,
       badge: "0% Fee",
       logo: "/nayapay-logo.svg",
@@ -741,12 +741,12 @@ export default function PlanModal({
                       <div>
                         <span className="text-[10px] text-[#5E6E66] block font-semibold">JazzCash Mobile Number:</span>
                         <strong className="text-base font-black font-mono text-[#123C2A] select-all">
-                          0336 5131223
+                          0308 6379663
                         </strong>
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleCopyAccount("03365131223")}
+                        onClick={() => handleCopyAccount("03086379663")}
                         className="px-3.5 py-2 rounded-lg bg-[#123C2A] text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#1A523A] transition-colors shadow-xs"
                       >
                         <Copy className="w-3.5 h-3.5" />
@@ -777,12 +777,12 @@ export default function PlanModal({
                       <div>
                         <span className="text-[10px] text-[#5E6E66] block font-semibold">EasyPaisa Account Number:</span>
                         <strong className="text-base font-black font-mono text-[#123C2A] select-all">
-                          0336 5131223
+                          0308 6379663
                         </strong>
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleCopyAccount("03365131223")}
+                        onClick={() => handleCopyAccount("03086379663")}
                         className="px-3.5 py-2 rounded-lg bg-[#00BA51] text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#009c43] transition-colors shadow-xs"
                       >
                         <Copy className="w-3.5 h-3.5" />
@@ -813,12 +813,12 @@ export default function PlanModal({
                       <div>
                         <span className="text-[10px] text-[#5E6E66] block font-semibold">NayaPay Mobile / Raast ID:</span>
                         <strong className="text-base font-black font-mono text-[#123C2A] select-all">
-                          0336 5131223
+                          0308 6379663
                         </strong>
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleCopyAccount("03365131223")}
+                        onClick={() => handleCopyAccount("03086379663")}
                         className="px-3.5 py-2 rounded-lg bg-[#FF5018] text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#e04512] transition-colors shadow-xs"
                       >
                         <Copy className="w-3.5 h-3.5" />
