@@ -36,14 +36,13 @@ export default function Testimonials() {
   ];
 
   const paymentMethods = [
-    "Apple Pay",
-    "Google Pay",
-    "Visa",
-    "Mastercard",
-    "JazzCash",
-    "EasyPaisa",
-    "Bank Transfer",
-    "UnionPay",
+    { name: "JazzCash", logo: "/jazzcash-logo.png" },
+    { name: "United Bank Limited (UBL)", logo: "/ubl-logo.png" },
+    { name: "Raast / IBFT", logo: null },
+    { name: "Visa", logo: null },
+    { name: "Mastercard", logo: null },
+    { name: "Apple Pay", logo: null },
+    { name: "Google Pay", logo: null },
   ];
 
   return (
@@ -120,10 +119,13 @@ export default function Testimonials() {
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             {paymentMethods.map((method) => (
               <span
-                key={method}
-                className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E0E7E2] text-xs font-bold text-[#123C2A] shadow-2xs"
+                key={method.name}
+                className="px-3.5 py-1.5 rounded-xl bg-white border border-[#E0E7E2] text-xs font-bold text-[#123C2A] shadow-2xs flex items-center gap-1.5"
               >
-                {method}
+                {method.logo && (
+                  <img src={method.logo} alt={method.name} className="h-4 w-auto object-contain" />
+                )}
+                <span>{method.name}</span>
               </span>
             ))}
           </div>

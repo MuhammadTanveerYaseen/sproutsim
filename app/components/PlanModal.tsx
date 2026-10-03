@@ -173,8 +173,9 @@ export default function PlanModal({
       accountTitle: "Muhammad Qadeer",
       accountNumber: "0308 6379663",
       iban: null,
-      badge: "Fastest",
-      icon: <Wallet className="w-4 h-4 text-[#E11D48]" />,
+      badge: "Instant",
+      logo: "/jazzcash-logo.png",
+      alt: "JazzCash",
     },
     {
       id: "ubl" as PaymentOptionId,
@@ -185,7 +186,8 @@ export default function PlanModal({
       accountNumber: "314722184",
       iban: "PK46UNIL0109000314722184",
       badge: "Official Bank",
-      icon: <Building2 className="w-4 h-4 text-[#2563EB]" />,
+      logo: "/ubl-logo.png",
+      alt: "United Bank Limited (UBL)",
     },
   ];
 
@@ -529,29 +531,42 @@ export default function PlanModal({
                 <label className="text-[11px] font-bold text-[#123C2A] uppercase tracking-wider block">
                   Select Your Payment Method:
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {paymentOptions.map((opt) => {
                     const isSelected = selectedPaymentOption === opt.id;
                     return (
                       <div
                         key={opt.id}
                         onClick={() => setSelectedPaymentOption(opt.id)}
-                        className={`p-3 rounded-2xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+                        className={`p-3 rounded-2xl border-2 cursor-pointer transition-all flex items-center justify-between gap-2.5 ${
                           isSelected
                             ? "border-[#2FBF71] bg-[#E9F8F0] ring-2 ring-[#2FBF71]/20 shadow-xs"
-                            : "border-[#E0E7E2] bg-white hover:border-[#A7E8C1]"
+                            : "border-[#E0E7E2] bg-white hover:border-[#A7E8C1] hover:bg-[#F8FAF9]"
                         }`}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-1.5 font-bold text-xs text-[#123C2A]">
-                            {opt.icon}
-                            <span>{opt.name}</span>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-10 h-10 rounded-xl bg-white border border-[#E0E7E2] p-1 flex items-center justify-center flex-shrink-0 shadow-2xs">
+                            <img
+                              src={opt.logo}
+                              alt={opt.alt}
+                              className="w-full h-full object-contain"
+                            />
                           </div>
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#F0F4F2] text-[#123C2A]">
-                            {opt.badge}
-                          </span>
+                          <div className="min-w-0">
+                            <div className="font-extrabold text-xs text-[#123C2A] truncate">
+                              {opt.name}
+                            </div>
+                            <p className="text-[10px] text-[#5E6E66] truncate">{opt.subtitle}</p>
+                          </div>
                         </div>
-                        <p className="text-[10px] text-[#5E6E66]">{opt.subtitle}</p>
+
+                        <span
+                          className={`text-[9px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${
+                            isSelected ? "bg-[#2FBF71] text-white" : "bg-[#F0F4F2] text-[#123C2A]"
+                          }`}
+                        >
+                          {opt.badge}
+                        </span>
                       </div>
                     );
                   })}
@@ -560,24 +575,42 @@ export default function PlanModal({
 
               {/* DISPLAY SELECTED PAYMENT ACCOUNT DETAILS */}
               <div className="p-4 rounded-2xl bg-[#F8FAF9] border-2 border-[#123C2A] space-y-3">
-                <div className="flex items-center justify-between border-b border-[#E0E7E2] pb-2">
-                  <div className="text-xs font-black text-[#123C2A] uppercase tracking-wider flex items-center gap-1.5">
-                    {currentOption.icon}
-                    <span>Send {formatPrice(selectedPlan)} via {currentOption.name}:</span>
+                <div className="flex items-center justify-between border-b border-[#E0E7E2] pb-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-white border border-[#E0E7E2] p-1 flex items-center justify-center flex-shrink-0 shadow-2xs">
+                      <img
+                        src={currentOption.logo}
+                        alt={currentOption.alt}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#5E6E66] block">
+                        Payment Instructions
+                      </span>
+                      <div className="text-xs sm:text-sm font-black text-[#123C2A]">
+                        Send {formatPrice(selectedPlan)} via {currentOption.name}
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E9F8F0] text-[#123C2A]">
-                    Official Account
+                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#E9F8F0] text-[#123C2A] border border-[#A7E8C1] flex-shrink-0">
+                    Official Verified
                   </span>
                 </div>
 
                 {selectedPaymentOption === "jazzcash" && (
-                  <div className="bg-white p-3.5 rounded-xl border border-[#E0E7E2] space-y-2.5 text-xs">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-[#F0F4F2]">
-                      <span className="text-[#5E6E66] font-semibold">Payment Method:</span>
-                      <strong className="text-[#123C2A] font-bold">JazzCash Mobile Account</strong>
+                  <div className="bg-white p-4 rounded-xl border border-[#E0E7E2] space-y-3 text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
+                      <div className="flex items-center gap-2">
+                        <img src="/jazzcash-logo.png" alt="JazzCash" className="h-6 w-auto object-contain" />
+                        <span className="font-bold text-[#123C2A]">JazzCash Mobile Account</span>
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#FEF2F2] text-[#E11D48] border border-[#FECDD3]">
+                        Instant Transfer
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between pb-1.5 border-b border-[#F0F4F2]">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
                       <span className="text-[#5E6E66] font-semibold">Account Title:</span>
                       <strong className="text-[#123C2A] font-extrabold text-sm text-[#2FBF71]">Muhammad Qadeer</strong>
                     </div>
@@ -602,18 +635,23 @@ export default function PlanModal({
                 )}
 
                 {selectedPaymentOption === "ubl" && (
-                  <div className="bg-white p-3.5 rounded-xl border border-[#E0E7E2] space-y-2.5 text-xs">
-                    <div className="flex items-center justify-between pb-1.5 border-b border-[#F0F4F2]">
-                      <span className="text-[#5E6E66] font-semibold">Bank Name:</span>
-                      <strong className="text-[#123C2A] font-bold">United Bank Limited (UBL)</strong>
+                  <div className="bg-white p-4 rounded-xl border border-[#E0E7E2] space-y-3 text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
+                      <div className="flex items-center gap-2">
+                        <img src="/ubl-logo.png" alt="United Bank Limited (UBL)" className="h-6 w-auto object-contain" />
+                        <span className="font-bold text-[#123C2A]">United Bank Limited (UBL)</span>
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]">
+                        1-Link / IBFT / Raast
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between pb-1.5 border-b border-[#F0F4F2]">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
                       <span className="text-[#5E6E66] font-semibold">Account Title:</span>
                       <strong className="text-[#123C2A] font-extrabold text-sm text-[#2FBF71]">Muhammad Qadeer</strong>
                     </div>
 
-                    <div className="flex items-center justify-between pb-1.5 border-b border-[#F0F4F2]">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
                       <div>
                         <span className="text-[10px] text-[#5E6E66] block font-semibold">Account Number:</span>
                         <strong className="text-sm font-black font-mono text-[#123C2A] select-all">
@@ -632,7 +670,7 @@ export default function PlanModal({
 
                     <div className="flex items-center justify-between pt-0.5">
                       <div className="overflow-hidden pr-2">
-                        <span className="text-[10px] text-[#5E6E66] block font-semibold">IBAN (IBFT / Raast):</span>
+                        <span className="text-[10px] text-[#5E6E66] block font-semibold">IBAN (IBFT / Raast / All Banks):</span>
                         <strong className="text-xs font-black font-mono text-[#123C2A] select-all break-all">
                           PK46UNIL0109000314722184
                         </strong>
@@ -791,6 +829,14 @@ export default function PlanModal({
                 <div className="text-xs text-[#5E6E66] flex justify-between">
                   <span>Total Amount:</span>
                   <strong className="text-[#123C2A]">{formatPrice(selectedPlan)}</strong>
+                </div>
+
+                <div className="text-xs text-[#5E6E66] flex justify-between items-center">
+                  <span>Payment Channel:</span>
+                  <span className="flex items-center gap-1.5 font-bold text-[#123C2A]">
+                    <img src={currentOption.logo} alt={currentOption.name} className="h-4 w-auto object-contain" />
+                    <span>{currentOption.name}</span>
+                  </span>
                 </div>
 
                 <div className="text-xs text-[#5E6E66] flex justify-between">
