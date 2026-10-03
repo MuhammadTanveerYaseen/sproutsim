@@ -181,7 +181,7 @@ export async function POST(request: Request) {
           iccid: order.iccid,
           lpaCode: order.lpaCode,
           createdAt: new Date().toISOString().replace("T", " ").substring(0, 16),
-          carrier: order.assignedOperator || "Jazz 4G LTE / Zong 4G",
+          carrier: order.assignedOperator || "GloEsim Enterprise Roaming • Jazz 4G LTE",
           emailDispatched: true,
         };
 

@@ -32,7 +32,7 @@ export default function HowItWorks() {
       num: "04",
       icon: Wifi,
       title: "Turn on Roaming & Connect",
-      desc: "Switch on 'Data Roaming'. Your phone connects to high-speed 4G LTE on Jazz & Zong immediately.",
+      desc: "Switch on 'Data Roaming'. Your phone connects to high-speed 4G LTE on GloEsim Enterprise Roaming • Jazz 4G LTE immediately.",
       badge: "Step Four",
     },
   ];

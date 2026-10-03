@@ -42,7 +42,7 @@ export default function Hero({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2FBF71] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2FBF71]"></span>
               </span>
-              <span>Live 4G/LTE Roaming Active · Jazz 4G &amp; Zong 4G Nodes</span>
+              <span>Live 4G/LTE Roaming Active · GloEsim Enterprise Roaming • Jazz 4G LTE</span>
             </div>
 
             {/* Main Headline */}
@@ -199,7 +199,7 @@ export default function Hero({
                       SproutSIM 4G eSIM
                     </h3>
                     <p className="text-[11px] font-medium text-[#5E6E66]">
-                      Jazz 4G LTE • Dual Roaming Node
+                      GloEsim Enterprise Roaming • Jazz 4G LTE
                     </p>
                   </div>
                 </div>

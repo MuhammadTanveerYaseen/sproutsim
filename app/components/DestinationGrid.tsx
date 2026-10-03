@@ -54,7 +54,7 @@ export default function DestinationGrid({
                 tethering: true,
                 idealFor: ideal,
                 speed: "4G / LTE Uncapped",
-                network: v.networks && v.networks.length > 0 ? v.networks.join(" / ") : "Jazz 4G LTE / Orange",
+                network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
                 gloEsimId: v.id,
               };
             });
@@ -127,7 +127,7 @@ export default function DestinationGrid({
               Pakistan 4G eSIM Data Plans
             </h2>
             <p className="text-xs sm:text-sm text-[#4A5D53] mt-1.5 max-w-2xl leading-relaxed">
-              High-speed, unthrottled mobile data roaming directly connected to Pakistan&apos;s tier-1 network (Jazz 4G LTE &amp; Orange). Instant digital QR activation delivered directly to your email.
+              High-speed, unthrottled mobile data roaming directly connected via GloEsim Enterprise Roaming • Jazz 4G LTE. Instant digital QR activation delivered directly to your email.
             </p>
           </div>
 
@@ -135,7 +135,7 @@ export default function DestinationGrid({
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-[#E9F8F0] border border-[#A7E8C1] text-[#123C2A] flex items-center gap-1.5">
               <Radio className="w-3.5 h-3.5 text-[#2FBF71]" />
-              <span>Jazz 4G &amp; Orange Dual Roaming</span>
+              <span>GloEsim Enterprise Roaming • Jazz 4G LTE</span>
             </span>
             <span className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-[#F8FAF9] border border-[#E0E7E2] text-[#123C2A] flex items-center gap-1.5">
               <Lock className="w-3.5 h-3.5 text-[#2FBF71]" />

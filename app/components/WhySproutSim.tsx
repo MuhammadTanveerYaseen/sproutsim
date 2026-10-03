@@ -3,7 +3,7 @@ import { Cpu, ShieldCheck, CheckCircle2, Lock, Smartphone, Wifi, Zap, XCircle, A
 
 export default function WhySproutSim() {
   const metrics = [
-    { value: "99.8%", label: "Network Uptime", sub: "Jazz & Zong dual 4G nodes" },
+    { value: "99.8%", label: "Network Uptime", sub: "GloEsim Enterprise Roaming • Jazz 4G LTE" },
     { value: "< 60s", label: "Instant QR Delivery", sub: "Direct Hostinger SMTP dispatch" },
     { value: "25,000+", label: "Active Connections", sub: "Trusted across Pakistan" },
     { value: "4.9 / 5", label: "Customer Trust Rating", sub: "Verified user satisfaction" },

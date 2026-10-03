@@ -518,7 +518,7 @@ const resolvers = {
         usedMB: 0,
         remainingMB: pkgInfo.dataMB,
         status: "ACTIVE",
-        operator: "Jazz 4G LTE",
+        operator: "GloEsim Enterprise Roaming • Jazz 4G LTE",
         mccMnc: "410-01",
         validUntil: "2026-10-30",
         lpaCode: orderRes.lpaCode,

@@ -70,7 +70,7 @@ export default function PlanModal({
               tethering: true,
               idealFor: `${v.package_validity} Days high-speed 4G data for communication and navigation`,
               speed: "4G / LTE Uncapped",
-              network: v.networks?.join(" / ") || "Jazz 4G LTE / Orange",
+              network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
               gloEsimId: v.id,
             }));
             setPlans(mapped);
@@ -981,7 +981,7 @@ export default function PlanModal({
                 </div>
                 <div className="flex justify-between items-center text-[#5E6E66]">
                   <span>Roaming Operator:</span>
-                  <span className="font-bold text-[#123C2A]">{liveOrder.assignedOperator || "Jazz 4G LTE / Orange"}</span>
+                  <span className="font-bold text-[#123C2A]">{liveOrder.assignedOperator || "GloEsim Enterprise Roaming • Jazz 4G LTE"}</span>
                 </div>
                 <div className="flex justify-between items-center text-[#5E6E66]">
                   <span>Active Data:</span>

@@ -40,7 +40,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Transit, quick airport connection & test messages",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db1997-864a-4f10-8449-ad910e8bb318",
   },
   {
@@ -56,7 +56,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Weekend stay & light Google Maps navigation",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2dab1d6-8635-4ea9-9bcf-a13b942cb37c",
   },
   {
@@ -72,7 +72,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "WhatsApp chats, ride-hailing & basic browsing",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2dab1d6-e316-41a7-bb79-a28ba1685f10",
   },
   {
@@ -88,7 +88,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Low-data backup line & 2FA bank authentication",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2dab1d7-4ad9-4ca1-a5f5-e031afb9b461",
   },
   {
@@ -104,7 +104,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "3-day business trip with continuous email access",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2dab1d7-81e4-42db-bd77-f1fa9c9d6501",
   },
   {
@@ -120,7 +120,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Short visit with video calls & media sharing",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db199b-0e61-479e-bf68-5360eb98ab60",
   },
   {
@@ -136,7 +136,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "1-week tourist trip across major cities",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db199b-62c9-46f8-a6de-3b85795b4ab3",
   },
   {
@@ -152,7 +152,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Month-long standby for communication and travel",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db199d-5103-4c71-9a60-3dabfda83375",
   },
   {
@@ -168,7 +168,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Heavy weekly streaming, Instagram & photo uploads",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db19a0-a23d-45a7-a674-d2fd114c8410",
   },
   {
@@ -184,7 +184,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "2-week trip across Lahore, Islamabad & Karachi",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2dab1e1-210d-43e7-8300-f966d74ca90e",
   },
   {
@@ -200,7 +200,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Balanced monthly usage with social & navigation",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db19a1-e566-4505-9c42-879bb6e6c52c",
   },
   {
@@ -216,7 +216,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Heavy hotspot sharing & remote working for 1 week",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db19a7-0def-43c3-8a43-61f4aee699b5",
   },
   {
@@ -232,7 +232,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Extended travel with video calls, YouTube & hotspot",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2dab1eb-0415-444f-96ea-9fdbffa4470c",
   },
   {
@@ -248,7 +248,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Most popular choice: Everyday social, streaming, calls & hotspot",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db19a9-0a35-4ed8-883f-296d8fe6abf8",
   },
   {
@@ -264,7 +264,7 @@ export const PAKISTAN_PLANS: PakistanPackage[] = [
     tethering: true,
     idealFor: "Heavy data: 4K video, Zoom/Teams conferences & laptop tethering",
     speed: "4G / LTE Uncapped",
-    network: "Jazz 4G LTE / Orange",
+    network: "GloEsim Enterprise Roaming • Jazz 4G LTE",
     gloEsimId: "a2db19b1-fa96-4a80-b723-3a1d83035201",
   },
 ];
