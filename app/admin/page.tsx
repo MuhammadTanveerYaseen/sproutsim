@@ -43,6 +43,7 @@ import {
   Database,
   Bell,
   Lock,
+  Paperclip,
   PauseCircle,
   PlayCircle,
   Eye,
@@ -77,12 +78,14 @@ export interface AdminOrder {
   grossMarginUSD: number;
   grossMarginPct: number;
   status: "ACTIVE" | "PENDING" | "COMPLETED" | "REFUNDED";
-  paymentMethod: "Stripe" | "JazzCash" | "EasyPaisa" | "Bank Transfer";
+  paymentMethod: "Stripe" | "JazzCash" | "EasyPaisa" | "NayaPay" | "United Bank Limited (UBL)" | "Bank Transfer" | string;
   iccid: string;
   lpaCode: string;
   createdAt: string;
   carrier: string;
   emailDispatched: boolean;
+  invoiceUrl?: string;
+  invoiceFileName?: string;
 }
 
 export interface AdminEsim {
@@ -1830,9 +1833,21 @@ export default function AdminPage() {
                               </div>
                             </td>
                             <td className="py-3.5 px-4">
-                              <span className="font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] border border-slate-200">
-                                {order.paymentMethod}
-                              </span>
+                              <div className="flex flex-col gap-1 items-start">
+                                <span className="font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] border border-slate-200">
+                                  {order.paymentMethod}
+                                </span>
+                                {order.invoiceUrl && (
+                                  <button
+                                    onClick={() => setSelectedOrderInvoice(order)}
+                                    className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 flex items-center gap-1 cursor-pointer transition-colors"
+                                    title="View customer payment invoice proof"
+                                  >
+                                    <Paperclip className="w-2.5 h-2.5" />
+                                    <span>Invoice</span>
+                                  </button>
+                                )}
+                              </div>
                             </td>
                             <td className="py-3.5 px-4">
                               <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-700">
@@ -3386,6 +3401,42 @@ export default function AdminPage() {
                 +${selectedOrderInvoice.grossMarginUSD.toFixed(2)} USD ({selectedOrderInvoice.grossMarginPct}%)
               </span>
             </div>
+
+            {/* Customer Uploaded Invoice Proof */}
+            {selectedOrderInvoice.invoiceUrl && (
+              <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-900">
+                  <span className="flex items-center gap-1.5 text-emerald-700">
+                    <Paperclip className="w-3.5 h-3.5" />
+                    Uploaded Customer Payment Receipt
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-mono font-normal">
+                    {selectedOrderInvoice.invoiceFileName || "Receipt"}
+                  </span>
+                </div>
+                {selectedOrderInvoice.invoiceUrl.startsWith("data:image") ? (
+                  <div className="max-h-64 overflow-auto rounded-lg border border-slate-200 bg-white p-1 flex items-center justify-center">
+                    <img
+                      src={selectedOrderInvoice.invoiceUrl}
+                      alt="Payment Receipt"
+                      className="max-h-60 w-auto object-contain rounded"
+                    />
+                  </div>
+                ) : (
+                  <div className="p-3 bg-white rounded-lg border border-slate-200 text-xs font-mono text-slate-700 flex items-center justify-between">
+                    <span>📄 {selectedOrderInvoice.invoiceFileName || "Payment Document"}</span>
+                    <a
+                      href={selectedOrderInvoice.invoiceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-600 font-bold hover:underline text-[11px]"
+                    >
+                      Open Document &rarr;
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="flex items-center justify-end gap-2 pt-2">
               <button

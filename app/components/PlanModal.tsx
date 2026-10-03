@@ -22,6 +22,11 @@ import {
   Building2,
   Wallet,
   AlertCircle,
+  UploadCloud,
+  FileText,
+  CheckCircle2,
+  Trash2,
+  Paperclip,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
@@ -33,7 +38,7 @@ interface PlanModalProps {
   onOpenProfile?: () => void;
 }
 
-type PaymentOptionId = "jazzcash" | "ubl";
+type PaymentOptionId = "jazzcash" | "easypaisa" | "nayapay" | "ubl";
 
 export default function PlanModal({
   initialPlan,
@@ -102,6 +107,13 @@ export default function PlanModal({
   const [senderName, setSenderName] = useState("");
   const [transactionRef, setTransactionRef] = useState("");
 
+  // Mandatory Invoice Upload State
+  const [invoicePreview, setInvoicePreview] = useState<string | null>(null);
+  const [invoiceFileName, setInvoiceFileName] = useState<string>("");
+  const [invoiceFileSize, setInvoiceFileSize] = useState<string>("");
+  const [invoiceError, setInvoiceError] = useState<string | null>(null);
+  const [isProcessingInvoice, setIsProcessingInvoice] = useState(false);
+
   // Order & Verification State
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const [isPaymentVerified, setIsPaymentVerified] = useState(false);
@@ -115,6 +127,71 @@ export default function PlanModal({
   const [copiedAccount, setCopiedAccount] = useState(false);
   const [copiedIban, setCopiedIban] = useState(false);
   const [adminBypassLoading, setAdminBypassLoading] = useState(false);
+
+  const handleInvoiceFileChange = (file: File | null) => {
+    if (!file) return;
+
+    if (file.size > 8 * 1024 * 1024) {
+      setInvoiceError("File size exceeds 8MB. Please select a smaller screenshot or PDF invoice.");
+      return;
+    }
+
+    setInvoiceError(null);
+    setInvoiceFileName(file.name);
+    setInvoiceFileSize(`${(file.size / 1024).toFixed(0)} KB`);
+    setIsProcessingInvoice(true);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+
+      if (file.type.startsWith("image/") && file.size > 800 * 1024) {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 1400;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          const compressed = canvas.toDataURL("image/jpeg", 0.82);
+          setInvoicePreview(compressed);
+          setIsProcessingInvoice(false);
+        };
+        img.onerror = () => {
+          setInvoicePreview(dataUrl);
+          setIsProcessingInvoice(false);
+        };
+        img.src = dataUrl;
+      } else {
+        setInvoicePreview(dataUrl);
+        setIsProcessingInvoice(false);
+      }
+    };
+    reader.onerror = () => {
+      setInvoiceError("Failed to read file. Please select the receipt file again.");
+      setIsProcessingInvoice(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveInvoice = () => {
+    setInvoicePreview(null);
+    setInvoiceFileName("");
+    setInvoiceFileSize("");
+    setInvoiceError(null);
+  };
 
   // Poll for admin payment verification when in 'verifying' step
   useEffect(() => {
@@ -168,14 +245,47 @@ export default function PlanModal({
     {
       id: "jazzcash" as PaymentOptionId,
       name: "JazzCash",
-      subtitle: "Instant Mobile Account",
-      bankName: "JazzCash",
+      subtitle: "Instant Mobile Account / QR",
+      bankName: "JazzCash Mobile Account",
       accountTitle: "Muhammad Qadeer",
-      accountNumber: "0308 6379663",
+      accountNumber: "0336 5131223",
       iban: null,
       badge: "Instant",
       logo: "/jazzcash-logo.png",
       alt: "JazzCash",
+      brandColor: "#E11D48",
+      accentBg: "#FEF2F2",
+      accentBorder: "#FECDD3",
+    },
+    {
+      id: "easypaisa" as PaymentOptionId,
+      name: "EasyPaisa",
+      subtitle: "Instant Mobile Account / Raast",
+      bankName: "EasyPaisa Digital Bank",
+      accountTitle: "Muhammad Qadeer",
+      accountNumber: "0336 5131223",
+      iban: null,
+      badge: "Instant",
+      logo: "/easypaisa-logo.png",
+      alt: "EasyPaisa",
+      brandColor: "#00BA51",
+      accentBg: "#ECFDF5",
+      accentBorder: "#A7F3D0",
+    },
+    {
+      id: "nayapay" as PaymentOptionId,
+      name: "NayaPay",
+      subtitle: "E-Wallet & Raast Transfer",
+      bankName: "NayaPay Digital Wallet",
+      accountTitle: "Muhammad Qadeer",
+      accountNumber: "0336 5131223",
+      iban: null,
+      badge: "0% Fee",
+      logo: "/nayapay-logo.svg",
+      alt: "NayaPay",
+      brandColor: "#FF5018",
+      accentBg: "#FFF7ED",
+      accentBorder: "#FFEDD5",
     },
     {
       id: "ubl" as PaymentOptionId,
@@ -188,6 +298,9 @@ export default function PlanModal({
       badge: "Official Bank",
       logo: "/ubl-logo.png",
       alt: "United Bank Limited (UBL)",
+      brandColor: "#2563EB",
+      accentBg: "#EFF6FF",
+      accentBorder: "#BFDBFE",
     },
   ];
 
@@ -215,6 +328,12 @@ export default function PlanModal({
       alert("Please enter your mobile or WhatsApp phone number so we can verify your transfer.");
       return;
     }
+    if (!invoicePreview) {
+      setInvoiceError("Mandatory requirement: Please upload your payment receipt or transfer invoice screenshot before submitting for verification.");
+      const el = document.getElementById("invoice-upload-container");
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
 
     setIsSubmittingOrder(true);
     try {
@@ -231,6 +350,9 @@ export default function PlanModal({
           phone,
           senderName: `${currentOption.name} • ${senderName || "Customer"}`,
           transactionRef: transactionRef || `Paid via ${currentOption.name}`,
+          paymentMethod: currentOption.name,
+          invoiceData: invoicePreview,
+          invoiceFileName: invoiceFileName || "payment_receipt.png",
         }),
       });
 
@@ -619,13 +741,85 @@ export default function PlanModal({
                       <div>
                         <span className="text-[10px] text-[#5E6E66] block font-semibold">JazzCash Mobile Number:</span>
                         <strong className="text-base font-black font-mono text-[#123C2A] select-all">
-                          0308 6379663
+                          0336 5131223
                         </strong>
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleCopyAccount("03086379663")}
+                        onClick={() => handleCopyAccount("03365131223")}
                         className="px-3.5 py-2 rounded-lg bg-[#123C2A] text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#1A523A] transition-colors shadow-xs"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>{copiedAccount ? "Copied!" : "Copy Number"}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {selectedPaymentOption === "easypaisa" && (
+                  <div className="bg-white p-4 rounded-xl border border-[#E0E7E2] space-y-3 text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
+                      <div className="flex items-center gap-2">
+                        <img src="/easypaisa-logo.png" alt="EasyPaisa" className="h-6 w-auto object-contain" />
+                        <span className="font-bold text-[#123C2A]">EasyPaisa Digital Bank</span>
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#ECFDF5] text-[#00BA51] border border-[#A7F3D0]">
+                        Instant Raast
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
+                      <span className="text-[#5E6E66] font-semibold">Account Title:</span>
+                      <strong className="text-[#123C2A] font-extrabold text-sm text-[#2FBF71]">Muhammad Qadeer</strong>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-0.5">
+                      <div>
+                        <span className="text-[10px] text-[#5E6E66] block font-semibold">EasyPaisa Account Number:</span>
+                        <strong className="text-base font-black font-mono text-[#123C2A] select-all">
+                          0336 5131223
+                        </strong>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyAccount("03365131223")}
+                        className="px-3.5 py-2 rounded-lg bg-[#00BA51] text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#009c43] transition-colors shadow-xs"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>{copiedAccount ? "Copied!" : "Copy Number"}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {selectedPaymentOption === "nayapay" && (
+                  <div className="bg-white p-4 rounded-xl border border-[#E0E7E2] space-y-3 text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
+                      <div className="flex items-center gap-2">
+                        <img src="/nayapay-logo.svg" alt="NayaPay" className="h-5 w-auto object-contain" />
+                        <span className="font-bold text-[#123C2A]">NayaPay Digital Wallet</span>
+                      </div>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#FFF7ED] text-[#FF5018] border border-[#FFEDD5]">
+                        0% Fee / Raast
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between pb-2 border-b border-[#F0F4F2]">
+                      <span className="text-[#5E6E66] font-semibold">Account Title:</span>
+                      <strong className="text-[#123C2A] font-extrabold text-sm text-[#2FBF71]">Muhammad Qadeer</strong>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-0.5">
+                      <div>
+                        <span className="text-[10px] text-[#5E6E66] block font-semibold">NayaPay Mobile / Raast ID:</span>
+                        <strong className="text-base font-black font-mono text-[#123C2A] select-all">
+                          0336 5131223
+                        </strong>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyAccount("03365131223")}
+                        className="px-3.5 py-2 rounded-lg bg-[#FF5018] text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#e04512] transition-colors shadow-xs"
                       >
                         <Copy className="w-3.5 h-3.5" />
                         <span>{copiedAccount ? "Copied!" : "Copy Number"}</span>
@@ -742,9 +936,97 @@ export default function PlanModal({
                     type="text"
                     value={transactionRef}
                     onChange={(e) => setTransactionRef(e.target.value)}
-                    placeholder="e.g. JazzCash / EasyPaisa Tx ID or Sender Name"
+                    placeholder={`e.g. ${currentOption.name} Tx ID or Sender Name`}
                     className="w-full px-3.5 py-2.5 rounded-xl border-2 border-[#E0E7E2] focus:border-[#2FBF71] text-xs font-semibold text-[#1C2420] focus:outline-none"
                   />
+                </div>
+
+                {/* MANDATORY PAYMENT INVOICE / RECEIPT UPLOAD CONTAINER */}
+                <div id="invoice-upload-container" className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-[#123C2A] uppercase tracking-wider flex items-center gap-1.5">
+                      <Paperclip className="w-3.5 h-3.5 text-[#2FBF71]" />
+                      <span>Upload Payment Invoice / Receipt *</span>
+                    </label>
+                    <span className="text-[10px] font-black px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-200">
+                      Mandatory
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-[#5E6E66]">
+                    Please attach the screenshot or official PDF receipt from your {currentOption.name} app showing the transfer to Muhammad Qadeer.
+                  </p>
+
+                  {invoiceError && (
+                    <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-600" />
+                      <span>{invoiceError}</span>
+                    </div>
+                  )}
+
+                  {!invoicePreview ? (
+                    <label
+                      htmlFor="invoice-upload-input"
+                      className={`border-2 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all ${
+                        invoiceError
+                          ? "border-rose-400 bg-rose-50/50"
+                          : "border-[#A7E8C1] bg-[#F8FAF9] hover:bg-[#E9F8F0] hover:border-[#2FBF71]"
+                      }`}
+                    >
+                      <input
+                        id="invoice-upload-input"
+                        type="file"
+                        accept="image/*,application/pdf"
+                        className="hidden"
+                        onChange={(e) => handleInvoiceFileChange(e.target.files?.[0] || null)}
+                      />
+                      <div className="w-10 h-10 rounded-full bg-white shadow-2xs border border-[#E0E7E2] flex items-center justify-center text-[#2FBF71]">
+                        {isProcessingInvoice ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <UploadCloud className="w-5 h-5" />
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <span className="text-xs font-bold text-[#123C2A] block">
+                          Click to Browse or Drag &amp; Drop Invoice / Receipt
+                        </span>
+                        <span className="text-[10px] text-[#5E6E66] block mt-0.5">
+                          PNG, JPG, WEBP, or PDF screenshot (Max 8MB)
+                        </span>
+                      </div>
+                    </label>
+                  ) : (
+                    <div className="p-3 rounded-2xl bg-[#E9F8F0] border-2 border-[#2FBF71] flex items-center justify-between gap-3 shadow-2xs">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-12 h-12 rounded-xl bg-white border border-[#A7E8C1] overflow-hidden flex-shrink-0 flex items-center justify-center shadow-xs">
+                          {invoicePreview.startsWith("data:image") ? (
+                            <img src={invoicePreview} alt="Receipt preview" className="w-full h-full object-cover" />
+                          ) : (
+                            <FileText className="w-6 h-6 text-[#2FBF71]" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-4 h-4 text-[#2FBF71] flex-shrink-0" />
+                            <span className="text-xs font-extrabold text-[#123C2A] truncate">
+                              {invoiceFileName || "Receipt Attached"}
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-medium text-[#5E6E66] block mt-0.5">
+                            {invoiceFileSize} · Verified Ready for Admin
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemoveInvoice}
+                        className="p-2 rounded-lg bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors flex-shrink-0 shadow-2xs"
+                        title="Remove and select another file"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -752,16 +1034,24 @@ export default function PlanModal({
               <button
                 disabled={isSubmittingOrder}
                 onClick={handleSubmitPaymentNotice}
-                className="w-full py-3.5 rounded-xl bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF] font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-transform active:scale-98 disabled:opacity-60 shadow-md"
+                className={`w-full py-3.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-transform active:scale-98 shadow-md ${
+                  !invoicePreview
+                    ? "bg-[#123C2A] hover:bg-[#1A523A] text-white"
+                    : "bg-[#2FBF71] hover:bg-[#26A561] text-[#FFFFFF]"
+                }`}
               >
                 {isSubmittingOrder ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Sending Alert to Admin...</span>
+                    <span>Uploading Invoice &amp; Alerting Admin...</span>
                   </>
                 ) : (
                   <>
-                    <span>I Have Sent Payment · Submit for Verification</span>
+                    <span>
+                      {!invoicePreview
+                        ? "Attach Invoice & Submit for Verification"
+                        : "I Have Sent Payment · Submit for Verification"}
+                    </span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

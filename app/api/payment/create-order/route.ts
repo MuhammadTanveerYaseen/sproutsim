@@ -18,11 +18,21 @@ export async function POST(request: Request) {
       phone,
       senderName,
       transactionRef,
+      paymentMethod,
+      invoiceData,
+      invoiceFileName,
     } = body;
 
     if (!email || !email.includes("@")) {
       return NextResponse.json(
         { error: "A valid email address is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!invoiceData) {
+      return NextResponse.json(
+        { error: "Payment invoice / receipt screenshot is mandatory. Please upload your payment receipt before submitting." },
         { status: 400 }
       );
     }
@@ -40,9 +50,11 @@ export async function POST(request: Request) {
       customerEmail: email,
       customerPhone: phone || "Not provided",
       senderName: senderName || "Customer",
-      transactionRef: transactionRef || "Transfer Reported via WhatsApp / Phone",
+      transactionRef: transactionRef || `Paid via ${paymentMethod || "Direct Transfer"}`,
       status: "PENDING_VERIFICATION",
-      paymentMethod: "MANUAL_CALL_OR_TRANSFER",
+      paymentMethod: paymentMethod || "MANUAL_TRANSFER",
+      invoiceUrl: invoiceData,
+      invoiceFileName: invoiceFileName || "payment_receipt.png",
       createdAt: now,
       updatedAt: now,
     };
@@ -58,7 +70,7 @@ export async function POST(request: Request) {
       console.warn("[MongoDB Notice] Could not persist pending order immediately:", dbErr);
     }
 
-    // 3. Dispatch high-priority email alert to Admin
+    // 3. Dispatch high-priority email alert to Admin with uploaded invoice
     const origin = request.headers.get("origin") || "http://localhost:3000";
     const verifyUrl = `${origin}/api/payment/verify?orderId=${orderId}&token=admin_instant_verify`;
 
@@ -72,8 +84,11 @@ export async function POST(request: Request) {
         dataAllowance: orderDoc.dataAllowance,
         validity: orderDoc.validity,
         priceFormatted: orderDoc.priceFormatted,
-        senderDetails: `${senderName ? senderName + " • " : ""}${transactionRef || "Call / WhatsApp verification requested"}`,
+        senderDetails: `${senderName ? senderName + " • " : ""}${transactionRef || "Invoice uploaded for verification"}`,
         verifyUrl,
+        paymentMethod: paymentMethod || "Manual Transfer",
+        invoiceData,
+        invoiceFileName,
       });
     } catch (mailErr) {
       console.warn("[Mail Alert Notice] Failed to send admin payment alert email:", mailErr);
@@ -81,7 +96,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: "Order placed. Awaiting admin manual payment verification.",
+      message: "Order placed with invoice attached. Awaiting admin manual payment verification.",
       orderId,
       order: orderDoc,
     });

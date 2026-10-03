@@ -18,7 +18,7 @@ export default function HowItWorks() {
       num: "02",
       icon: CreditCard,
       title: "Instant Digital Checkout",
-      desc: "Pay securely in PKR via JazzCash or direct UBL Bank Transfer with fast admin verification.",
+      desc: "Pay securely in PKR via JazzCash, EasyPaisa, NayaPay, or UBL Bank Transfer and upload your invoice for instant verification.",
       badge: "Step Two",
     },
     {

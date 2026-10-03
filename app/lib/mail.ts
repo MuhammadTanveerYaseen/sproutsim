@@ -193,6 +193,9 @@ export interface AdminPaymentAlertPayload {
   priceFormatted: string;
   senderDetails?: string;
   verifyUrl: string;
+  paymentMethod?: string;
+  invoiceData?: string;
+  invoiceFileName?: string;
 }
 
 export async function sendPaymentVerificationAlertToAdmin(payload: AdminPaymentAlertPayload) {
@@ -265,6 +268,30 @@ export async function sendPaymentVerificationAlertToAdmin(payload: AdminPaymentA
             </div>
           </div>
 
+          <!-- CUSTOMER UPLOADED INVOICE / RECEIPT PROOF -->
+          ${
+            payload.invoiceData
+              ? `
+          <div style="background-color: #F8FAF9; border: 2px dashed #2FBF71; border-radius: 14px; padding: 16px; margin: 18px 0; text-align: center;">
+            <div style="font-size: 11px; font-weight: 800; color: #123C2A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+              📎 Mandatory Customer Payment Invoice Attached
+            </div>
+            ${
+              payload.invoiceData.startsWith("data:image")
+                ? `<div style="text-align: center; margin-bottom: 8px;">
+                     <img src="${payload.invoiceData}" alt="Payment Receipt" style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 1px solid #E0E7E2; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: inline-block;" />
+                   </div>`
+                : `<div style="background: #FFFFFF; border: 1px solid #E0E7E2; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 13px; color: #123C2A;">
+                     📄 ${payload.invoiceFileName || "Receipt Document Uploaded"}
+                   </div>`
+            }
+            <span style="display: block; font-size: 11px; color: #5E6E66; margin-top: 6px;">
+              File: ${payload.invoiceFileName || "invoice-receipt"} (Verified upload by customer)
+            </span>
+          </div>`
+              : ""
+          }
+
           <!-- BULLETPROOF BUTTON: Table-based with 100% inline CSS -->
           <div style="margin: 24px 0; text-align: center;">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -308,14 +335,32 @@ export async function sendPaymentVerificationAlertToAdmin(payload: AdminPaymentA
     return { success: true, simulated: true };
   }
 
-  const plainText = `NEW PAYMENT VERIFICATION REQUEST:\n\nOrder ID: ${payload.orderId}\nCustomer Email: ${payload.customerEmail}\nCustomer Phone: ${payload.customerPhone || "Not provided"}\nPackage: ${payload.planName} (${payload.dataAllowance} • ${payload.validity})\nAmount: ${payload.priceFormatted}\nPayment Proof: ${payload.senderDetails || "Transfer Reported"}\n\nCLICK THIS LINK TO APPROVE PAYMENT:\n${payload.verifyUrl}\n\n(Once clicked, customer screen will turn green and activate eSIM)`;
+  const plainText = `NEW PAYMENT VERIFICATION REQUEST:\n\nOrder ID: ${payload.orderId}\nCustomer Email: ${payload.customerEmail}\nCustomer Phone: ${payload.customerPhone || "Not provided"}\nPackage: ${payload.planName} (${payload.dataAllowance} • ${payload.validity})\nAmount: ${payload.priceFormatted}\nMethod: ${payload.paymentMethod || "Transfer Reported"}\nPayment Proof: ${payload.senderDetails || "Transfer Reported"}\nInvoice File: ${payload.invoiceFileName || (payload.invoiceData ? "Attached" : "None")}\n\nCLICK THIS LINK TO APPROVE PAYMENT:\n${payload.verifyUrl}\n\n(Once clicked, customer screen will turn green and activate eSIM)`;
+
+  const attachments: any[] = [];
+  if (payload.invoiceData && payload.invoiceData.includes(",")) {
+    try {
+      const [meta, base64Content] = payload.invoiceData.split(",");
+      const mimeMatch = meta.match(/:(.*?);/);
+      const contentType = mimeMatch ? mimeMatch[1] : "image/png";
+      const ext = contentType.includes("pdf") ? "pdf" : "png";
+      attachments.push({
+        filename: payload.invoiceFileName || `invoice-${payload.orderId}.${ext}`,
+        content: Buffer.from(base64Content, "base64"),
+        contentType,
+      });
+    } catch (e) {
+      console.warn("[Mail Invoice Attachment Notice]", e);
+    }
+  }
 
   const info = await transporter.sendMail({
     from: `"${fromName}" <${fromEmail}>`,
     to: adminEmail,
-    subject: `🚨 [PAYMENT VERIFICATION NEEDED] Order ${payload.orderId} - ${payload.priceFormatted} from ${payload.customerPhone || payload.customerEmail}`,
+    subject: `🚨 [PAYMENT VERIFICATION NEEDED] Order ${payload.orderId} - ${payload.priceFormatted} via ${payload.paymentMethod || "Manual"} from ${payload.customerPhone || payload.customerEmail}`,
     text: plainText,
     html: htmlContent,
+    attachments,
   });
 
   return { success: true, messageId: info.messageId };

@@ -37,12 +37,12 @@ export default function Testimonials() {
 
   const paymentMethods = [
     { name: "JazzCash", logo: "/jazzcash-logo.png" },
+    { name: "EasyPaisa", logo: "/easypaisa-logo.png" },
+    { name: "NayaPay", logo: "/nayapay-logo.svg" },
     { name: "United Bank Limited (UBL)", logo: "/ubl-logo.png" },
-    { name: "Raast / IBFT", logo: null },
+    { name: "Raast / 1-Link", logo: null },
     { name: "Visa", logo: null },
     { name: "Mastercard", logo: null },
-    { name: "Apple Pay", logo: null },
-    { name: "Google Pay", logo: null },
   ];
 
   return (
